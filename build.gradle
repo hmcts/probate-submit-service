@@ -1,10 +1,4 @@
 buildscript {
-  repositories {
-    mavenLocal()
-    maven { url "http://artifactory.reform.hmcts.net/artifactory/libs-release" }
-    maven { url "http://repo1.maven.org/maven2/" }
-    maven { url "https://plugins.gradle.org/m2/" }
-  }
   dependencies {
     classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.5'
     classpath("net.serenity-bdd:serenity-gradle-plugin:1.5.2")
@@ -14,8 +8,9 @@ buildscript {
 
 plugins {
   id 'application'
-  id 'org.springframework.boot' version '1.5.8.RELEASE'
-  id 'org.owasp.dependencycheck' version '3.0.2'
+  id 'pmd'
+  id 'org.springframework.boot' version '1.5.13.RELEASE'
+  id 'org.owasp.dependencycheck' version '3.1.2'
   id 'com.github.ben-manes.versions' version '0.15.0'
   id 'com.gorylenko.gradle-git-properties' version '1.4.21'
 }
@@ -60,12 +55,28 @@ tasks.withType(FindBugs) {
   }
 }
 
+findbugs{
+  ignoreFailures=true
+  reportLevel = "low"
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectName", "probate :: submit service"
+    property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
+    property "sonar.host.url", "https://sonar.reform.hmcts.net/"
+  }
+}
+
+test.finalizedBy jacocoTestReport
+
 dependencyCheck {
-  suppressionFiles = ['dependency-check-suppressions.xml']
+  failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
+  suppressionFile = 'config/owasp/suppressions.xml'
+  scanConfigurations = ['compile']
 }
 
 sourceSets {
-
   testFunctional {
     java {
       compileClasspath += main.output
@@ -73,6 +84,15 @@ sourceSets {
       srcDir file('src/functionalTest/java')
     }
     resources.srcDir file('src/functionalTest/resources')
+  }
+
+  testsmoke {
+      java {
+          compileClasspath += main.output
+          runtimeClasspath += main.output
+          srcDir file('src/smokeTest/java')
+      }
+      resources.srcDir file('src/smokeTest/resources')
   }
 }
 
@@ -83,28 +103,19 @@ task functional(type: Test) {
   finalizedBy aggregate
 }
 
-findbugs{
-  ignoreFailures=true
-  reportLevel = "low"
+task smoke(type: Test) {
+  description = "Runs Smoke Tests"
+  testClassesDirs = sourceSets.testsmoke.output.classesDirs
+  classpath = sourceSets.testsmoke.runtimeClasspath
 }
 
-sonarqube {
-  properties {
-    property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
-    property "sonar.host.url", "https://sonar.reform.hmcts.net/"
-  }
+pmd {
+  toolVersion = "6.3.0"
+  ignoreFailures = true
+  sourceSets = [sourceSets.main, sourceSets.test, sourceSets.testFunctional, sourceSets.testSmoke]
+  reportsDir = file("$project.buildDir/reports/pmd")
+  ruleSetFiles = files("config/pmd/ruleset.xml")
 }
-
-test.finalizedBy jacocoTestReport
-
-// https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
-dependencyCheck {
-  // Specifies if the build should be failed if a CVSS score above a specified level is identified.
-  // range of 0-10 fails the build, anything greater and it doesn't fail the build
-  failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
-  suppressionFile = 'dependency-check-suppressions.xml'
-}
-
 
 repositories {
   mavenLocal()
@@ -118,7 +129,7 @@ repositories {
 }
 
 def versions = [
-        logging: '2.0.2'
+    logging: '2.2.1'
 ]
 
 dependencies {
@@ -132,8 +143,9 @@ dependencies {
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.logging
-  compile group: 'uk.gov.hmcts.auth.provider.service', name: 'service-token-generator-spring', version: '1.0.5'
+  compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
   compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
+
   
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test' 
   testCompile group: 'org.springframework.security', name: 'spring-security-config'
@@ -148,6 +160,10 @@ dependencies {
   testFunctionalCompile sourceSets.test.runtimeClasspath
 
   testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
+
+  testsmokeCompile sourceSets.main.runtimeClasspath
+  testsmokeCompile sourceSets.test.runtimeClasspath
+
 }
 
 compileJava {
@@ -155,12 +171,14 @@ compileJava {
 }
 
 jar {
+  archiveName = 'submit-service.jar'
   manifest {
 
     attributes 'Implementation-Title': project.name,
       'Implementation-Version': project.version
   }
 }
+
 
 task printVersion {
   doLast {

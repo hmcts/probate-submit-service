@@ -53,6 +53,8 @@
     key: dummyKey
     tokenTimeToLiveInSeconds: '900'
 
+  idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
+
   ccd:
     probate:
       fullName: fullName

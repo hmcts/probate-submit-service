@@ -1,8 +1,7 @@
 package uk.gov.hmcts.probate.security;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
-import uk.gov.hmcts.auth.provider.service.token.ServiceTokenGenerator;
+import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,16 +9,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecurityUtils {
 
-    private final ServiceTokenGenerator serviceTokenGenerator;
+    private final AuthTokenGenerator authTokenGenerator;
 
     @Autowired
-    public SecurityUtils(@Qualifier("cachedServiceTokenGenerator") final ServiceTokenGenerator serviceTokenGenerator) {
-        this.serviceTokenGenerator = serviceTokenGenerator;
+    public SecurityUtils(final AuthTokenGenerator authTokenGenerator) {
+        this.authTokenGenerator = authTokenGenerator;
     }
 
     public HttpHeaders authorizationHeaders() {
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("ServiceAuthorization", serviceTokenGenerator.generate());
+        headers.add("ServiceAuthorization", authTokenGenerator.generate());
         return headers;
     }
 }
