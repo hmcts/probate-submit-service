@@ -152,11 +152,10 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
     }
 
     private void validateLoadFormDataBySubmissionReferenceSuccess() throws IOException {
-        Response response = SerenityRest.given().relaxedHTTPSValidation()
+        SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.getHeaders(SESSION_ID))
-                .when().get(persistenceServiceUrl + "/formdata/search/findBySubmissionReference?submissionReference=" + SUBMISSION_REFERENCE);
-//                .then().assertThat().statusCode(200);
-        System.out.println(response);
+                .when().get(persistenceServiceUrl + "/formdata/search/findBySubmissionReference?submissionReference=" + SUBMISSION_REFERENCE)
+                .then().assertThat().statusCode(200);
     }
 
     private void validateLoadFormDataBySubmissionReferenceFailure(long submissionReference, int errorCode, String errorMsg) {
