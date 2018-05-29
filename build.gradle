@@ -86,7 +86,7 @@ sourceSets {
     resources.srcDir file('src/functionalTest/resources')
   }
 
-  testsmoke {
+  testSmoke {
       java {
           compileClasspath += main.output
           runtimeClasspath += main.output
@@ -105,8 +105,8 @@ task functional(type: Test) {
 
 task smoke(type: Test) {
   description = "Runs Smoke Tests"
-  testClassesDirs = sourceSets.testsmoke.output.classesDirs
-  classpath = sourceSets.testsmoke.runtimeClasspath
+  testClassesDirs = sourceSets.testSmoke.output.classesDirs
+  classpath = sourceSets.testSmoke.runtimeClasspath
 }
 
 pmd {
@@ -161,8 +161,8 @@ dependencies {
 
   testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
 
-  testsmokeCompile sourceSets.main.runtimeClasspath
-  testsmokeCompile sourceSets.test.runtimeClasspath
+  testSmokeCompile sourceSets.main.runtimeClasspath
+  testSmokeCompile sourceSets.test.runtimeClasspath
 
 }
 
