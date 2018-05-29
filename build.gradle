@@ -7,6 +7,7 @@ buildscript {
   }
   dependencies {
     classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.5'
+    classpath("net.serenity-bdd:serenity-gradle-plugin:1.5.2")
   }
   
 }
@@ -22,6 +23,7 @@ plugins {
 apply plugin: 'org.sonarqube'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
+apply plugin: 'net.serenity-bdd.aggregator'
 
 gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources/uk/gov/hmcts/probate/services/submit")
@@ -60,6 +62,25 @@ tasks.withType(FindBugs) {
 
 dependencyCheck {
   suppressionFiles = ['dependency-check-suppressions.xml']
+}
+
+sourceSets {
+
+  testFunctional {
+    java {
+      compileClasspath += main.output
+      runtimeClasspath += main.output
+      srcDir file('src/functionalTest/java')
+    }
+    resources.srcDir file('src/functionalTest/resources')
+  }
+}
+
+task functional(type: Test) {
+  description = "Runs functional Tests"
+  testClassesDirs = sourceSets.testFunctional.output.classesDirs
+  classpath = sourceSets.testFunctional.runtimeClasspath
+  finalizedBy aggregate
 }
 
 findbugs{
@@ -117,6 +138,16 @@ dependencies {
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test' 
   testCompile group: 'org.springframework.security', name: 'spring-security-config'
   testCompile group: 'org.springframework.security', name: 'spring-security-test'
+
+  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '1.5.2'
+  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '1.5.2'
+  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '1.5.2'
+  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '1.0.26'
+  testFunctionalCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+  testFunctionalCompile sourceSets.main.runtimeClasspath
+  testFunctionalCompile sourceSets.test.runtimeClasspath
+
+  testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
 }
 
 compileJava {
