@@ -139,7 +139,6 @@ dependencies {
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
   compile group: 'org.springframework.retry', name: 'spring-retry'
 
-    
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.logging
@@ -148,8 +147,6 @@ dependencies {
 
   
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test' 
-  testCompile group: 'org.springframework.security', name: 'spring-security-config'
-  testCompile group: 'org.springframework.security', name: 'spring-security-test'
 
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '1.5.2'
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '1.5.2'
