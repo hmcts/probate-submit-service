@@ -26,21 +26,6 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
         INITIALISED = true;
     }
 
-    private void populateFormDataTable() {
-        RestAssured.baseURI = persistenceServiceUrl;
-        RequestSpecification request = RestAssured.given();
-
-        request.header("Content-Type", "application/json");
-        request.header("Session-Id", SESSION_ID);
-        request.body(utils.getJsonFromFile("formData.json"));
-        request.post(persistenceServiceUrl + "/formdata");
-
-        request.header("Content-Type", "application/json");
-        request.header("Session-Id", SESSION_ID);
-        request.body(utils.getJsonFromFile("submitData.json"));
-        request.post(persistenceServiceUrl + "/submission");
-    }
-
     @Test
     public void saveSubmissionSuccess() {
         validateSaveSubmissionSuccess();

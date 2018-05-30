@@ -30,4 +30,11 @@ public class TestUtils {
                 new Header("Content-Type", ContentType.JSON.toString()),
                 new Header("Session-ID", sessionId));
     }
+
+    public Headers submitHeaders(String sessionId) {
+        return Headers.headers(
+                new Header("Content-Type", ContentType.JSON.toString()),
+                new Header("UserId", sessionId),
+                new Header("Authorization", "DUMMY_KEY"));
+    }
 }
