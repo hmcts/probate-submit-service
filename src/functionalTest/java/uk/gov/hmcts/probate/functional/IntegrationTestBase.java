@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate.functional;
 
+
 import net.thucydides.junit.spring.SpringIntegration;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ public abstract class IntegrationTestBase {
 
     String submitServiceUrl;
     String persistenceServiceUrl;
+
 
     @Autowired
     public void submitServiceConfiguration(@Value("${probate.submit.url}") String submitServiceUrl,
