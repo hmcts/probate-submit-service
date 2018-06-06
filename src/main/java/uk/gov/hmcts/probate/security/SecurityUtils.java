@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class SecurityUtils {
 
     private final AuthTokenGenerator authTokenGenerator;
-    private final Logger logger = LoggerFactory.getLogger(CoreCaseDataMapper.class);
+    private final Logger logger = LoggerFactory.getLogger(SecurityUtils.class);
 
     @Autowired
     public SecurityUtils(final AuthTokenGenerator authTokenGenerator) {
