@@ -55,7 +55,7 @@ locals {
 }
 
 resource "azurerm_resource_group" "resource_group" {
-  name     = "${var.product}-${var.microservice}-${var.env}"
+  name     = "${var.product}-${var.microservice}"
   location = "UK South"
 }
 
