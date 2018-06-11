@@ -67,7 +67,7 @@ module "probate-submit-service" {
   env                 = "${var.env}"
   ilbIp               = "${var.ilbIp}"
   subscription        = "${var.subscription}"
-  asp_id              = "${var.product}-${var.env}"
+  asp_id              = "${data.terraform_remote_state.core_apps_infrastructure.aspA}"
   deploymentTag       = "${var.product}"
 
   app_settings = {
