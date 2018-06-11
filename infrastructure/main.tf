@@ -67,7 +67,7 @@ module "probate-submit-service" {
   env                 = "${var.env}"
   ilbIp               = "${var.ilbIp}"
   subscription        = "${var.subscription}"
-  asp_id              = "${var.product}-${var.env}-asp"
+  asp_id              = "${var.product}-${var.env}"
   deploymentTag       = "${var.product}"
 
   app_settings = {
