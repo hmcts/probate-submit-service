@@ -61,7 +61,7 @@ resource "azurerm_resource_group" "resource_group" {
 
 module "probate-submit-service" {
   source              = "git@github.com:hmcts/moj-module-webapp.git?ref=infra_versions"
-  product             = "${var.product}-${var.microservice}"
+  product             = "${var.product}-${var.microservice}-${var.env}"
   resource_group_name = "${azurerm_resource_group.resource_group.name}"
   location            = "${var.location}"
   env                 = "${var.env}"
