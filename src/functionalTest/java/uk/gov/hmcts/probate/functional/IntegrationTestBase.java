@@ -21,7 +21,7 @@ public abstract class IntegrationTestBase {
     String submitServiceUrl;
     String persistenceServiceUrl;
     String submissionId;
-
+    private String formDataId;
     private static String SESSION_ID = "tom@email.com";
 
     @Autowired
@@ -45,19 +45,20 @@ public abstract class IntegrationTestBase {
         request.header("Content-Type", "application/json");
         request.header("Session-Id", SESSION_ID);
         request.body(utils.getJsonFromFile("formData.json"));
-        request.post(persistenceServiceUrl + "/formdata");
+        Response formDataResponse = request.post(persistenceServiceUrl + "/formdata");
+        formDataId = formDataResponse.jsonPath().getString("formdata.applicantEmail");
 
         request.header("Content-Type", "application/json");
         request.header("Session-Id", SESSION_ID);
         request.body(utils.getJsonFromFile("submitData.json"));
-        Response response = request.post(persistenceServiceUrl + "/submissions");
-        submissionId = response.jsonPath().getString("id");
+        Response submissionResponse = request.post(persistenceServiceUrl + "/submissions");
+        submissionId = submissionResponse.jsonPath().getString("id");
     }
 
     void tearDownDatabase() {
         RestAssured.baseURI = persistenceServiceUrl;
         RequestSpecification request = RestAssured.given();
-        request.delete(persistenceServiceUrl + "/formdata");
-        request.delete(persistenceServiceUrl + "/submissions");
+        request.delete(persistenceServiceUrl + "/formdata/" + formDataId);
+        request.delete(persistenceServiceUrl + "/submissions/" + submissionId);
     }
 }
