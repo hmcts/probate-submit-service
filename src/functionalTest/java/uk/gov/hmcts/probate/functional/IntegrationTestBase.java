@@ -38,7 +38,7 @@ public abstract class IntegrationTestBase {
         this.springIntegration = new SpringIntegration();
     }
 
-    void populateFormDataTable() {
+    void populateDatabase() {
         RestAssured.baseURI = persistenceServiceUrl;
         RequestSpecification request = RestAssured.given();
 
@@ -52,5 +52,12 @@ public abstract class IntegrationTestBase {
         request.body(utils.getJsonFromFile("submitData.json"));
         Response response = request.post(persistenceServiceUrl + "/submissions");
         submissionId = response.jsonPath().getString("id");
+    }
+
+    void tearDownDatabase() {
+        RestAssured.baseURI = persistenceServiceUrl;
+        RequestSpecification request = RestAssured.given();
+        request.delete(persistenceServiceUrl + "/formdata");
+        request.delete(persistenceServiceUrl + "/submissions");
     }
 }

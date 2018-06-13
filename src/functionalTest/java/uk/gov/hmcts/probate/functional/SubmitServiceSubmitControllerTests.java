@@ -1,13 +1,9 @@
 package uk.gov.hmcts.probate.functional;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.rest.SerenityRest;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.hamcrest.Matchers.equalTo;
 
 public class SubmitServiceSubmitControllerTests extends IntegrationTestBase {
     private static String SESSION_ID = "tom@email.com";
@@ -19,7 +15,7 @@ public class SubmitServiceSubmitControllerTests extends IntegrationTestBase {
     @Before
     public void setUp() {
         if (INITIALISED) return;
-        populateFormDataTable();
+        populateDatabase();
         INITIALISED = true;
     }
 
