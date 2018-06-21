@@ -23,7 +23,8 @@ List<LinkedHashMap<String, Object>> secrets = [
     secret('probateCcdDataStoreApi', 'CCD_DATA_STORE_API_URL'),
     secret('probateServiceAuthUrl', 'SERVICE_AUTH_PROVIDER_BASE_URL'),
     secret('probateUserAuthUrl', 'USER_AUTH_PROVIDER_OAUTH2_URL'),
-    secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI')
+    secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI'),
+    secret('probateUserAuthUrlNew', 'USER_AUTH_PROVIDER_OAUTH2_URL_NEW')
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
