@@ -64,7 +64,7 @@ public class ContractTestUtils {
 
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return solCcdServiceAuthTokenGenerator.getUserId();
     }
 
