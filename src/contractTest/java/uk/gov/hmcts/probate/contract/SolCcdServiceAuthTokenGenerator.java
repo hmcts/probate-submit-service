@@ -3,6 +3,8 @@ package uk.gov.hmcts.probate.contract;
 
 import io.restassured.RestAssured;
 import java.util.Base64;
+
+import io.restassured.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -91,10 +93,13 @@ public class SolCcdServiceAuthTokenGenerator {
     private String generateClientCode() {
         String code = "";
         final String encoded = Base64.getEncoder().encodeToString((idamUsername + ":" + idamPassword).getBytes());
-        code = RestAssured.given().baseUri(idamUserBaseUrl)
+        Response res = RestAssured.given().baseUri(idamUserBaseUrl)
                 .header("Authorization", "Basic " + encoded)
-                .post("/oauth2/authorize?response_type=code&client_id=probate&redirect_uri=" + redirectUri)
-                .body().path("code");
+                .post("/oauth2/authorize?response_type=code&client_id=probate&redirect_uri=" + redirectUri);
+
+        System.out.println("response status code..." + res.getStatusCode());
+        System.out.println("response body..." + res.getBody().prettyPrint());
+              //  .body().path("code");
         return code;
 
     }
