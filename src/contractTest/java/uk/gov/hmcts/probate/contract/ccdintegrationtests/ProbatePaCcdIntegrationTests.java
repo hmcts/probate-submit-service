@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import uk.gov.hmcts.probate.contract.IntegrationTestBase;
@@ -14,7 +15,7 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
     String token;
 
 
-    @Test
+    @Ignore
     public void validatePostSuccessCCDCase() {
         generateEventToken();
 
@@ -29,7 +30,7 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
     }
 
 
-    @Test
+    @Ignore
     public void verifyJurisdictionInTheSuccessResponse() {
         generateEventToken();
 
@@ -44,7 +45,7 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
 
     }
 
-    @Test
+    @Ignore
     public void verifyStateIsPresentInTheSuccessResponse() {
         generateEventToken();
 
@@ -59,7 +60,7 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
 
     }
 
-    @Test
+    @Ignore
     public void verifyCaseTypeIDPresentInTheSuccessResponse() {
         generateEventToken();
 
@@ -75,7 +76,7 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
     }
 
 
-    @Test
+    @Ignore
     public void verifySecurityClassificationIsPresentInTheSuccessResponse() {
         generateEventToken();
 
@@ -90,7 +91,7 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
 
     }
 
-    @Test
+    @Ignore
     public void verifyCreatedDateIsPresentInTheSuccessResponse() {
         generateEventToken();
 
@@ -104,7 +105,7 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
                 .statusCode(201).and().extract().body().asString().contains("created_date");
     }
 
-    @Test
+    @Ignore
     public void verifyLastModifiedIsPresentInTheSuccessResponse() {
         generateEventToken();
 
@@ -118,7 +119,7 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
                 .statusCode(201).and().extract().body().asString().contains("last_modified");
     }
 
-    @Test
+    @Ignore
     public void verifyIdIsPresentInTheSuccessResponse() {
         generateEventToken();
 
@@ -133,7 +134,7 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
     }
 
 
-    @Test
+    @Ignore
     public void verifycaseDataIsPresentInTheSuccessResponse() {
         generateEventToken();
 
@@ -147,7 +148,7 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
                 .statusCode(201).and().extract().body().asString().contains("case_data");
     }
 
-    @Test
+    @Ignore
     public void verifyDataClassificationIsPresentInTheSuccessResponse() {
         generateEventToken();
 
@@ -161,7 +162,7 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
                 .statusCode(201).and().extract().body().asString().contains("data_classification");
     }
 
-    @Test
+    @Ignore
     public void validateFailureWithInvalidCCDCasePayload() {
 
         String rep = contractTestUtils.getJsonFromFile("failure.pa.ccd.json").replace("\"event_token\": \"sampletoken\"", "\"event_token\":\"abc\"");
