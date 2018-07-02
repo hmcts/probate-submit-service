@@ -12,8 +12,7 @@
     "will":{
       "left":"Yes",
       "codicils":"No",
-      "original":"Yes",
-      "isWillDate":"No"
+      "original":"Yes"
     },
     "assets":{
       "assetsoverseas":"No"
