@@ -8,4 +8,4 @@ packages_version = "3.0.0"
 
 idam_service_api  = "http://betadevbccidams2slb.reform.hmcts.net"
 ccd_baseUrl = "https://case-data-app.test.ccd.reform.hmcts.net:4481"
-services_persistence_baseUrl = "http://probate-persistence-service-sandbox-staging.service.core-compute-sandbox.internal"
+services_persistence_baseUrl = "http://probate-persistence-service-sandbox.service.core-compute-sandbox.internal"
