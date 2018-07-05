@@ -1,8 +1,10 @@
 {
   "primaryApplicantAddress": {
-    "AddressLine1": "my address\r\n"
+    "AddressLine1": "my address",
+    "PostCode": "SW1A 1AA"
   },
   "deceasedAddress": {
-    "AddressLine1": "their address\r\n"
+    "AddressLine1": "101 Test Street, London,",
+    "PostCode": "SW1A 1AA"
   }
 }

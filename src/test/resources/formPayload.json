@@ -4,7 +4,7 @@
     "submitdata": {
         "applicantFirstName": "Applicant",
         "applicantLastName": "NAme",
-        "applicantAddress": "my address\r\n",
+        "applicantAddress": "my address SW1A 1AA\r\n",
         "applicantPhone": "324234",
         "applicantEmail": "nigel@haworthconsulting.co.uk",
         "applicantIsExecutor": "Yes",
@@ -26,7 +26,7 @@
             }
         },
         "deceasedMarriedAfterDateOnWill": "Yes",
-        "deceasedAddress": "their address\r\n",
+        "deceasedAddress": "101 Test Street, London, SW1A 1AA\r\n",
         "deceasedDod": "1 February 2000",
         "deceasedDob": "1 February 1900",
         "deceasedDomicile": "live (domicile) permanently in England or Wales",
@@ -124,8 +124,8 @@
                 "hasOtherName": false,
                 "email": "hello@hotmail.co.uk",
                 "mobile": "11111111111",
-                "address": "exec_6_address\r\n",
-                "freeTextAddress": "exec_6_address\r\n",
+                "address": "exec_6_address, SW1A 1AA\r\n",
+                "freeTextAddress": "exec_6_address, SW1A 1AA\r\n",
                 "inviteId": {},
                 "emailSent": true
             },
@@ -136,8 +136,8 @@
                 "currentName": "exec_7_new_name ",
                 "email": "hi@hotmail.co.uk",
                 "mobile": "2222222222",
-                "address": "exec_7_address\r\n",
-                "freeTextAddress": "exec_7_address\r\n",
+                "address": "exec_7_address, SW1A 1AA\r\n",
+                "freeTextAddress": "exec_7_address, SW1A 1AA\r\n",
                 "inviteId": {},
                 "emailSent": true
             }
@@ -147,6 +147,6 @@
     "registry": {
         "sequenceNumber": 12345,
         "email": "test@email.com",
-        "address": "test address"
+        "address": "test address, SW1A 1AA"
     }
 }

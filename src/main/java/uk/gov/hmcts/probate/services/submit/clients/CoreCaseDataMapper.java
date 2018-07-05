@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,9 @@ public class CoreCaseDataMapper {
 
     private final Logger logger = LoggerFactory.getLogger(CoreCaseDataMapper.class);
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+
+    @Autowired
+    private AddressParser addressParser;
 
     @Value("${ccd.probate.fullName}")
     private String fullName;
@@ -247,9 +251,8 @@ public class CoreCaseDataMapper {
             value.set(applyingExecutorPhoneNumber, new TextNode(executorPhoneNumber.trim()));
             String executorEmail = executor.get(email).asText();
             value.set(applyingExecutorEmail, new TextNode(executorEmail.trim()));
-            JsonNode executorAddress = executor.get(address);
-            ObjectNode ccdExecutorAddressObject = mapper.createObjectNode();
-            ccdExecutorAddressObject.set("AddressLine1", executorAddress);
+
+            ObjectNode ccdExecutorAddressObject = addressParser.parse(Optional.ofNullable(executor), address);
             value.set(applyingExecutorAddress, ccdExecutorAddressObject);
         } else {
             value.set(notApplyingExecutorName, new TextNode(executorName.trim()));
@@ -320,16 +323,8 @@ public class CoreCaseDataMapper {
         return Optional.of(ccdFormat);
     }
 
-    public Optional<JsonNode> addressMapper(JsonNode probateData, String fieldname) {
-        Optional<JsonNode> ret = Optional.empty();
-        Optional<JsonNode> address = Optional.ofNullable(probateData.get(fieldname));
-        if (address.isPresent()) {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode ccdAddressObject = mapper.createObjectNode();
-            ccdAddressObject.set("AddressLine1", address.get());
-            return Optional.of(ccdAddressObject);
-        }
-        return ret;
+    public Optional<JsonNode> addressMapper(JsonNode probateData, String fieldName) {
+        return Optional.of(addressParser.parse(Optional.ofNullable(probateData), fieldName));
     }
 
     public Optional<JsonNode> declarationMapper(JsonNode probateData, String fieldname) {
