@@ -20,6 +20,7 @@
     },
     "deceased" : {
       "alias" : "No",
+      "marriedAfterDateOnWill": "Yes",
       "address" : "Dee Ceased Address",
       "dob_day" : 1,
       "dod_day" : 1,

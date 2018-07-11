@@ -20,6 +20,7 @@
     "numberOfExecutors": 7,
     "willHasCodicils": "Yes",
     "willNumberOfCodicils": 1,
+    "deceasedMarriedAfterDateOnWill": "Yes",
     "deceasedForenames": "Suki",
     "numberOfApplicants": 3,
     "willAccessOriginal": "Yes",
