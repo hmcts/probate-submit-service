@@ -103,6 +103,7 @@
       willLeft: willExists
       willOriginal: willAccessOriginal
       willWithCodicils: willHasCodicils
+      deceasedMarriedAfterDateOnWill: deceasedMarriedAfterWillOrCodicilDate
       noOfApplicants: numberOfApplicants
       noOfExecutors: numberOfExecutors
       ihtIdentifier: ihtReferenceNumber
