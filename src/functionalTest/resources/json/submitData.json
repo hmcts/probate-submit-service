@@ -18,7 +18,7 @@
     "willOriginal":"Yes",
     "willWithDate":"No",
     "willWithCodicils":"No",
-    "deceasedMarriedAfterDateOnWill": "Yes",
+    "deceasedMarriedAfterWillOrCodicilDate": "Yes",
     "ihtCompleted":"Yes",
     "ihtForm":"online",
     "ihtIdentifier":"1",
