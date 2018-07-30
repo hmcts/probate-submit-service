@@ -2,7 +2,6 @@ package uk.gov.hmcts.probate.services.submit.clients;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.MissingNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import org.junit.Before;
@@ -125,7 +124,7 @@ public class CoreCaseDataMapperTest {
 
     @Test
     public void mapMonetaryValueTest() {
-        Optional expected = Optional.of(new TextNode("2222200"));
+        Optional expected = Optional.of(new TextNode("99999999956"));
         Optional<JsonNode> mappedData = coreCaseDataMapper.monetaryValueMapper(submitdata, "ihtNetValue");
         assertEquals(expected, mappedData);
     }
