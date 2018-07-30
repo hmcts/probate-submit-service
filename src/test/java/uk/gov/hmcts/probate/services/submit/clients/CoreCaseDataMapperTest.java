@@ -225,9 +225,7 @@ public class CoreCaseDataMapperTest {
     public void mapDatesTest() {
         Map<String, JsonNode> expectedDates = new HashMap<>();
         expectedDates.put("deceasedDateOfBirth", new TextNode("1900-02-01"));
-        expectedDates.put("willDate", new TextNode("1985-01-01"));
         expectedDates.put("deceasedDateOfDeath", new TextNode("2000-02-01"));
-        expectedDates.put("willLatestCodicilDate", new TextNode("1986-01-01"));
         Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getDateMap(), coreCaseDataMapper::dateMapper);
         assertEquals(expectedDates, mappedData);
     }

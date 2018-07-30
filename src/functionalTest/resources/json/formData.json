@@ -12,14 +12,14 @@
     "will" : {
       "left" : "Yes",
       "codicils" : "No",
-      "original" : "Yes",
-      "isWillDate" : "No"
+      "original" : "Yes"
     },
     "summary" : {
       "readyToDeclare" : false
     },
     "deceased" : {
       "alias" : "No",
+      "marriedAfterDateOnWill": "Yes",
       "address" : "Dee Ceased Address",
       "dob_day" : 1,
       "dod_day" : 1,

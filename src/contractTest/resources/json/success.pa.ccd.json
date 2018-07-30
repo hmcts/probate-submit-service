@@ -20,6 +20,7 @@
     "numberOfExecutors": 7,
     "willHasCodicils": "Yes",
     "willNumberOfCodicils": 1,
+    "deceasedMarriedAfterWillOrCodicilDate": "Yes",
     "deceasedForenames": "Suki",
     "numberOfApplicants": 3,
     "willAccessOriginal": "Yes",
@@ -30,11 +31,9 @@
     "primaryApplicantSurname": "Mason",
     "ihtReferenceNumber": "12345678F12345",
     "primaryApplicantPhoneNumber": "+643514579562",
-    "willLatestCodicilHasDate": "Yes",
+    "willLatestCodicilHasDate": "No",
     "deceasedSurname": "Hammond",
     "deceasedDateOfDeath": "1983-12-22",
-    "willDate": "1984-02-27",
-    "willLatestCodicilDate": "1987-10-06",
     "deceasedDateOfBirth": "1902-10-06",
     "executorsNotApplying": [
 

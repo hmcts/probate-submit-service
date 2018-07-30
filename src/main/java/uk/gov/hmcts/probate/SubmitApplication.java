@@ -6,12 +6,23 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.client.RestTemplate;
+import uk.gov.hmcts.reform.authorisation.healthcheck.ServiceAuthHealthIndicator;
 
-@SpringBootApplication
+@SpringBootApplication(exclude= {ServiceAuthHealthIndicator.class})
 public class SubmitApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(SubmitApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(SubmitApplication.class, args);
+  }
 
+  @Bean
+  @ConfigurationProperties(prefix = "mail")
+  public JavaMailSenderImpl javaMailSender() {
+    return new JavaMailSenderImpl();
+  }
+
+  @Bean
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
+  }
 }

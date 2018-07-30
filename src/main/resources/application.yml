@@ -90,8 +90,6 @@
     dateMap:
       deceasedDob: deceasedDateOfBirth
       deceasedDod: deceasedDateOfDeath
-      willDate: willDate
-      willCodicilsDate: willLatestCodicilDate
     fieldMap:
       applicantIsExecutor: primaryApplicantIsApplying
       applicantFirstName: primaryApplicantForenames
@@ -103,6 +101,7 @@
       willLeft: willExists
       willOriginal: willAccessOriginal
       willWithCodicils: willHasCodicils
+      deceasedMarriedAfterDateOnWill: deceasedMarriedAfterWillOrCodicilDate
       noOfApplicants: numberOfApplicants
       noOfExecutors: numberOfExecutors
       ihtIdentifier: ihtReferenceNumber
@@ -110,7 +109,6 @@
       copiesOverseas: outsideUKGrantCopies
       paymentReference: paymentReferenceNumber
       willCodicilsNumber: willNumberOfCodicils
-      willCodicilsWithDate: willLatestCodicilHasDate
       deceasedAliasAssets: deceasedAnyOtherNames
     monetaryValueMap:
       ihtGrossValue: ihtGrossValue

@@ -88,9 +88,7 @@ public class MailMessageBuilderTest {
         assertThat(mailContent, containsString(emailData.at("/submitdata/applicantIsExecutor").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/deceasedDomicile").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/willOriginal").asText()));
-        assertThat(mailContent, containsString(emailData.at("/submitdata/willWithDate").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/willWithCodicils").asText()));
-        assertThat(mailContent, containsString(emailData.at("/submitdata/willDate").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/willOriginal").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/ihtCompleted").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/noOfExecutors").asText()));
