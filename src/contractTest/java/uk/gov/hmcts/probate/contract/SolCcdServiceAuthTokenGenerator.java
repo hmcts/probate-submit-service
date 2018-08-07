@@ -33,7 +33,7 @@ public class SolCcdServiceAuthTokenGenerator {
     @Value("${idam.username}")
     private String idamUsername;
 
-    @Value("${idam.password}")
+    @Value("${idam.userpassword}")
     private String idamPassword;
 
     @Value("${env}")
