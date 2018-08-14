@@ -3,10 +3,11 @@ package uk.gov.hmcts.probate.services.submit.clients;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,19 +21,17 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 
+@RunWith(MockitoJUnitRunner.class)
 public class PersistenceClientTest {
 
     @Mock
-    private PersistenceEntityBuilder entityBuilder;
-    private PersistenceClient persistenceClient;
+    private RequestFactory entityBuilder;
+
     @Mock
     private RestTemplate restTemplate;
-    
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        persistenceClient = new PersistenceClient(restTemplate, entityBuilder);
-    }
+
+    @InjectMocks
+    private PersistenceClient persistenceClient;
 
     @Test
     public void saveSubmissionSuccessTest() {

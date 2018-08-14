@@ -154,7 +154,7 @@ public class CoreCaseDataMapper {
         this.addressMap = addressMap;
     }
 
-    public JsonNode createCcdData(JsonNode probateData, String ccdEventId, JsonNode ccdToken, Calendar submissonTimestamp, JsonNode registryData) {
+    public JsonNode createCcdData(JsonNode probateData, String ccdEventId, JsonNode ccdToken, Calendar submissionTimestamp, JsonNode registryData) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode event = mapper.createObjectNode();
         event.put("id", ccdEventId);
@@ -164,16 +164,16 @@ public class CoreCaseDataMapper {
         formattedData.set("event", event);
         formattedData.put("ignore_warning", true);
         formattedData.set("event_token", ccdToken);
-        formattedData.set("data", mapData(probateData, submissonTimestamp, registryData));
+        formattedData.set("data", mapData(probateData, submissionTimestamp, registryData));
         return formattedData;
     }
 
-    public ObjectNode mapData(JsonNode probateData, Calendar submissonTimestamp, JsonNode registryData) {
+    public ObjectNode mapData(JsonNode probateData, Calendar submissionTimestamp, JsonNode registryData) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdData = mapper.createObjectNode();
         JsonNode registry = registryData.get("registry");
         ccdData.set("applicationID", registryData.get("submissionReference"));
-        LocalDate localDate = LocalDateTime.ofInstant(submissonTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate = LocalDateTime.ofInstant(submissionTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
         ccdData.put("applicationSubmittedDate", localDate.toString());
         ccdData.put("deceasedDomicileInEngWales", "live (domicile) permanently in England or Wales".equalsIgnoreCase(probateData.get("deceasedDomicile").asText()) ? "Yes" : "No");
         ccdData.put("ihtFormCompletedOnline", "online".equalsIgnoreCase(probateData.get("ihtForm").asText()) ? "Yes" : "No");
@@ -421,5 +421,18 @@ public class CoreCaseDataMapper {
         return Optional.of(ccdExecutorsApplying);
     }
 
-
+    public JsonNode updatePaymentStatus(JsonNode probateData, String paymentStatus, String ccdEventId, JsonNode ccdToken) {
+        ((ObjectNode) probateData).put("paymentStatus", paymentStatus);
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode event = mapper.createObjectNode();
+        event.put("id", ccdEventId);
+        event.put("description", "");
+        event.put("summary", "Probate application");
+        ObjectNode formattedData = mapper.createObjectNode();
+        formattedData.set("event", event);
+        formattedData.put("ignore_warning", true);
+        formattedData.set("event_token", ccdToken);
+        formattedData.set("data", probateData);
+        return formattedData;
+    }
 }

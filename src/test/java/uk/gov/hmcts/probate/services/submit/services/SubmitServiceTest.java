@@ -2,6 +2,7 @@ package uk.gov.hmcts.probate.services.submit.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 import org.junit.Before;
@@ -24,8 +25,6 @@ import uk.gov.hmcts.probate.services.submit.clients.CoreCaseDataClient;
 
 public class SubmitServiceTest {
 
-    private TestUtils testUtils;
-
     private SubmitService submitService;
     private MailClient mockMailClient;
     private PersistenceClient persistenceClient;
@@ -36,26 +35,25 @@ public class SubmitServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        testUtils = new TestUtils();
         persistenceClient = mock(PersistenceClient.class);
         mockMailClient = mock(MailClient.class);
         coreCaseDataClient = mock(CoreCaseDataClient.class);
         sequenceService = mock(SequenceService.class);
         submitService = new SubmitService(mockMailClient, persistenceClient, coreCaseDataClient, sequenceService);
         submissionTimestamp = Calendar.getInstance();
-        registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
+        registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
     }
 
     @Test
-    public void testSubmitWithSuccess() {
+    public void testSubmitWithSuccess() throws IOException {
         String userId = "123";
         String authorizationToken = "dummyAuthToken";
-        JsonNode submitData = testUtils.getJsonNodeFromFile("formPayload.json");
+        JsonNode submitData = TestUtils.getJsonNodeFromFile("formPayload.json");
         when(persistenceClient.loadFormDataById(anyString())).thenReturn(submitData);
         when(persistenceClient.saveSubmission(submitData)).thenReturn(submitData);
         when(mockMailClient.execute(submitData, registryData, submissionTimestamp)).thenReturn("12345678");
         when(sequenceService.nextRegistry(submitData.get("id").asLong())).thenReturn(registryData);
-        JsonNode dummmyCcdStartCaseRespose =  testUtils.getJsonNodeFromFile("ccdStartCaseResponse.json");
+        JsonNode dummmyCcdStartCaseRespose =  TestUtils.getJsonNodeFromFile("ccdStartCaseResponse.json");
 
         JsonNode response = submitService.submit(submitData, userId, authorizationToken);
 
@@ -63,10 +61,10 @@ public class SubmitServiceTest {
     }
 
     @Test
-    public void testResubmitWithSuccess() {
-        JsonNode resubmitData = testUtils.getJsonNodeFromFile("formPayload.json");
-        JsonNode formData = testUtils.getJsonNodeFromFile("formData.json");
-        JsonNode registryData = testUtils.getJsonNodeFromFile("registryDataResubmitNewApplication.json");
+    public void testResubmitWithSuccess() throws IOException {
+        JsonNode resubmitData = TestUtils.getJsonNodeFromFile("formPayload.json");
+        JsonNode formData = TestUtils.getJsonNodeFromFile("formData.json");
+        JsonNode registryData = TestUtils.getJsonNodeFromFile("registryDataResubmitNewApplication.json");
         when(persistenceClient.loadSubmission(Long.parseLong("112233"))).thenReturn(resubmitData);
         when(persistenceClient.loadFormDataBySubmissionReference(Long.parseLong("112233"))).thenReturn(formData);
         when(sequenceService.populateRegistryResubmitData(Long.parseLong("112233"), formData)).thenReturn(registryData);
