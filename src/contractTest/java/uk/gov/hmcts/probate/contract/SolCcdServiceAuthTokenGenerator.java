@@ -59,8 +59,8 @@ public class SolCcdServiceAuthTokenGenerator {
         return tokenGenerator.generate();
     }
 
-    public int getUserId() {
-        int userid_local = RestAssured.given()
+    public String getUserId() {
+        String userid_local = "" + RestAssured.given()
                 .header("Authorization", userToken)
                 .get(idamUserBaseUrl + "/details")
                 .body()
