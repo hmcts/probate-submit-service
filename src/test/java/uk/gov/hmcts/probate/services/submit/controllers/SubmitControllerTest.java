@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -52,9 +51,6 @@ public class SubmitControllerTest {
 
     private MockMvc mockMvc;
 
-    @Autowired
-    private TestUtils testUtils;
-
     @Mock
     private SubmitService mockSubmitService;
 
@@ -90,8 +86,8 @@ public class SubmitControllerTest {
 
     @Test
     public void submitSuccessfully() throws Exception {
-        JsonNode validApplication = testUtils.getJsonNodeFromFile("formPayload.json");
-        JsonNode registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
+        JsonNode validApplication = TestUtils.getJsonNodeFromFile("formPayload.json");
+        JsonNode registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
         when(mockSubmitService.submit(eq(validApplication), eq(userId), eq(authorizationToken))).thenReturn(registryData);
 
         ResultActions result = mockMvc.perform(post(SUBMIT_SERVICE_URL)
@@ -127,7 +123,7 @@ public class SubmitControllerTest {
 
     @Test
     public void testSubmitThrowingMailException() throws Exception {
-        JsonNode validApplication = testUtils.getJsonNodeFromFile("formPayload.json");
+        JsonNode validApplication = TestUtils.getJsonNodeFromFile("formPayload.json");
         doThrow(MailSendException.class).when(mockSubmitService).submit(eq(validApplication), eq(userId), eq(authorizationToken));
 
         ResultActions result = mockMvc.perform(post(SUBMIT_SERVICE_URL)
@@ -141,7 +137,7 @@ public class SubmitControllerTest {
 
     @Test
     public void testSubmitThrowingParsingSubmitException() throws Exception {
-        JsonNode validApplication = testUtils.getJsonNodeFromFile("formPayload.json");
+        JsonNode validApplication = TestUtils.getJsonNodeFromFile("formPayload.json");
         doThrow(ParsingSubmitException.class).when(mockSubmitService).submit(eq(validApplication), eq(userId), eq(authorizationToken));
 
         ResultActions result = mockMvc.perform(post(SUBMIT_SERVICE_URL)

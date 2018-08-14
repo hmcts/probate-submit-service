@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 
 @Component
-public class PersistenceEntityBuilder {
+public class RequestFactory {
     
     private final SecurityUtils securityUtils;
 
     @Autowired
-    public PersistenceEntityBuilder(SecurityUtils securityUtils) {
+    public RequestFactory(SecurityUtils securityUtils) {
         this.securityUtils = securityUtils;
     }
     

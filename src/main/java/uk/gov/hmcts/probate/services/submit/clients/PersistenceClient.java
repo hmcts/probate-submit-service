@@ -25,10 +25,10 @@ public class PersistenceClient {
     private String sequenceNumberPersistenceUrl;
 
     private RestTemplate restTemplate;
-    private PersistenceEntityBuilder builder;
+    private RequestFactory builder;
 
     @Autowired
-    public PersistenceClient(RestTemplate restTemplate, PersistenceEntityBuilder builder) {
+    public PersistenceClient(RestTemplate restTemplate, RequestFactory builder) {
         this.restTemplate = restTemplate;
         this.builder = builder;
     }
