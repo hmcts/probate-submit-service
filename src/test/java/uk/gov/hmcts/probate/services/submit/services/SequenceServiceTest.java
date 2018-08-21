@@ -38,7 +38,6 @@ public class SequenceServiceTest {
     @Mock
     private Registry mockRegistry;
 
-    @InjectMocks
     private SequenceService sequenceService;
 
     private ObjectMapper mapper;
@@ -48,6 +47,7 @@ public class SequenceServiceTest {
     @Before
     public void setUp() {
         mapper = new ObjectMapper();
+        sequenceService = new SequenceService(registryMap, persistenceClient, mailSender, mapper);
     }
 
     @Test

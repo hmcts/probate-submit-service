@@ -1,110 +1,139 @@
 package uk.gov.hmcts.probate.services.submit.services;
 
+import static net.logstash.logback.marker.Markers.append;
+
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+
 import java.util.Calendar;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import uk.gov.hmcts.probate.services.submit.clients.CcdCreateCaseParams;
+import uk.gov.hmcts.probate.services.submit.clients.CcdCreateCaseParams.Builder;
 import uk.gov.hmcts.probate.services.submit.clients.CoreCaseDataClient;
 import uk.gov.hmcts.probate.services.submit.clients.MailClient;
 import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
-
-import static net.logstash.logback.marker.Markers.append;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.client.HttpClientErrorException;
+import uk.gov.hmcts.probate.services.submit.model.CcdCaseResponse;
+import uk.gov.hmcts.probate.services.submit.model.FormData;
+import uk.gov.hmcts.probate.services.submit.model.PersistenceResponse;
+import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 
 @Service
 public class SubmitService {
 
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  private static final String DUPLICATE_SUBMISSION = "DUPLICATE_SUBMISSION";
-  private MailClient mailClient;
-  private PersistenceClient persistenceClient;
-  private CoreCaseDataClient coreCaseDataClient;
-  private SequenceService sequenceService;
-  @Value("${services.coreCaseData.enabled}")
-  private boolean coreCaseDataEnabled;
+    private static final String DUPLICATE_SUBMISSION = "DUPLICATE_SUBMISSION";
+    private MailClient mailClient;
+    private PersistenceClient persistenceClient;
+    private CoreCaseDataClient coreCaseDataClient;
+    private SequenceService sequenceService;
+    @Value("${services.coreCaseData.enabled}")
+    private boolean coreCaseDataEnabled;
 
-  @Autowired
-  public SubmitService(MailClient mailClient, PersistenceClient persistenceClient,
-      CoreCaseDataClient coreCaseDataClient, SequenceService sequenceService) {
-    this.mailClient = mailClient;
-    this.persistenceClient = persistenceClient;
-    this.coreCaseDataClient = coreCaseDataClient;
-    this.sequenceService = sequenceService;
-  }
+    @Autowired
+    public SubmitService(MailClient mailClient, PersistenceClient persistenceClient,
+                         CoreCaseDataClient coreCaseDataClient, SequenceService sequenceService) {
+        this.mailClient = mailClient;
+        this.persistenceClient = persistenceClient;
+        this.coreCaseDataClient = coreCaseDataClient;
+        this.sequenceService = sequenceService;
+    }
 
-  public JsonNode submit(JsonNode submitData, String userId, String authorization) {
-    String emailId = submitData.at("/submitdata/applicantEmail").asText();
-    JsonNode formData = persistenceClient.loadFormDataById(emailId);
-    if (formData.get("submissionReference").asLong() == 0) {
-      String message = "Application submitted, payload version: " + submitData
-          .at("/submitdata/payloadVersion").asText() + ", number of executors: " + submitData
-          .at("/submitdata/noOfExecutors").asText();
-      JsonNode persistenceResponse = persistenceClient.saveSubmission(submitData);
-      JsonNode submissionReference = persistenceResponse.get("id");
-      JsonNode registryData = sequenceService.nextRegistry(submissionReference.asLong());
-      Calendar submissionTimestamp = Calendar.getInstance();
-      mailClient.execute(submitData, registryData, submissionTimestamp);
-      logger.info(append("tags", "Analytics"), message);
-      if (coreCaseDataEnabled) {
-        try {
-          ArrayNode ccdCaseResponses = (ArrayNode) coreCaseDataClient
-              .getCase(submitData.get("submitdata"), userId, authorization);
-          JsonNode ccdCaseResponse;
-          if (ccdCaseResponses.size() == 0) {
-            JsonNode ccdStartCaseResponse = coreCaseDataClient
-                .createCase(userId, authorization);
-            ccdCaseResponse = coreCaseDataClient
-                .saveCase(submitData.get("submitdata"), userId, authorization,
-                    ccdStartCaseResponse, submissionTimestamp, registryData);
-          } else {
-            ccdCaseResponse = ccdCaseResponses.get(0);
-          }
-          ((ObjectNode) formData).put("caseId", ccdCaseResponse.get("id").textValue());
-          persistenceClient
-              .updateFormData(emailId, submissionReference.asLong(), formData);
-        } catch (HttpClientErrorException e) {
-          logger.error("Exception while talking to ccd: ", e);
-          logger.error(e.getMessage());
-          logger.error(e.getResponseBodyAsString());
-        } catch (Exception e) {
-          logger.error("Exception while talking to ccd: ", e);
-          logger.error(e.getMessage());
+    public JsonNode submit(SubmitData submitData, String userId, String authorization) {
+        FormData formData = persistenceClient.loadFormDataById(submitData.getApplicantEmailAddress());
+        if (formData.getSubmissionReference() != 0) {
+            return new TextNode(DUPLICATE_SUBMISSION);
         }
-      }
-      return registryData;
-    }
-    return new TextNode(DUPLICATE_SUBMISSION);
-  }
 
-  public String resubmit(long submissionId) {
-    try {
-      JsonNode resubmitData = persistenceClient.loadSubmission(submissionId);
-      JsonNode formData = persistenceClient.loadFormDataBySubmissionReference(submissionId);
-      JsonNode registryData = sequenceService
-          .populateRegistryResubmitData(submissionId, formData);
-      Calendar submissionTimestamp = Calendar.getInstance();
-      logger.info("Application re-submitted, registry data payload: " + registryData);
-      return mailClient.execute(resubmitData, registryData, submissionTimestamp);
-    } catch (HttpClientErrorException e) {
-      logger.error("Invalid Submission Reference Exception: ", e);
-      return "Invalid submission reference entered.  Please enter a valid submission reference.";
-    }
-  }
+        PersistenceResponse persistenceResponse = persistenceClient.saveSubmission(submitData);
+        Calendar submissionTimestamp = Calendar.getInstance();
+        logger.info(append("tags", "Analytics"), generateMessage(submitData));
 
-  public JsonNode updatePaymentStatus(JsonNode submitData, String userId, String authorization) {
-    String paymentStatus = submitData.get("paymentStatus").asText();
-    JsonNode tokenJson = coreCaseDataClient
-        .createCaseUpdatePaymentStatusEvent(userId, submitData.get("caseId").asText(),
-            authorization);
-    JsonNode ccdCaseResponse = coreCaseDataClient.getCase(submitData, userId, authorization);
-    return coreCaseDataClient.updatePaymentStatus(ccdCaseResponse, userId, authorization, tokenJson, paymentStatus);
-  }
+        JsonNode registryData = sequenceService.nextRegistry(persistenceResponse.getIdAsLong());
+
+        CcdCreateCaseParams ccdCreateCaseParams = new Builder()
+                .withAuthorisation(authorization)
+                .withFormData(formData)
+                .withRegistryData(registryData)
+                .withSubmissionReference(persistenceResponse.getIdAsJsonNode())
+                .withSubmitData(submitData)
+                .withUserId(userId)
+                .withSubmissionTimestamp(submissionTimestamp)
+                .build();
+
+        submitCcdCase(ccdCreateCaseParams);
+        if (submitData.getPaymentDue() == 0) {
+            mailClient.execute(submitData.getJson(), registryData, submissionTimestamp);
+        }
+        return registryData;
+    }
+
+    private String generateMessage(SubmitData submitData) {
+        return "Application submitted, payload version: " + submitData.getPayloadVersion()
+                + ", number of executors: " + submitData.getNoOfExecutors();
+    }
+
+    private void submitCcdCase(CcdCreateCaseParams ccdCreateCaseParams) {
+        if (!coreCaseDataEnabled) {
+            return;
+        }
+        Optional<CcdCaseResponse> caseResponseOptional = coreCaseDataClient
+                .getCase(ccdCreateCaseParams.getSubmitData(),
+                        ccdCreateCaseParams.getUserId(), ccdCreateCaseParams.getAuthorization());
+
+
+        CcdCaseResponse ccdCaseResponse = caseResponseOptional.isPresent() ? caseResponseOptional.get()
+                : createCase(ccdCreateCaseParams);
+
+        SubmitData submitData = ccdCreateCaseParams.getSubmitData();
+        FormData formData = ccdCreateCaseParams.getFormData();
+        JsonNode submissionReference = ccdCreateCaseParams.getSubmissionReference();
+        formData.setCaseId(ccdCaseResponse.getCaseId());
+        persistenceClient.updateFormData(submitData.getApplicantEmailAddress(),
+                submissionReference.asLong(), formData.getJson());
+    }
+
+    private CcdCaseResponse createCase(CcdCreateCaseParams ccdCreateCaseParams) {
+        JsonNode ccdStartCaseResponse = coreCaseDataClient.createCase(ccdCreateCaseParams);
+        return coreCaseDataClient.saveCase(ccdCreateCaseParams, ccdStartCaseResponse);
+    }
+
+    public String resubmit(long submissionId) {
+        try {
+            JsonNode resubmitData = persistenceClient.loadSubmission(submissionId);
+            JsonNode formData = persistenceClient.loadFormDataBySubmissionReference(submissionId);
+            JsonNode registryData = sequenceService
+                    .populateRegistryResubmitData(submissionId, formData);
+            Calendar submissionTimestamp = Calendar.getInstance();
+            logger.info("Application re-submitted, registry data payload: " + registryData);
+            return mailClient.execute(resubmitData, registryData, submissionTimestamp);
+        } catch (HttpClientErrorException e) {
+            logger.error("Invalid Submission Reference Exception: ", e);
+            return "Invalid submission reference entered.  Please enter a valid submission reference.";
+        }
+    }
+
+    public JsonNode updatePaymentStatus(SubmitData submitData, String userId, String authorization) {
+        String paymentStatus = submitData.getPaymentStatus();
+        JsonNode tokenJson = coreCaseDataClient
+                .createCaseUpdatePaymentStatusEvent(userId, submitData.getCaseId(), authorization);
+        Optional<CcdCaseResponse> optionalCcdCaseResponse = coreCaseDataClient
+                .getCase(submitData, userId, authorization);
+        JsonNode updatePaymentStatusResponse = coreCaseDataClient
+                .updatePaymentStatus(optionalCcdCaseResponse.get(), userId, authorization, tokenJson,
+                        paymentStatus);
+
+        FormData formData = persistenceClient.loadFormDataById(submitData.getApplicantEmailAddress());
+        JsonNode registryData = sequenceService.nextRegistry(formData.getSubmissionReference());
+        Calendar submissionTimestamp = Calendar.getInstance();
+        mailClient.execute(submitData.getJson(), registryData, submissionTimestamp);
+        return updatePaymentStatusResponse;
+    }
 }
