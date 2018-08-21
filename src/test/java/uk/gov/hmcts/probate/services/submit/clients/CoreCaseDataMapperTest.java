@@ -333,7 +333,7 @@ public class CoreCaseDataMapperTest {
         JsonNode updatedCcdJson = coreCaseDataMapper.updatePaymentStatus(jsonNode, paymentStatus,
             UPDATE_PAYMENT_STATUS_CCD_EVENT_ID, tokenNode);
 
-        assertThat(updatedCcdJson.get("data").get("paymentStatus"), is(equalTo(paymentStatus)));
-        assertThat(updatedCcdJson.get("token"), is(equalTo(token)));
+        assertThat(updatedCcdJson.get("data").get("paymentStatus").asText(), is(equalTo(paymentStatus)));
+        assertThat(updatedCcdJson.get("event_token"), is(equalTo(tokenNode)));
     }
 }
