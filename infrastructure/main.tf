@@ -63,10 +63,10 @@ module "probate-submit-service" {
   ilbIp = "${var.ilbIp}"
   is_frontend  = false
   subscription = "${var.subscription}"
-  asp_name     = "${var.product}-${var.env}-asp-${var.env}-asp"
+  asp_name     = "${var.asp_name}" //"${var.product}-${var.env}-asp-${var.env}-asp"
   capacity     = "${var.capacity}"
   common_tags  = "${var.common_tags}"
-  asp_rg       = "mgmt-asp-${var.env}"
+  asp_rg       = "${var.asp_rg}" //"mgmt-asp-${var.env}"
   app_settings = {
 
 	  // Logging vars
