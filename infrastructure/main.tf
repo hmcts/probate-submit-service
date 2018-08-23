@@ -56,17 +56,17 @@ locals {
 }
 
 module "probate-submit-service" {
-  source = "git@github.com:hmcts/moj-module-webapp.git?ref=master"
+  source = "git@github.com:hmcts/moj-module-webapp.git?ref=cnp707b"
   product = "${var.product}-${var.microservice}"
   location = "${var.location}"
   env = "${var.env}"
   ilbIp = "${var.ilbIp}"
   is_frontend  = false
   subscription = "${var.subscription}"
-  asp_name     = "${var.product}-${var.env}-asp"
+  asp_name     = "${var.product}-${var.env}-asp-${var.env}-asp"
   capacity     = "${var.capacity}"
   common_tags  = "${var.common_tags}"
-  
+  asp_rg       = "mgmt-asp-${var.env}"
   app_settings = {
 
 	  // Logging vars
