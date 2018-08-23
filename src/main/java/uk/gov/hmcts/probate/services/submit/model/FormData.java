@@ -12,7 +12,7 @@ public class FormData {
     }
 
     public Long getSubmissionReference() {
-        return formData.at("submissionReference").asLong();
+        return formData.at("/submissionReference").asLong();
     }
 
     public void setCaseId(String id) {

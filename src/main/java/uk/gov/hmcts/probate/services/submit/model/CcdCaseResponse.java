@@ -15,6 +15,6 @@ public class CcdCaseResponse {
     }
 
     public JsonNode getCaseData() {
-        return ccdCaseResponseData.get("case_data");
+        return ccdCaseResponseData.get("/case_data");
     }
 }

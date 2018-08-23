@@ -69,7 +69,7 @@ public class SubmitService {
                 .build();
 
         submitCcdCase(ccdCreateCaseParams);
-        if (submitData.getPaymentDue() == 0) {
+        if (submitData.getPaymentTotal() == 0) {
             mailClient.execute(submitData.getJson(), registryData, submissionTimestamp);
         }
         return registryData;

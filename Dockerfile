@@ -1,4 +1,4 @@
-FROM gradle:jdk8 as builder
+FROM gradle:jdk8 as requestBuilder
 
 COPY . /home/gradle/src
 USER root
@@ -13,7 +13,7 @@ FROM openjdk:8-alpine
 RUN mkdir -p /usr/local/bin
 
 COPY docker/entrypoint.sh /
-COPY --from=builder /home/gradle/src/build/libs/submit-service.jar /submit-service.jar
+COPY --from=requestFactory /home/gradle/src/build/libs/submit-service.jar /submit-service.jar
 
 HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy= curl --silent --fail http://localhost:8181/health
 
