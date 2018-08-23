@@ -1,7 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.Objects;
 
@@ -34,7 +33,7 @@ public class SubmitData {
     }
 
     public double getPaymentTotal() {
-        return submitData.at("/submitdata/payment/total").asDouble();
+        return submitData.at("/submitdata/totalFee").asDouble();
     }
 
     public String getCaseId() {
