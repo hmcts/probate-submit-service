@@ -112,9 +112,9 @@ public class CoreCaseDataClient {
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public JsonNode createCaseUpdatePaymentStatusEvent(String userId, String caseId,
+    public JsonNode createCaseUpdatePaymentStatusEvent(String userId, Long caseId,
                                                        String authorization) {
-        String[] createCaseUrlItems = {getBaseUrl(userId), CASES_RESOURCE, caseId,
+        String[] createCaseUrlItems = {getBaseUrl(userId), CASES_RESOURCE, caseId.toString(),
                 EVENT_TRIGGERS_RESOURCE,
                 UPDATE_PAYMENT_STATUS_CCD_EVENT_ID, TOKEN_RESOURCE};
         return getEventToken(authorization, createCaseUrlItems);
@@ -140,7 +140,7 @@ public class CoreCaseDataClient {
     public JsonNode updatePaymentStatus(CcdCaseResponse ccdCaseResponse, String userId,
                                         String authorization,
                                         JsonNode token, String paymentStatus) {
-        String[] urlItems = {getBaseUrl(userId), CASES_RESOURCE, ccdCaseResponse.getCaseId(),
+        String[] urlItems = {getBaseUrl(userId), CASES_RESOURCE, ccdCaseResponse.getCaseId().toString(),
                 EVENTS_RESOURCE};
         JsonNode caseDataNode = ccdCaseResponse.getCaseData();
         JsonNode ccdData = ccdMapper

@@ -43,7 +43,7 @@ public class CoreCaseDataClientTest {
     private static final String CORE_CASE_DATA_URL =
             "http://localhost:4452/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfRepresentation";
     private static final String USER_ID = "12345";
-    private static final String CASE_ID = "9999999";
+    private static final Long CASE_ID = 9999999L;
     private static final String AUTHORIZATION_TOKEN = "XXXXXX";
     private static final Calendar SUBMISSION_TIMESTAMP = Calendar.getInstance();
     private static final JsonNode SEQUENCE_NUMBER = new LongNode(123L);

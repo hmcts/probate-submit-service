@@ -10,11 +10,11 @@ public class CcdCaseResponse {
         this.ccdCaseResponseData = ccdCaseResponseData;
     }
 
-    public String getCaseId() {
-        return ccdCaseResponseData.get("id").textValue();
+    public Long getCaseId() {
+        return ccdCaseResponseData.get("id").asLong();
     }
 
     public JsonNode getCaseData() {
-        return ccdCaseResponseData.get("/case_data");
+        return ccdCaseResponseData.get("case_data");
     }
 }

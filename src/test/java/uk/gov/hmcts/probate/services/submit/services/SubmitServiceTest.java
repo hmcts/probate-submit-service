@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 public class SubmitServiceTest {
 
     private static final String USER_ID = "12345";
-    private static final String CASE_ID = "99999";
+    private static final Long CASE_ID = 99999L;
     private static final Long ID = 1L;
     private static final String AUTHORIZATION_TOKEN = "XXXXXX";
     private static final String APPLICANT_EMAIL_ADDRESS = "test@test.com";
