@@ -26,16 +26,15 @@ public class SubmitData {
     }
 
     public JsonNode getSubmitData() {
-        return submitData.at("submitdata");
+        return submitData.at("/submitdata");
     }
 
     public String getPaymentStatus() {
         return submitData.at("/submitdata/payment/status").asText();
     }
 
-    public Float getPaymentDue() {
-        String paymentDue = submitData.at("/submitdata/payment/paymentDue").asText();
-        return StringUtils.isNumeric(paymentDue) ? Float.valueOf(paymentDue) : 0;
+    public double getPaymentTotal() {
+        return submitData.at("/submitdata/payment/total").asDouble();
     }
 
     public String getCaseId() {

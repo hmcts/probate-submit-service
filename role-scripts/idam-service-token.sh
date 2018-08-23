@@ -9,5 +9,5 @@
 
 MICROSERVICE="${1:-ccd_gw}"
 
-curl --silent -X POST http://localhost:4502/testing-support/lease -d '{"microservice":"probate_backend"}' -H "CONTENT-TYPE:application/json"
+curl --silent -X POST http://localhost:4502/testing-support/lease -d '{"microservice":"probate_frontend"}' -H "CONTENT-TYPE:application/json"
 

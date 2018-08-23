@@ -22,6 +22,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import uk.gov.hmcts.probate.services.submit.model.CcdCaseResponse;
 import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 
@@ -44,9 +45,10 @@ public class CoreCaseDataClient {
     private static final String CASES_RESOURCE = "cases";
     private static final String UPDATE_PAYMENT_STATUS_CCD_EVENT_ID = "updatePaymentStatus";
     private static final String CASE_QUERY_PARAM_PREFIX = "case.";
-    private static final List<String> GET_QUERY_PARAMETERS_FOR_CASE = Arrays
-            .asList("primaryApplicantEmailAddress", "deceasedSurname", "deceasedForenames",
-                    "deceasedDateOfDeath");
+
+    public static final String PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD = "primaryApplicantEmailAddress";
+    public static final String DECEASED_SURNAME_FIELD = "deceasedSurname";
+    public static final String DECEASED_FORENAMES_FIELD = "deceasedForenames";
 
     @Autowired
     public CoreCaseDataClient(RestTemplate restTemplate, RequestFactory requestFactory,
@@ -70,7 +72,7 @@ public class CoreCaseDataClient {
         JsonNode ccdData = ccdMapper
                 .createCcdData(ccdCreateCaseParams.getSubmitData().getSubmitData(),
                         APPLY_FOR_GRANT_CCD_EVENT_ID, token, ccdCreateCaseParams.getSubmissionTimestamp(),
-                        ccdCreateCaseParams.getSubmissionReference());
+                        ccdCreateCaseParams.getRegistryData());
         HttpEntity<JsonNode> ccdSaveRequest = requestFactory
                 .createCcdSaveRequest(ccdData, ccdCreateCaseParams.getAuthorization());
         String saveUrl = String.format(coreCaseDataServiceURL, ccdCreateCaseParams.getUserId()) + "/"
@@ -84,10 +86,10 @@ public class CoreCaseDataClient {
                                              String authorization) {
         String caseEndpointUrl = String.format(coreCaseDataServiceURL, userId) + "/" + CASES_RESOURCE;
         HttpEntity<JsonNode> request = requestFactory.createCcdStartRequest(authorization);
-        Map<String, String> queryParameterMap = getQueryParameters(submitData.getSubmitData());
+        String url = generateUrlWithQueryParams(caseEndpointUrl, submitData.getSubmitData());
         try {
             ResponseEntity<JsonNode> response = restTemplate
-                    .exchange(caseEndpointUrl, HttpMethod.GET, request, JsonNode.class, queryParameterMap);
+                    .exchange(url, HttpMethod.GET, request, JsonNode.class);
             ArrayNode caseResponses = (ArrayNode) response.getBody();
             if (caseResponses.size() == 0) {
                 return Optional.empty();
@@ -101,10 +103,12 @@ public class CoreCaseDataClient {
         }
     }
 
-    private Map<String, String> getQueryParameters(JsonNode submitData) {
-        return GET_QUERY_PARAMETERS_FOR_CASE.stream()
-                .collect(Collectors.toMap(field -> CASE_QUERY_PARAM_PREFIX + field,
-                        field -> submitData.get(field).asText()));
+    private String generateUrlWithQueryParams(String baseUrl, JsonNode submitData) {
+        return UriComponentsBuilder.fromHttpUrl(baseUrl)
+                .queryParam(CASE_QUERY_PARAM_PREFIX + PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD, submitData.get("applicantEmail").textValue())
+                .queryParam(CASE_QUERY_PARAM_PREFIX + DECEASED_SURNAME_FIELD, submitData.get("deceasedSurname").textValue())
+                .queryParam(CASE_QUERY_PARAM_PREFIX + DECEASED_FORENAMES_FIELD, submitData.get("deceasedFirstname").textValue())
+                .toUriString();
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))

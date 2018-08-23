@@ -134,7 +134,7 @@ public class SubmitServiceTest {
         when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);
         when(persistenceClient.saveSubmission(submitData)).thenReturn(persistenceResponse);
         when(persistenceResponse.getIdAsLong()).thenReturn(ID);
-        when(submitData.getPaymentDue()).thenReturn(100F);
+        when(submitData.getPaymentTotal()).thenReturn(100D);
         when(persistenceResponse.getIdAsJsonNode()).thenReturn(submissionReference);
         when(submissionReference.asLong()).thenReturn(ID);
         when(sequenceService.nextRegistry(ID)).thenReturn(registryData);
@@ -163,7 +163,7 @@ public class SubmitServiceTest {
         ReflectionTestUtils.setField(submitService, "coreCaseDataEnabled", false);
 
         when(submitData.getApplicantEmailAddress()).thenReturn(APPLICANT_EMAIL_ADDRESS);
-        when(submitData.getPaymentDue()).thenReturn(100F);
+        when(submitData.getPaymentTotal()).thenReturn(100D);
         when(formData.getSubmissionReference()).thenReturn(0L);
         when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);
         when(persistenceClient.saveSubmission(submitData)).thenReturn(persistenceResponse);
@@ -196,7 +196,7 @@ public class SubmitServiceTest {
         when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);
         when(persistenceClient.saveSubmission(submitData)).thenReturn(persistenceResponse);
         when(persistenceResponse.getIdAsLong()).thenReturn(ID);
-        when(submitData.getPaymentDue()).thenReturn(0F);
+        when(submitData.getPaymentTotal()).thenReturn(0D);
         when(persistenceResponse.getIdAsJsonNode()).thenReturn(submissionReference);
         when(submissionReference.asLong()).thenReturn(ID);
         when(sequenceService.nextRegistry(ID)).thenReturn(registryData);
