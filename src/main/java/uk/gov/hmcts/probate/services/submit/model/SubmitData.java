@@ -36,8 +36,8 @@ public class SubmitData {
         return submitData.at("/submitdata/totalFee").asDouble();
     }
 
-    public String getCaseId() {
-        return submitData.at("/submitdata/caseId").asText();
+    public Long getCaseId() {
+        return submitData.at("/submitdata/caseId").asLong();
     }
 
     public JsonNode getJson() {

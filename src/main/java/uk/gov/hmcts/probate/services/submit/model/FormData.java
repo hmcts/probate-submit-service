@@ -15,8 +15,8 @@ public class FormData {
         return formData.at("/submissionReference").asLong();
     }
 
-    public void setCaseId(String id) {
-        ((ObjectNode) formData).put("caseId", id);
+    public void setCaseId(Long id) {
+        ( (ObjectNode) formData.get("formdata")).put("caseId", id);
     }
 
     public JsonNode getJson() {
