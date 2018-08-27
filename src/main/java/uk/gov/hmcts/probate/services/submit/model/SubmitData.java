@@ -29,7 +29,7 @@ public class SubmitData {
     }
 
     public String getPaymentStatus() {
-        return submitData.at("/submitdata/payment/status").asText();
+        return submitData.at("/submitdata/paymentStatus").asText();
     }
 
     public double getPaymentTotal() {
@@ -38,6 +38,10 @@ public class SubmitData {
 
     public Long getCaseId() {
         return submitData.at("/submitdata/caseId").asLong();
+    }
+
+    public JsonNode getRegistry() {
+        return submitData.at("/submitdata/registry");
     }
 
     public JsonNode getJson() {

@@ -3,6 +3,8 @@ package uk.gov.hmcts.probate.services.submit.services;
 import static net.logstash.logback.marker.Markers.append;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
 import java.util.Calendar;
@@ -36,14 +38,16 @@ public class SubmitService {
     private SequenceService sequenceService;
     @Value("${services.coreCaseData.enabled}")
     private boolean coreCaseDataEnabled;
+    private ObjectMapper objectMapper;
 
     @Autowired
     public SubmitService(MailClient mailClient, PersistenceClient persistenceClient,
-                         CoreCaseDataClient coreCaseDataClient, SequenceService sequenceService) {
+                         CoreCaseDataClient coreCaseDataClient, SequenceService sequenceService, ObjectMapper objectMapper) {
         this.mailClient = mailClient;
         this.persistenceClient = persistenceClient;
         this.coreCaseDataClient = coreCaseDataClient;
         this.sequenceService = sequenceService;
+        this.objectMapper = objectMapper;
     }
 
     public JsonNode submit(SubmitData submitData, String userId, String authorization) {
@@ -68,11 +72,11 @@ public class SubmitService {
                 .withSubmissionTimestamp(submissionTimestamp)
                 .build();
 
-        submitCcdCase(ccdCreateCaseParams);
+        JsonNode caseIdJson = submitCcdCase(ccdCreateCaseParams);
         if (submitData.getPaymentTotal() == 0) {
             mailClient.execute(submitData.getJson(), registryData, submissionTimestamp);
         }
-        return registryData;
+        return caseIdJson;
     }
 
     private String generateMessage(SubmitData submitData) {
@@ -80,9 +84,9 @@ public class SubmitService {
                 + ", number of executors: " + submitData.getNoOfExecutors();
     }
 
-    private void submitCcdCase(CcdCreateCaseParams ccdCreateCaseParams) {
+    private JsonNode submitCcdCase(CcdCreateCaseParams ccdCreateCaseParams) {
         if (!coreCaseDataEnabled) {
-            return;
+            return objectMapper.createObjectNode();
         }
         Optional<CcdCaseResponse> caseResponseOptional = coreCaseDataClient
                 .getCase(ccdCreateCaseParams.getSubmitData(),
@@ -95,9 +99,15 @@ public class SubmitService {
         SubmitData submitData = ccdCreateCaseParams.getSubmitData();
         FormData formData = ccdCreateCaseParams.getFormData();
         JsonNode submissionReference = ccdCreateCaseParams.getSubmissionReference();
-        formData.setCaseId(ccdCaseResponse.getCaseId());
+
         persistenceClient.updateFormData(submitData.getApplicantEmailAddress(),
                 submissionReference.asLong(), formData.getJson());
+
+        ObjectNode response = objectMapper.createObjectNode();
+        response.put("caseId", ccdCaseResponse.getCaseId());
+        response.set("registry", ccdCreateCaseParams.getRegistryData());
+        response.set("submissionReference", submissionReference);
+        return response;
     }
 
     private CcdCaseResponse createCase(CcdCreateCaseParams ccdCreateCaseParams) {
@@ -129,11 +139,8 @@ public class SubmitService {
         JsonNode updatePaymentStatusResponse = coreCaseDataClient
                 .updatePaymentStatus(optionalCcdCaseResponse.get(), userId, authorization, tokenJson,
                         paymentStatus);
-
-        FormData formData = persistenceClient.loadFormDataById(submitData.getApplicantEmailAddress());
-        JsonNode registryData = sequenceService.nextRegistry(formData.getSubmissionReference());
         Calendar submissionTimestamp = Calendar.getInstance();
-        mailClient.execute(submitData.getJson(), registryData, submissionTimestamp);
+        mailClient.execute(submitData.getJson(), submitData.getRegistry(), submissionTimestamp);
         return updatePaymentStatusResponse;
     }
 }
