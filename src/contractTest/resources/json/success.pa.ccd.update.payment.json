@@ -10,7 +10,10 @@
     "payments": [
       {
         "value": {
-          "status": "success"
+          "status": "success",
+          "date": "2018-08-29",
+          "reference": "CODE4$$$Hill4314$$$CODE5$$$CODE2/100",
+          "amount": "5000"
         }
       }
     ]
