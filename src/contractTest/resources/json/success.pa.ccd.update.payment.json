@@ -1,0 +1,18 @@
+{
+  "event": {
+    "id": "createCase",
+    "description": "",
+    "summary": "Probate application"
+  },
+  "ignore_warning": true,
+  "event_token": "sampletoken",
+  "data": {
+    "payments": [
+      {
+        "value": {
+          "status": "success"
+        }
+      }
+    ]
+  }
+}
