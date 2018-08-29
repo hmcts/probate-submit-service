@@ -13,8 +13,4 @@ public class CcdCaseResponse {
     public Long getCaseId() {
         return ccdCaseResponseData.get("id").asLong();
     }
-
-    public JsonNode getCaseData() {
-        return ccdCaseResponseData.get("case_data");
-    }
 }

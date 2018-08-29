@@ -15,8 +15,6 @@ public class CcdCreateCaseParams {
 
     private String authorization;
 
-    private FormData formData;
-
     private JsonNode submissionReference;
 
     private JsonNode registryData;
@@ -33,10 +31,6 @@ public class CcdCreateCaseParams {
 
     public String getAuthorization() {
         return authorization;
-    }
-
-    public FormData getFormData() {
-        return formData;
     }
 
     public JsonNode getSubmissionReference() {
@@ -62,8 +56,6 @@ public class CcdCreateCaseParams {
 
         private String authorization;
 
-        private FormData formData;
-
         private JsonNode submissionReference;
 
         private JsonNode registryData;
@@ -75,7 +67,6 @@ public class CcdCreateCaseParams {
             ccdCreateCaseParams.userId = userId;
             ccdCreateCaseParams.submitData = submitData;
             ccdCreateCaseParams.authorization = authorization;
-            ccdCreateCaseParams.formData = formData;
             ccdCreateCaseParams.submissionReference = submissionReference;
             ccdCreateCaseParams.registryData = registryData;
             ccdCreateCaseParams.submissionTimestamp = submissionTimestamp;
@@ -94,11 +85,6 @@ public class CcdCreateCaseParams {
 
         public Builder withSubmitData(SubmitData submitData) {
             this.submitData = submitData;
-            return this;
-        }
-
-        public Builder withFormData(FormData formData) {
-            this.formData = formData;
             return this;
         }
 

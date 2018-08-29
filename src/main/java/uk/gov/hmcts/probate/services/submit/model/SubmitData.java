@@ -28,8 +28,8 @@ public class SubmitData {
         return submitData.at("/submitdata");
     }
 
-    public String getPaymentStatus() {
-        return submitData.at("/submitdata/paymentStatus").asText();
+    public PaymentResponse getPaymentResponse() {
+        return new PaymentResponse(submitData.at("/submitdata/paymentResponse"));
     }
 
     public double getPaymentTotal() {

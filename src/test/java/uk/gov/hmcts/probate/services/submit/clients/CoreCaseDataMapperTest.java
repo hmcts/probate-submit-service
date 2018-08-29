@@ -13,8 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.constraints.NotNull;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -32,6 +30,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.annotation.Validated;
+import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
 @RunWith(SpringRunner.class)
@@ -41,7 +40,7 @@ import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 @ConfigurationProperties(prefix = "ccd")
 public class CoreCaseDataMapperTest {
 
-    private static final String UPDATE_PAYMENT_STATUS_CCD_EVENT_ID = "updatePaymentStatus";
+    private static final String CREATE_CASE_CCD_EVENT_ID = "createCase";
 
     @Autowired
     private CoreCaseDataMapper coreCaseDataMapper;
@@ -323,17 +322,18 @@ public class CoreCaseDataMapperTest {
 
     @Test
     public void shouldUpdatePaymentStatus() throws IOException {
-        String paymentStatus  = "COMPLETE";
         String token  = "TOKEN123456";
-        JsonNode jsonNode = TestUtils.getJsonNodeFromFile("pa.ccd.json");
-
         ObjectNode tokenNode = mapper.createObjectNode();
         tokenNode.put("token", token);
+        JsonNode paymentJsonNode = TestUtils.getJsonNodeFromFile("paymentV1Response.json");
+        PaymentResponse paymentResponse = new PaymentResponse(paymentJsonNode);
+        JsonNode updatedCcdJson = coreCaseDataMapper.updatePaymentStatus(paymentResponse,
+                CREATE_CASE_CCD_EVENT_ID, tokenNode);
 
-        JsonNode updatedCcdJson = coreCaseDataMapper.updatePaymentStatus(jsonNode, paymentStatus,
-            UPDATE_PAYMENT_STATUS_CCD_EVENT_ID, tokenNode);
-
-        assertThat(updatedCcdJson.get("data").get("paymentStatus").asText(), is(equalTo(paymentStatus)));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/status").asText(), is(equalTo("success")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/date").asText(), is(equalTo("2018-08-29")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/reference").asText(), is(equalTo("CODE4$$$Hill4314$$$CODE5$$$CODE2/100")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/amount").asText(), is(equalTo("5000")));
         assertThat(updatedCcdJson.get("event_token"), is(equalTo(tokenNode)));
     }
 }

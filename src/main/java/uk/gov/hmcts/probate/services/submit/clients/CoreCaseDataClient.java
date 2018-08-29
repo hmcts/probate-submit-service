@@ -2,14 +2,6 @@ package uk.gov.hmcts.probate.services.submit.clients;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +16,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.gov.hmcts.probate.services.submit.model.CcdCaseResponse;
+import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 import uk.gov.hmcts.probate.services.submit.model.SubmitData;
+
+import java.util.Optional;
 
 @Component
 public class CoreCaseDataClient {
@@ -43,7 +38,7 @@ public class CoreCaseDataClient {
     private static final String EVENTS_RESOURCE = "events";
     private static final String TOKEN_RESOURCE = "token";
     private static final String CASES_RESOURCE = "cases";
-    private static final String UPDATE_PAYMENT_STATUS_CCD_EVENT_ID = "updatePaymentStatus";
+    private static final String CREATE_CASE_CCD_EVENT_ID = "createCase";
     private static final String CASE_QUERY_PARAM_PREFIX = "case.";
 
     public static final String PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD = "primaryApplicantEmailAddress";
@@ -60,12 +55,11 @@ public class CoreCaseDataClient {
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public JsonNode createCase(CcdCreateCaseParams ccdCreateCaseParams) {
-        String[] createCaseUrlItems = {getBaseUrl(ccdCreateCaseParams.getUserId()),
+        String url = UriComponentsBuilder.fromHttpUrl(getBaseUrl(ccdCreateCaseParams.getUserId())).pathSegment(
                 EVENT_TRIGGERS_RESOURCE,
-                APPLY_FOR_GRANT_CCD_EVENT_ID, TOKEN_RESOURCE};
-        return getEventToken(ccdCreateCaseParams.getAuthorization(), createCaseUrlItems);
+                APPLY_FOR_GRANT_CCD_EVENT_ID, TOKEN_RESOURCE).toUriString();
+        return getEventToken(ccdCreateCaseParams.getAuthorization(), url);
     }
-
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public CcdCaseResponse saveCase(CcdCreateCaseParams ccdCreateCaseParams, JsonNode token) {
@@ -75,8 +69,8 @@ public class CoreCaseDataClient {
                         ccdCreateCaseParams.getRegistryData());
         HttpEntity<JsonNode> ccdSaveRequest = requestFactory
                 .createCcdSaveRequest(ccdData, ccdCreateCaseParams.getAuthorization());
-        String saveUrl = String.format(coreCaseDataServiceURL, ccdCreateCaseParams.getUserId()) + "/"
-                + CASES_RESOURCE;
+        String saveUrl = UriComponentsBuilder.fromHttpUrl(getBaseUrl(ccdCreateCaseParams.getUserId()))
+                .pathSegment(CASES_RESOURCE).toUriString();
         logger.info("Save case url: " + saveUrl);
         return new CcdCaseResponse(postRequestToUrl(ccdSaveRequest, saveUrl));
     }
@@ -84,7 +78,8 @@ public class CoreCaseDataClient {
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public Optional<CcdCaseResponse> getCase(SubmitData submitData, String userId,
                                              String authorization) {
-        String caseEndpointUrl = String.format(coreCaseDataServiceURL, userId) + "/" + CASES_RESOURCE;
+        String caseEndpointUrl = UriComponentsBuilder.fromHttpUrl(getBaseUrl(userId)).pathSegment(CASES_RESOURCE).toUriString();
+
         HttpEntity<JsonNode> request = requestFactory.createCcdStartRequest(authorization);
         String url = generateUrlWithQueryParams(caseEndpointUrl, submitData.getSubmitData());
         try {
@@ -114,19 +109,18 @@ public class CoreCaseDataClient {
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public JsonNode createCaseUpdatePaymentStatusEvent(String userId, Long caseId,
                                                        String authorization) {
-        String[] createCaseUrlItems = {getBaseUrl(userId), CASES_RESOURCE, caseId.toString(),
+        String url = UriComponentsBuilder.fromHttpUrl(getBaseUrl(userId)).pathSegment(CASES_RESOURCE, caseId.toString(),
                 EVENT_TRIGGERS_RESOURCE,
-                UPDATE_PAYMENT_STATUS_CCD_EVENT_ID, TOKEN_RESOURCE};
-        return getEventToken(authorization, createCaseUrlItems);
+                CREATE_CASE_CCD_EVENT_ID, TOKEN_RESOURCE).toUriString();
+        return getEventToken(authorization, url);
     }
 
-    private JsonNode getEventToken(String authorization, String[] urlItems) {
-        String startUrl = StringUtils.join(urlItems, '/');
-        logger.info("Start case: " + startUrl);
+    private JsonNode getEventToken(String authorization, String url) {
+        logger.info("Start case: " + url);
         HttpEntity<JsonNode> request = requestFactory.createCcdStartRequest(authorization);
         try {
             ResponseEntity<JsonNode> response = restTemplate
-                    .exchange(startUrl, HttpMethod.GET, request, JsonNode.class);
+                    .exchange(url, HttpMethod.GET, request, JsonNode.class);
             return response.getBody().get(TOKEN_RESOURCE);
         } catch (HttpClientErrorException e) {
             logger.info("Exception while getting an event token from CCD", e);
@@ -137,19 +131,14 @@ public class CoreCaseDataClient {
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public JsonNode updatePaymentStatus(CcdCaseResponse ccdCaseResponse, String userId,
+    public JsonNode updatePaymentStatus(Long caseId, String userId,
                                         String authorization,
-                                        JsonNode token, String paymentStatus) {
-        String[] urlItems = {getBaseUrl(userId), CASES_RESOURCE, ccdCaseResponse.getCaseId().toString(),
-                EVENTS_RESOURCE};
-        JsonNode caseDataNode = ccdCaseResponse.getCaseData();
-        JsonNode ccdData = ccdMapper
-                .updatePaymentStatus(caseDataNode, paymentStatus, UPDATE_PAYMENT_STATUS_CCD_EVENT_ID,
-                        token);
-        HttpEntity<JsonNode> ccdSaveRequest = requestFactory
-                .createCcdSaveRequest(ccdData, authorization);
+                                        JsonNode token, PaymentResponse paymentResponse) {
+        String url = UriComponentsBuilder.fromHttpUrl(getBaseUrl(userId)).pathSegment(CASES_RESOURCE, caseId.toString(),
+                EVENTS_RESOURCE).toUriString();
+        JsonNode ccdData = ccdMapper.updatePaymentStatus(paymentResponse, CREATE_CASE_CCD_EVENT_ID, token);
+        HttpEntity<JsonNode> ccdSaveRequest = requestFactory.createCcdSaveRequest(ccdData, authorization);
 
-        String url = StringUtils.join(urlItems, '/');
         logger.info("Update case payment url: " + url);
         return postRequestToUrl(ccdSaveRequest, url);
     }
