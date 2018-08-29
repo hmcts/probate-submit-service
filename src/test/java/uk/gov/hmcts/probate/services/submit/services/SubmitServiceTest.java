@@ -1,10 +1,10 @@
 package uk.gov.hmcts.probate.services.submit.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -14,6 +14,7 @@ import uk.gov.hmcts.probate.services.submit.clients.MailClient;
 import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
 import uk.gov.hmcts.probate.services.submit.model.CcdCaseResponse;
 import uk.gov.hmcts.probate.services.submit.model.FormData;
+import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 import uk.gov.hmcts.probate.services.submit.model.PersistenceResponse;
 import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
@@ -40,9 +41,7 @@ public class SubmitServiceTest {
     private static final Long ID = 1L;
     private static final String AUTHORIZATION_TOKEN = "XXXXXX";
     private static final String APPLICANT_EMAIL_ADDRESS = "test@test.com";
-    private static final String PAYMENT_STATUS = "SUCCESSFUL";
 
-    @InjectMocks
     private SubmitService submitService;
 
     @Mock
@@ -78,15 +77,22 @@ public class SubmitServiceTest {
     @Mock
     private CcdCaseResponse ccdCaseResponse;
 
+    @Mock
+    private PaymentResponse paymentResponse;
+
+    private ObjectMapper objectMapper;
+
     private Calendar submissionTimestamp;
     private JsonNode registryData;
 
     @Before
     public void setUp() throws Exception {
+        objectMapper = new ObjectMapper();
         submissionTimestamp = Calendar.getInstance();
         registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
+        submitService = new SubmitService(mockMailClient, persistenceClient, coreCaseDataClient,
+                sequenceService, objectMapper);
         ReflectionTestUtils.setField(submitService, "coreCaseDataEnabled", true);
-
     }
 
     @Test
@@ -179,7 +185,7 @@ public class SubmitServiceTest {
         JsonNode submitResponse = submitService.submit(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
         assertThat(submitResponse, is(notNullValue()));
-        verify(persistenceClient, never()).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formDataJson);
+        verify(persistenceClient, times(1)).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formDataJson);
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
         verify(persistenceClient, times(1)).saveSubmission(submitData);
         verify(coreCaseDataClient, never()).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
@@ -224,26 +230,23 @@ public class SubmitServiceTest {
     @Test
     public void shouldUpdatePaymentStatusSuccessfully() {
         when(submitData.getApplicantEmailAddress()).thenReturn(APPLICANT_EMAIL_ADDRESS);
-        when(submitData.getPaymentStatus()).thenReturn(PAYMENT_STATUS);
+        when(submitData.getPaymentResponse()).thenReturn(paymentResponse);
         when(submissionReference.asLong()).thenReturn(ID);
         when(formData.getSubmissionReference()).thenReturn(0L);
         when(submitData.getCaseId()).thenReturn(CASE_ID);
         when(coreCaseDataClient.createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN)).thenReturn(jsonNode);
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
-        when(coreCaseDataClient.updatePaymentStatus(ccdCaseResponse, USER_ID, AUTHORIZATION_TOKEN, jsonNode, PAYMENT_STATUS)).thenReturn(jsonNode);
+        when(coreCaseDataClient.updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse)).thenReturn(jsonNode);
         when(sequenceService.nextRegistry(ID)).thenReturn(registryData);
         when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);
 
         JsonNode submitResponse = submitService.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
         assertThat(submitResponse, is(notNullValue()));
-        verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
-        verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, times(1)).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN);
-        verify(coreCaseDataClient, times(1)).updatePaymentStatus(ccdCaseResponse, USER_ID, AUTHORIZATION_TOKEN, jsonNode, PAYMENT_STATUS);
+        verify(coreCaseDataClient, times(1)).updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse);
         verify(mockMailClient, times(1)).execute(any(), any(), any());
-        verify(sequenceService, times(1)).nextRegistry(0L);
     }
 
     @Test

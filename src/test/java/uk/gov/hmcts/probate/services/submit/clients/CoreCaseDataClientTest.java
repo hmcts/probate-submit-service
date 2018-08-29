@@ -35,6 +35,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.probate.services.submit.model.CcdCaseResponse;
 import uk.gov.hmcts.probate.services.submit.model.FormData;
+import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -48,21 +49,16 @@ public class CoreCaseDataClientTest {
     private static final Calendar SUBMISSION_TIMESTAMP = Calendar.getInstance();
     private static final JsonNode SEQUENCE_NUMBER = new LongNode(123L);
     private static final String APPLY_FOR_GRANT_CCD_EVENT_ID = "applyForGrant";
-    private static final String EVENT_TRIGGERS_RESOURCE = "event-triggers";
-    private static final String EVENTS_RESOURCE = "events";
     private static final String TOKEN_RESOURCE = "token";
-    private static final String CASES_RESOURCE = "cases";
-    private static final String UPDATE_PAYMENT_STATUS_CCD_EVENT_ID = "updatePaymentStatus";
-    private static final String CASE_QUERY_PARAM_PREFIX = "case.";
-    private static final String PAYMENT_STATUS = "SUCCESSFUL";
-    public static final String PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD = "primaryApplicantEmailAddress";
+    private static final String UPDATE_PAYMENT_STATUS_CCD_EVENT_ID = "createCase";
+
+    public static final String APPLICANT_EMAIL_ADDRESS_FIELD = "applicantEmail";
     public static final String DECEASED_SURNAME_FIELD = "deceasedSurname";
-    public static final String DECEASED_FORENAMES_FIELD = "deceasedForenames";
-    public static final String DECEASED_DATE_OF_DEATH_FIELD = "deceasedDateOfDeath";
+    public static final String DECEASED_FORENAMES_FIELD = "deceasedFirstname";
+
     public static final JsonNode PRIMARY_APPLICANT_EMAIL_ADDRESS = new TextNode("test@test.com");
     public static final JsonNode DECEASED_SURNAME = new TextNode("Brown");
     public static final JsonNode DECEASED_FORENAMES = new TextNode("Bobby");
-    public static final JsonNode DECEASED_DATE_OF_DEATH = new TextNode("2000-02-01");
 
     private CcdCreateCaseParams ccdCreateCaseParams;
     private ObjectMapper objectMapper;
@@ -86,9 +82,6 @@ public class CoreCaseDataClientTest {
     private CoreCaseDataMapper ccdDataMapper;
 
     @Mock
-    private FormData formData;
-
-    @Mock
     private SubmitData submitData;
 
     @Mock
@@ -103,6 +96,9 @@ public class CoreCaseDataClientTest {
     @Mock
     private CcdCaseResponse ccdCaseResponse;
 
+    @Mock
+    private PaymentResponse paymentResponse;
+
     @InjectMocks
     private CoreCaseDataClient coreCaseDataClient;
 
@@ -115,7 +111,6 @@ public class CoreCaseDataClientTest {
 
         ccdCreateCaseParams = new CcdCreateCaseParams.Builder()
                 .withAuthorisation(AUTHORIZATION_TOKEN)
-                .withFormData(formData)
                 .withRegistryData(registryData)
                 .withSubmissionReference(SEQUENCE_NUMBER)
                 .withSubmitData(submitData)
@@ -124,20 +119,18 @@ public class CoreCaseDataClientTest {
                 .build();
 
         when(submitData.getSubmitData()).thenReturn(submitDataJson);
-        when(submitDataJson.get(PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD))
+        when(submitDataJson.get(APPLICANT_EMAIL_ADDRESS_FIELD))
                 .thenReturn(PRIMARY_APPLICANT_EMAIL_ADDRESS);
         when(submitDataJson.get(DECEASED_SURNAME_FIELD)).thenReturn(DECEASED_SURNAME);
         when(submitDataJson.get(DECEASED_FORENAMES_FIELD)).thenReturn(DECEASED_FORENAMES);
-        when(submitDataJson.get(DECEASED_DATE_OF_DEATH_FIELD)).thenReturn(DECEASED_DATE_OF_DEATH);
 
         when(ccdCaseResponse.getCaseId()).thenReturn(CASE_ID);
-        when(ccdCaseResponse.getCaseData()).thenReturn(ccdData);
     }
 
     @Test
     public void shouldCreateCase() {
-        String url = String.format(CORE_CASE_DATA_URL, USER_ID) + "/" + EVENT_TRIGGERS_RESOURCE + "/" +
-                APPLY_FOR_GRANT_CCD_EVENT_ID + "/" + TOKEN_RESOURCE;
+        String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/" +
+                "event-triggers/applyForGrant/token";
         when(restTemplate.exchange(url, HttpMethod.GET, ccdRequest, JsonNode.class))
                 .thenReturn(response);
         when(requestFactory.createCcdStartRequest(ccdCreateCaseParams.getAuthorization()))
@@ -154,8 +147,8 @@ public class CoreCaseDataClientTest {
 
     @Test(expected = HttpClientErrorException.class)
     public void shouldThrowHttpClientErrorExceptionCreateCaseWhenRestTemplateException() {
-        String url = String.format(CORE_CASE_DATA_URL, USER_ID) + "/" + EVENT_TRIGGERS_RESOURCE + "/" +
-                APPLY_FOR_GRANT_CCD_EVENT_ID + "/" + TOKEN_RESOURCE;
+        String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/" +
+                "event-triggers/applyForGrant/token";
         doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST))
                 .when(restTemplate).exchange(url, HttpMethod.GET, ccdRequest, JsonNode.class);
         when(requestFactory.createCcdStartRequest(ccdCreateCaseParams.getAuthorization()))
@@ -168,10 +161,11 @@ public class CoreCaseDataClientTest {
 
     @Test
     public void shouldSaveCase() {
-        String url = String.format(CORE_CASE_DATA_URL, USER_ID) + "/" + CASES_RESOURCE;
+        String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases";
         when(ccdDataMapper.createCcdData(submitDataJson,
                 APPLY_FOR_GRANT_CCD_EVENT_ID, tokenJsonNode, ccdCreateCaseParams.getSubmissionTimestamp(),
-                ccdCreateCaseParams.getSubmissionReference())).thenReturn(ccdData);
+                ccdCreateCaseParams.getRegistryData())).thenReturn(ccdData);
+
         when(requestFactory.createCcdSaveRequest(ccdData, ccdCreateCaseParams.getAuthorization()))
                 .thenReturn(ccdRequest);
         when(restTemplate.exchange(url, HttpMethod.POST, ccdRequest, JsonNode.class))
@@ -183,7 +177,7 @@ public class CoreCaseDataClientTest {
         assertThat(ccdCaseResponse, is(notNullValue()));
         verify(ccdDataMapper, times(1)).createCcdData(submitDataJson,
                 APPLY_FOR_GRANT_CCD_EVENT_ID, tokenJsonNode, ccdCreateCaseParams.getSubmissionTimestamp(),
-                ccdCreateCaseParams.getSubmissionReference());
+                ccdCreateCaseParams.getRegistryData());
         verify(requestFactory, times(1))
                 .createCcdSaveRequest(ccdData, ccdCreateCaseParams.getAuthorization());
         verify(restTemplate, times(1)).exchange(url, HttpMethod.POST, ccdRequest, JsonNode.class);
@@ -191,10 +185,10 @@ public class CoreCaseDataClientTest {
 
     @Test(expected = HttpClientErrorException.class)
     public void shouldThrowHttpClientErrorExceptionOnSaveCaseWhenRestTemplateException() {
-        String url = String.format(CORE_CASE_DATA_URL, USER_ID) + "/" + CASES_RESOURCE;
+        String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases";
         when(ccdDataMapper.createCcdData(submitDataJson,
                 APPLY_FOR_GRANT_CCD_EVENT_ID, tokenJsonNode, ccdCreateCaseParams.getSubmissionTimestamp(),
-                ccdCreateCaseParams.getSubmissionReference())).thenReturn(ccdData);
+                ccdCreateCaseParams.getRegistryData())).thenReturn(ccdData);
         when(requestFactory.createCcdSaveRequest(ccdData, ccdCreateCaseParams.getAuthorization()))
                 .thenReturn(ccdRequest);
         doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST))
@@ -205,17 +199,12 @@ public class CoreCaseDataClientTest {
 
     @Test
     public void shouldGetCaseWhenExistForQueryParameters() {
-        String url = String.format(CORE_CASE_DATA_URL, USER_ID) + "/" + CASES_RESOURCE;
-        Map<String, String> queryParameterMap = ImmutableMap.<String, String>builder()
-                .put(CASE_QUERY_PARAM_PREFIX + PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD,
-                        PRIMARY_APPLICANT_EMAIL_ADDRESS.textValue())
-                .put(CASE_QUERY_PARAM_PREFIX + DECEASED_SURNAME_FIELD, DECEASED_SURNAME.textValue())
-                .put(CASE_QUERY_PARAM_PREFIX + DECEASED_FORENAMES_FIELD, DECEASED_FORENAMES.textValue())
-                .put(CASE_QUERY_PARAM_PREFIX + DECEASED_DATE_OF_DEATH_FIELD,
-                        DECEASED_DATE_OF_DEATH.textValue())
-                .build();
+        String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/" +
+                "cases?case.primaryApplicantEmailAddress=test@test.com" +
+                "&case.deceasedSurname=Brown" +
+                "&case.deceasedForenames=Bobby";
         when(restTemplate.exchange(eq(url), eq(HttpMethod.GET), eq(ccdRequest),
-                eq(JsonNode.class), eq(queryParameterMap))).thenReturn(response);
+                eq(JsonNode.class))).thenReturn(response);
         when(requestFactory.createCcdStartRequest(AUTHORIZATION_TOKEN)).thenReturn(ccdRequest);
         ArrayNode arrayNode = objectMapper.createArrayNode();
         arrayNode.add(ccdData);
@@ -226,24 +215,19 @@ public class CoreCaseDataClientTest {
 
         assertThat(optionalCcdCaseResponse.isPresent(), is(true));
         verify(restTemplate, times(1)).exchange(eq(url), eq(HttpMethod.GET), eq(ccdRequest),
-                eq(JsonNode.class), eq(queryParameterMap));
+                eq(JsonNode.class));
         verify(requestFactory, times(1)).createCcdStartRequest(AUTHORIZATION_TOKEN);
     }
 
     @Test(expected = HttpClientErrorException.class)
     public void shouldThrowHttpClientErrorExceptionOnGetCaseWhenRestTemplateException() {
-        String url = String.format(CORE_CASE_DATA_URL, USER_ID) + "/" + CASES_RESOURCE;
-        Map<String, String> queryParameterMap = ImmutableMap.<String, String>builder()
-                .put(CASE_QUERY_PARAM_PREFIX + PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD,
-                        PRIMARY_APPLICANT_EMAIL_ADDRESS.textValue())
-                .put(CASE_QUERY_PARAM_PREFIX + DECEASED_SURNAME_FIELD, DECEASED_SURNAME.textValue())
-                .put(CASE_QUERY_PARAM_PREFIX + DECEASED_FORENAMES_FIELD, DECEASED_FORENAMES.textValue())
-                .put(CASE_QUERY_PARAM_PREFIX + DECEASED_DATE_OF_DEATH_FIELD,
-                        DECEASED_DATE_OF_DEATH.textValue())
-                .build();
+        String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/" +
+                "cases?case.primaryApplicantEmailAddress=test@test.com" +
+                "&case.deceasedSurname=Brown" +
+                "&case.deceasedForenames=Bobby";
         doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(restTemplate)
                 .exchange(eq(url), eq(HttpMethod.GET), eq(ccdRequest),
-                        eq(JsonNode.class), eq(queryParameterMap));
+                        eq(JsonNode.class));
         when(requestFactory.createCcdStartRequest(AUTHORIZATION_TOKEN)).thenReturn(ccdRequest);
         ArrayNode arrayNode = objectMapper.createArrayNode();
         arrayNode.add(ccdData);
@@ -254,17 +238,12 @@ public class CoreCaseDataClientTest {
 
     @Test
     public void shouldReturnEmptyOptionalOnGetCaseWhenCaseDoesNotExist() {
-        String url = String.format(CORE_CASE_DATA_URL, USER_ID) + "/" + CASES_RESOURCE;
-        Map<String, String> queryParameterMap = ImmutableMap.<String, String>builder()
-                .put(CASE_QUERY_PARAM_PREFIX + PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD,
-                        PRIMARY_APPLICANT_EMAIL_ADDRESS.textValue())
-                .put(CASE_QUERY_PARAM_PREFIX + DECEASED_SURNAME_FIELD, DECEASED_SURNAME.textValue())
-                .put(CASE_QUERY_PARAM_PREFIX + DECEASED_FORENAMES_FIELD, DECEASED_FORENAMES.textValue())
-                .put(CASE_QUERY_PARAM_PREFIX + DECEASED_DATE_OF_DEATH_FIELD,
-                        DECEASED_DATE_OF_DEATH.textValue())
-                .build();
+        String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/" +
+                "cases?case.primaryApplicantEmailAddress=test@test.com" +
+                "&case.deceasedSurname=Brown" +
+                "&case.deceasedForenames=Bobby";
         when(restTemplate.exchange(eq(url), eq(HttpMethod.GET), eq(ccdRequest),
-                eq(JsonNode.class), eq(queryParameterMap))).thenReturn(response);
+                eq(JsonNode.class))).thenReturn(response);
         when(requestFactory.createCcdStartRequest(AUTHORIZATION_TOKEN)).thenReturn(ccdRequest);
         ArrayNode arrayNode = objectMapper.createArrayNode();
         when(response.getBody()).thenReturn(arrayNode);
@@ -274,15 +253,14 @@ public class CoreCaseDataClientTest {
 
         assertThat(optionalCcdCaseResponse.isPresent(), is(false));
         verify(restTemplate, times(1)).exchange(eq(url), eq(HttpMethod.GET), eq(ccdRequest),
-                eq(JsonNode.class), eq(queryParameterMap));
+                eq(JsonNode.class));
         verify(requestFactory, times(1)).createCcdStartRequest(AUTHORIZATION_TOKEN);
     }
 
     @Test
     public void shouldCreatePaymentStatusUpdateEvent() {
-        String url = String.format(CORE_CASE_DATA_URL, USER_ID) + "/" + CASES_RESOURCE + "/" + CASE_ID +
-                "/" + EVENT_TRIGGERS_RESOURCE + "/" + UPDATE_PAYMENT_STATUS_CCD_EVENT_ID + "/"
-                + TOKEN_RESOURCE;
+        String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/" +
+                "cases/9999999/event-triggers/createCase/token";
         when(restTemplate.exchange(url, HttpMethod.GET, ccdRequest, JsonNode.class))
                 .thenReturn(response);
         when(requestFactory.createCcdStartRequest(ccdCreateCaseParams.getAuthorization()))
@@ -300,13 +278,12 @@ public class CoreCaseDataClientTest {
 
     @Test
     public void shouldUpdatePaymentStatus() {
-        String url =
-                String.format(CORE_CASE_DATA_URL, USER_ID) + "/" + CASES_RESOURCE + "/" + CASE_ID + "/" +
-                        EVENTS_RESOURCE;
-        when(ccdDataMapper.updatePaymentStatus(ccdData, PAYMENT_STATUS,
+        String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/" +
+                "cases/9999999/events";
+        when(ccdDataMapper.updatePaymentStatus(paymentResponse,
                 UPDATE_PAYMENT_STATUS_CCD_EVENT_ID, tokenJsonNode)).thenReturn(ccdData);
         when(ccdDataMapper
-                .updatePaymentStatus(ccdData, PAYMENT_STATUS, UPDATE_PAYMENT_STATUS_CCD_EVENT_ID,
+                .updatePaymentStatus(paymentResponse, UPDATE_PAYMENT_STATUS_CCD_EVENT_ID,
                         tokenJsonNode)).thenReturn(ccdData);
         when(requestFactory.createCcdSaveRequest(ccdData, ccdCreateCaseParams.getAuthorization()))
                 .thenReturn(ccdRequest);
@@ -315,11 +292,11 @@ public class CoreCaseDataClientTest {
         when(response.getBody()).thenReturn(ccdData);
 
         JsonNode updatePaymentStatus = coreCaseDataClient
-                .updatePaymentStatus(ccdCaseResponse, USER_ID, AUTHORIZATION_TOKEN, tokenJsonNode,
-                        PAYMENT_STATUS);
+                .updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, tokenJsonNode,
+                        paymentResponse);
 
         assertThat(updatePaymentStatus, is(notNullValue()));
-        verify(ccdDataMapper, times(1)).updatePaymentStatus(ccdData, PAYMENT_STATUS,
+        verify(ccdDataMapper, times(1)).updatePaymentStatus(paymentResponse,
                 UPDATE_PAYMENT_STATUS_CCD_EVENT_ID, tokenJsonNode);
         verify(requestFactory, times(1))
                 .createCcdSaveRequest(ccdData, ccdCreateCaseParams.getAuthorization());
