@@ -14,6 +14,7 @@ import org.springframework.mail.MailSendException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.HttpClientErrorException;
 import uk.gov.hmcts.probate.services.submit.model.ParsingSubmitException;
 import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 import uk.gov.hmcts.probate.services.submit.services.SubmitService;
@@ -132,5 +133,18 @@ public class SubmitControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(registryData.toString()));
+    }
+
+    @Test
+    public void shouldReturn502WhenHttpClientErrorExceptionThrownOnSubmit() throws Exception {
+        SubmitData validApplication = new SubmitData(TestUtils.getJsonNodeFromFile("formPayload.json"));
+        doThrow(HttpClientErrorException.class).when(mockSubmitService).submit(eq(validApplication), eq(userId), eq(authorizationToken));
+
+        mockMvc.perform(post(SUBMIT_SERVICE_URL)
+                .headers(httpHeaders)
+                .content(validApplication.getJson().toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadGateway())
+                .andExpect(status().reason("Could not persist submitted application"));
     }
 }

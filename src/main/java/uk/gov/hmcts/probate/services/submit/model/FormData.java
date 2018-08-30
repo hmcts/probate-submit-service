@@ -1,7 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class FormData {
 
@@ -21,14 +20,6 @@ public class FormData {
 
     public JsonNode getRegistry(){
         return formData.at("/registry");
-    }
-
-    public void setSubmissionReference(JsonNode submissionReference) {
-        ((ObjectNode) formData.get("formdata")).set("submissionReference", submissionReference);
-    }
-
-    public void setRegistry(JsonNode registry) {
-        ((ObjectNode) formData.get("formdata")).set("registry", registry);
     }
 
     public JsonNode getJson() {

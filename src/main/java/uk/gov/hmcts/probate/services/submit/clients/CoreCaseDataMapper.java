@@ -442,19 +442,20 @@ public class CoreCaseDataMapper {
         formattedData.put("ignore_warning", true);
         formattedData.set("event_token", ccdToken);
 
-        ObjectNode paymentNode = mapper.createObjectNode();
-        ObjectNode paymentValueNode = mapper.createObjectNode();
-        paymentValueNode.put("status", paymentResponse.getStatus());
-        addDate(paymentValueNode, paymentResponse.getDateCreated());
-        paymentValueNode.put("reference", paymentResponse.getReference());
-        paymentValueNode.put("amount", paymentResponse.getAmount().toString());
-        paymentNode.set("value", paymentValueNode);
-        ArrayNode paymentArrayNode = mapper.createArrayNode();
-        paymentArrayNode.add(paymentNode);
 
         ObjectNode probateData = mapper.createObjectNode();
-        probateData.set("payments", paymentArrayNode);
-
+        if (!paymentResponse.isEmpty()) {
+            ObjectNode paymentNode = mapper.createObjectNode();
+            ObjectNode paymentValueNode = mapper.createObjectNode();
+            paymentValueNode.put("status", paymentResponse.getStatus());
+            addDate(paymentValueNode, paymentResponse.getDateCreated());
+            paymentValueNode.put("reference", paymentResponse.getReference());
+            paymentValueNode.put("amount", paymentResponse.getAmount().toString());
+            paymentNode.set("value", paymentValueNode);
+            ArrayNode paymentArrayNode = mapper.createArrayNode();
+            paymentArrayNode.add(paymentNode);
+            probateData.set("payments", paymentArrayNode);
+        }
         formattedData.set("data", probateData);
         return formattedData;
     }

@@ -53,13 +53,15 @@ public class SequenceServiceTest {
     @Test
     public void nextRegistry() throws IOException {
         JsonNode registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
-        when(mockRegistry.capitalizeRegistryName()).thenReturn("Oxford");
-        when(persistenceClient.getNextSequenceNumber("oxford")).thenReturn(1234L);
-        when(sequenceService.getRegistrySequenceNumber(mockRegistry)).thenReturn(20013L);
-        when(mockRegistry.getEmail()).thenReturn("oxford@email.com");
-        when(mockRegistry.getAddress()).thenReturn("Test Address Line 1\nTest Address Line 2\nTest Address Postcode");
 
-        JsonNode result = sequenceService.populateRegistrySubmitData(SUBMISSION_REFERENCE, mockRegistry);
+        Registry registry = new Registry();
+        registry.setName("oxford");
+        when(persistenceClient.getNextSequenceNumber("oxford")).thenReturn(1234L);
+        when(sequenceService.getRegistrySequenceNumber(registry)).thenReturn(20013L);
+        registry.setEmail("oxford@email.com");
+        registry.setAddress("Test Address Line 1\nTest Address Line 2\nTest Address Postcode");
+
+        JsonNode result = sequenceService.populateRegistrySubmitData(SUBMISSION_REFERENCE, registry);
         assertEquals(result.toString(), registryData.toString());
     }
 

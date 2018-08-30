@@ -2,25 +2,9 @@ package uk.gov.hmcts.probate.services.submit.clients;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.MissingNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import javax.validation.constraints.NotNull;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +16,24 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.annotation.Validated;
 import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
+
+import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -336,4 +338,37 @@ public class CoreCaseDataMapperTest {
         assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/amount").asText(), is(equalTo("5000")));
         assertThat(updatedCcdJson.get("event_token"), is(equalTo(tokenNode)));
     }
+
+    @Test
+    public void shouldUpdatePaymentStatusWhenDateIsNotCorrectFormat() throws IOException {
+        String token  = "TOKEN123456";
+        ObjectNode tokenNode = mapper.createObjectNode();
+        tokenNode.put("token", token);
+        JsonNode paymentJsonNode = TestUtils.getJsonNodeFromFile("paymentV1Response.json");
+        ((ObjectNode) paymentJsonNode).put("date_created", "1234");
+        PaymentResponse paymentResponse = new PaymentResponse(paymentJsonNode);
+        JsonNode updatedCcdJson = coreCaseDataMapper.updatePaymentStatus(paymentResponse,
+                CREATE_CASE_CCD_EVENT_ID, tokenNode);
+
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/status").asText(), is(equalTo("success")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/date").asText(), is(equalTo("")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/reference").asText(), is(equalTo("CODE4$$$Hill4314$$$CODE5$$$CODE2/100")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/amount").asText(), is(equalTo("5000")));
+        assertThat(updatedCcdJson.get("event_token"), is(equalTo(tokenNode)));
+    }
+
+    @Test
+    public void shouldNotUpdatePaymentStatusWhenNoPaymentResponse() {
+        String token  = "TOKEN123456";
+        ObjectNode tokenNode = mapper.createObjectNode();
+        tokenNode.put("token", token);
+        JsonNode paymentJsonNode = MissingNode.getInstance();
+        PaymentResponse paymentResponse = new PaymentResponse(paymentJsonNode);
+        JsonNode updatedCcdJson = coreCaseDataMapper.updatePaymentStatus(paymentResponse,
+                CREATE_CASE_CCD_EVENT_ID, tokenNode);
+
+        assertThat(updatedCcdJson.at("/data/payments").isMissingNode(), is(equalTo(true)));
+        assertThat(updatedCcdJson.get("event_token"), is(equalTo(tokenNode)));
+    }
+
 }
