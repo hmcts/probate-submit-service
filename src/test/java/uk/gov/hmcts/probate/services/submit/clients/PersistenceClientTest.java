@@ -23,6 +23,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.probate.services.submit.model.FormData;
@@ -117,5 +118,15 @@ public class PersistenceClientTest {
         Long result = persistenceClient.getNextSequenceNumber("RegistryName");
         verify(restTemplate, times(1)).getForEntity(endsWith("/RegistryName"), eq(Long.class));
         assertEquals(result, mockResponse.getBody());
+    }
+
+
+    @Test(expected = HttpClientErrorException.class)
+    public void shouldThrowUpdateFormDataSuccessTest() {
+        doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST, "{}")).when(restTemplate).put(anyString(), any());
+        HttpEntity<JsonNode> persistenceReq = new HttpEntity<>(new TextNode("requestBody"), new HttpHeaders());
+        when(entityBuilder.createPersistenceRequest(any())).thenReturn(persistenceReq);
+
+        persistenceClient.updateFormData("emailId", Long.parseLong("123456789"), new TextNode("requestBody"));
     }
 }

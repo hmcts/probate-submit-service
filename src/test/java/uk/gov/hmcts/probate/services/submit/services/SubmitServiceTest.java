@@ -222,7 +222,7 @@ public class SubmitServiceTest {
         verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, times(1)).createCase(any());
         verify(coreCaseDataClient, times(1)).saveCase(any(), any());
-        verify(mockMailClient, times(1)).execute(any(), any(), any());
+        verify(mockMailClient, never()).execute(any(), any(), any());
         verify(sequenceService, times(1)).nextRegistry(ID);
     }
 

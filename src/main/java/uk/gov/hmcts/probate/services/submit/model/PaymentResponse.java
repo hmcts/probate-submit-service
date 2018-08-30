@@ -10,6 +10,10 @@ public class PaymentResponse {
         this.paymentNode = paymentNode;
     }
 
+    public boolean isEmpty() {
+        return paymentNode.isMissingNode();
+    }
+
     public Long getAmount() {
         return paymentNode.get("amount").asLong();
     }

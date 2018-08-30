@@ -73,9 +73,6 @@ public class SubmitService {
                 .build();
 
         Long caseId = submitCcdCase(ccdCreateCaseParams);
-        if (submitData.getPaymentTotal() == 0) {
-            mailClient.execute(submitData.getJson(), registryData, submissionTimestamp);
-        }
         persistenceClient.updateFormData(submitData.getApplicantEmailAddress(),
                 submissionReference.asLong(), formData.getJson());
         ObjectNode response = objectMapper.createObjectNode();

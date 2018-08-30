@@ -77,6 +77,7 @@ public class PersistenceClient {
             restTemplate.put(formDataPersistenceUrl + "/" + emailId, persistenceRequest);
         } catch (HttpClientErrorException e) {
             logHttpClientErrorException(e);
+            throw e;
         }
     }
 
