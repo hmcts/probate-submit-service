@@ -154,3 +154,11 @@
         Line 2 Bham
         Line 3 Bham
         PostCode Bham
+    - name: manchester
+      id: 2
+      email: manchester@email.com
+      address: |
+        Line 1 man
+        Line 2 man
+        Line 3 man
+        PostCode Manchester
