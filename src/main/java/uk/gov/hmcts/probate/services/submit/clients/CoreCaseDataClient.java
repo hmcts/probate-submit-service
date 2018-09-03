@@ -71,7 +71,7 @@ public class CoreCaseDataClient {
                 .createCcdSaveRequest(ccdData, ccdCreateCaseParams.getAuthorization());
         String saveUrl = UriComponentsBuilder.fromHttpUrl(getBaseUrl(ccdCreateCaseParams.getUserId()))
                 .pathSegment(CASES_RESOURCE).toUriString();
-        logger.info("Save case url: " + saveUrl);
+        logger.info("Save case url: {}", saveUrl);
         return new CcdCaseResponse(postRequestToUrl(ccdSaveRequest, saveUrl));
     }
 
@@ -116,7 +116,7 @@ public class CoreCaseDataClient {
     }
 
     private JsonNode getEventToken(String authorization, String url) {
-        logger.info("Start case: " + url);
+        logger.info("Start case: {}", url);
         HttpEntity<JsonNode> request = requestFactory.createCcdStartRequest(authorization);
         try {
             ResponseEntity<JsonNode> response = restTemplate
@@ -139,7 +139,7 @@ public class CoreCaseDataClient {
         JsonNode ccdData = ccdMapper.updatePaymentStatus(paymentResponse, CREATE_CASE_CCD_EVENT_ID, token);
         HttpEntity<JsonNode> ccdSaveRequest = requestFactory.createCcdSaveRequest(ccdData, authorization);
 
-        logger.info("Update case payment url: " + url);
+        logger.info("Update case payment url: {}", url);
         return postRequestToUrl(ccdSaveRequest, url);
     }
 
@@ -162,7 +162,7 @@ public class CoreCaseDataClient {
     }
 
     private void logResponse(ResponseEntity<JsonNode> response) {
-        logger.info("Status code: " + response.getStatusCodeValue());
-        logger.info("Response body:" + response.toString());
+        logger.info("Status code: {}", response.getStatusCodeValue());
+        logger.info("Response body: {}", response.toString());
     }
 }
