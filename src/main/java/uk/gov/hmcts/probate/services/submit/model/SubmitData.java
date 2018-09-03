@@ -6,46 +6,46 @@ import java.util.Objects;
 
 public class SubmitData {
 
-    private final JsonNode submitData;
+    private final JsonNode json;
 
-    public SubmitData(JsonNode submitData) {
-        this.submitData = submitData;
+    public SubmitData(JsonNode json) {
+        this.json = json;
     }
 
     public String getApplicantEmailAddress() {
-        return submitData.at("/submitdata/applicantEmail").asText();
+        return json.at("/submitdata/applicantEmail").asText();
     }
 
     public String getPayloadVersion() {
-        return submitData.at("/submitdata/payloadVersion").asText();
+        return json.at("/submitdata/payloadVersion").asText();
     }
 
     public String getNoOfExecutors() {
-        return submitData.at("/submitdata/noOfExecutors").asText();
+        return json.at("/submitdata/noOfExecutors").asText();
     }
 
     public JsonNode getSubmitData() {
-        return submitData.at("/submitdata");
+        return json.at("/submitdata");
     }
 
     public PaymentResponse getPaymentResponse() {
-        return new PaymentResponse(submitData.at("/submitdata/paymentResponse"));
+        return new PaymentResponse(json.at("/submitdata/paymentResponse"));
     }
 
     public double getPaymentTotal() {
-        return submitData.at("/submitdata/totalFee").asDouble();
+        return json.at("/submitdata/totalFee").asDouble();
     }
 
     public Long getCaseId() {
-        return submitData.at("/submitdata/caseId").asLong();
+        return json.at("/submitdata/caseId").asLong();
     }
 
     public JsonNode getRegistry() {
-        return submitData.at("/submitdata/registry");
+        return json.at("/submitdata/registry");
     }
 
     public JsonNode getJson() {
-        return submitData;
+        return json;
     }
 
     @Override
@@ -53,11 +53,11 @@ public class SubmitData {
         if (this == o) return true;
         if (!(o instanceof SubmitData)) return false;
         SubmitData that = (SubmitData) o;
-        return Objects.equals(submitData, that.submitData);
+        return Objects.equals(json, that.json);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(submitData);
+        return Objects.hash(json);
     }
 }
