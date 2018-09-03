@@ -4,17 +4,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class PersistenceResponse {
 
-    private final JsonNode persistenceResponse;
+    private final JsonNode json;
 
     public PersistenceResponse(JsonNode submitData) {
-        this.persistenceResponse = submitData;
+        this.json = submitData;
     }
 
     public JsonNode getIdAsJsonNode() {
-        return persistenceResponse.get("id");
+        return json.get("id");
     }
 
     public Long getIdAsLong() {
-        return persistenceResponse.get("id").asLong();
+        return json.get("id").asLong();
     }
 }

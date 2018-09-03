@@ -19,7 +19,6 @@ import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -39,8 +38,8 @@ import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 public class CoreCaseDataMapper {
 
     private final Logger logger = LoggerFactory.getLogger(CoreCaseDataMapper.class);
-    private final static DateFormat ORIGINAL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
-    private final static DateFormat NEW_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private final DateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
+    private final DateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
     @Value("${ccd.probate.fullName}")
@@ -469,8 +468,8 @@ public class CoreCaseDataMapper {
 
     private String formatDate(String originalDateStr){
         try {
-            Date originalDate = ORIGINAL_DATE_FORMAT.parse(originalDateStr);
-            return NEW_DATE_FORMAT.format(originalDate);
+            Date originalDate = originalDateFormat.parse(originalDateStr);
+            return newDateFormat.format(originalDate);
         } catch (ParseException pe) {
              logger.error("Error parsing payment date", pe);
         }

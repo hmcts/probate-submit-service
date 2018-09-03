@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class CcdCaseResponse {
 
-    private final JsonNode ccdCaseResponseData;
+    private final JsonNode json;
 
-    public CcdCaseResponse(JsonNode ccdCaseResponseData) {
-        this.ccdCaseResponseData = ccdCaseResponseData;
+    public CcdCaseResponse(JsonNode json) {
+        this.json = json;
     }
 
     public Long getCaseId() {
-        return ccdCaseResponseData.get("id").asLong();
+        return json.get("id").asLong();
     }
 }
