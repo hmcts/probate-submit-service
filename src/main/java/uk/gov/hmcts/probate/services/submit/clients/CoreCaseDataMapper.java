@@ -5,7 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -14,23 +18,29 @@ import java.time.format.DateTimeParseException;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 
 @Configuration
 @ConfigurationProperties(prefix = "ccd")
 public class CoreCaseDataMapper {
 
     private final Logger logger = LoggerFactory.getLogger(CoreCaseDataMapper.class);
+    private final static DateFormat ORIGINAL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
+    private final static DateFormat NEW_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
     @Value("${ccd.probate.fullName}")
@@ -154,7 +164,7 @@ public class CoreCaseDataMapper {
         this.addressMap = addressMap;
     }
 
-    public JsonNode createCcdData(JsonNode probateData, String ccdEventId, JsonNode ccdToken, Calendar submissonTimestamp, JsonNode registryData) {
+    public JsonNode createCcdData(JsonNode probateData, String ccdEventId, JsonNode ccdToken, Calendar submissionTimestamp, JsonNode registryData) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode event = mapper.createObjectNode();
         event.put("id", ccdEventId);
@@ -164,16 +174,16 @@ public class CoreCaseDataMapper {
         formattedData.set("event", event);
         formattedData.put("ignore_warning", true);
         formattedData.set("event_token", ccdToken);
-        formattedData.set("data", mapData(probateData, submissonTimestamp, registryData));
+        formattedData.set("data", mapData(probateData, submissionTimestamp, registryData));
         return formattedData;
     }
 
-    public ObjectNode mapData(JsonNode probateData, Calendar submissonTimestamp, JsonNode registryData) {
+    public ObjectNode mapData(JsonNode probateData, Calendar submissionTimestamp, JsonNode registryData) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdData = mapper.createObjectNode();
         JsonNode registry = registryData.get("registry");
         ccdData.set("applicationID", registryData.get("submissionReference"));
-        LocalDate localDate = LocalDateTime.ofInstant(submissonTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate = LocalDateTime.ofInstant(submissionTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
         ccdData.put("applicationSubmittedDate", localDate.toString());
         ccdData.put("deceasedDomicileInEngWales", "live (domicile) permanently in England or Wales".equalsIgnoreCase(probateData.get("deceasedDomicile").asText()) ? "Yes" : "No");
         ccdData.put("ihtFormCompletedOnline", "online".equalsIgnoreCase(probateData.get("ihtForm").asText()) ? "Yes" : "No");
@@ -395,7 +405,7 @@ public class CoreCaseDataMapper {
             }
 
             ccdLegalStatement.set("intro", legalStatement.get().get("intro"));
-            
+
             return Optional.of(ccdLegalStatement);
         }
 
@@ -421,5 +431,50 @@ public class CoreCaseDataMapper {
         return Optional.of(ccdExecutorsApplying);
     }
 
+    public JsonNode updatePaymentStatus(PaymentResponse paymentResponse, String ccdEventId, JsonNode ccdToken) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode event = mapper.createObjectNode();
+        event.put("id", ccdEventId);
+        event.put("description", "");
+        event.put("summary", "Probate application");
+        ObjectNode formattedData = mapper.createObjectNode();
+        formattedData.set("event", event);
+        formattedData.put("ignore_warning", true);
+        formattedData.set("event_token", ccdToken);
 
+
+        ObjectNode probateData = mapper.createObjectNode();
+        if (!paymentResponse.isEmpty()) {
+            ObjectNode paymentNode = mapper.createObjectNode();
+            ObjectNode paymentValueNode = mapper.createObjectNode();
+            paymentValueNode.put("status", paymentResponse.getStatus());
+            addDate(paymentValueNode, paymentResponse.getDateCreated());
+            paymentValueNode.put("reference", paymentResponse.getReference());
+            paymentValueNode.put("amount", paymentResponse.getAmount().toString());
+            paymentNode.set("value", paymentValueNode);
+            ArrayNode paymentArrayNode = mapper.createArrayNode();
+            paymentArrayNode.add(paymentNode);
+            probateData.set("payments", paymentArrayNode);
+        }
+        formattedData.set("data", probateData);
+        return formattedData;
+    }
+
+    private void addDate(ObjectNode paymentValueNode, String date) {
+        String formattedDate = formatDate(date);
+        if (StringUtils.isNotBlank(formattedDate)) {
+            paymentValueNode.put("date", formattedDate);
+        }
+    }
+
+    private String formatDate(String originalDateStr){
+        try {
+            Date originalDate = ORIGINAL_DATE_FORMAT.parse(originalDateStr);
+            return NEW_DATE_FORMAT.format(originalDate);
+        } catch (ParseException pe) {
+             logger.error("Error parsing payment date", pe);
+        }
+        return "";
+    }
 }
+
