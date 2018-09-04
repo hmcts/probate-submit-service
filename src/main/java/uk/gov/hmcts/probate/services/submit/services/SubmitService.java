@@ -121,6 +121,7 @@ public class SubmitService {
 
     public JsonNode updatePaymentStatus(SubmitData submitData, String userId, String authorization) {
         PaymentResponse paymentStatus = submitData.getPaymentResponse();
+        persistenceClient.saveSubmission(submitData);
         JsonNode tokenJson = coreCaseDataClient
                 .createCaseUpdatePaymentStatusEvent(userId, submitData.getCaseId(), authorization);
         JsonNode updatePaymentStatusResponse = coreCaseDataClient
