@@ -15,7 +15,7 @@ public class PaymentResponse {
     }
 
     public Long getAmount() {
-        return paymentNode.get("amount").asLong();
+        return paymentNode.get("amount").asLong() * 100L;
     }
 
     public String getReference() {
@@ -23,11 +23,23 @@ public class PaymentResponse {
     }
 
     public String getDateCreated() {
-        return paymentNode.get("date_created").asText();
+        return paymentNode.get("date").asText();
 
     }
 
     public String getStatus() {
-        return paymentNode.at("/state/status").asText();
+        return paymentNode.get("status").asText();
+    }
+
+    public String getChannel() {
+        return paymentNode.get("channel").asText();
+    }
+
+    public String getTransactionId() {
+        return paymentNode.get("transactionId").asText();
+    }
+
+    public String getSiteId() {
+        return paymentNode.get("siteId").asText();
     }
 }

@@ -29,7 +29,7 @@ public class SubmitData {
     }
 
     public PaymentResponse getPaymentResponse() {
-        return new PaymentResponse(json.at("/submitdata/paymentResponse"));
+        return new PaymentResponse(json.at("/submitdata/payment"));
     }
 
     public double getPaymentTotal() {
