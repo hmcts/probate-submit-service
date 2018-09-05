@@ -450,6 +450,9 @@ public class CoreCaseDataMapper {
             addDate(paymentValueNode, paymentResponse.getDateCreated());
             paymentValueNode.put("reference", paymentResponse.getReference());
             paymentValueNode.put("amount", paymentResponse.getAmount().toString());
+            paymentValueNode.put("method", paymentResponse.getChannel());
+            paymentValueNode.put("transactionId", paymentResponse.getTransactionId());
+            paymentValueNode.put("siteId", paymentResponse.getSiteId());
             paymentNode.set("value", paymentValueNode);
             ArrayNode paymentArrayNode = mapper.createArrayNode();
             paymentArrayNode.add(paymentNode);
