@@ -37,6 +37,7 @@ import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 @ConfigurationProperties(prefix = "ccd")
 public class CoreCaseDataMapper {
 
+    private static final String IHT_FORM_VALUE_205 = "IHT205";
     private final Logger logger = LoggerFactory.getLogger(CoreCaseDataMapper.class);
     private final DateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
     private final DateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -185,7 +186,12 @@ public class CoreCaseDataMapper {
         LocalDate localDate = LocalDateTime.ofInstant(submissionTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
         ccdData.put("applicationSubmittedDate", localDate.toString());
         ccdData.put("deceasedDomicileInEngWales", "live (domicile) permanently in England or Wales".equalsIgnoreCase(probateData.get("deceasedDomicile").asText()) ? "Yes" : "No");
-        ccdData.put("ihtFormCompletedOnline", "online".equalsIgnoreCase(probateData.get("ihtForm").asText()) ? "Yes" : "No");
+        boolean ihtCompletedOnline = "online".equalsIgnoreCase(probateData.get("ihtForm").asText());
+        //System.out.println("************* ihtCompletedOnline "+ihtCompletedOnline);
+        String ihtFormId = probateData.get("ihtFormId") == null ? "" : probateData.get("ihtFormId").asText();
+        ccdData.put("ihtFormCompletedOnline", ihtCompletedOnline ? "Yes" : "No");
+        ccdData.put("ihtFormId", ihtCompletedOnline ? IHT_FORM_VALUE_205 : ihtFormId);
+        //System.out.println("*************"+ccdData.get("ihtFormId"));
         ccdData.put("softStop", "True".equalsIgnoreCase(probateData.get("softStop").asText()) ? "Yes" : "No");
         ccdData.set("registryLocation", registry.get("name"));
         ccdData.put("applicationType", "Personal");
