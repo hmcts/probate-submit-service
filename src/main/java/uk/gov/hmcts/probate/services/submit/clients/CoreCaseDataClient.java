@@ -93,7 +93,6 @@ public class CoreCaseDataClient {
         } catch (HttpClientErrorException e) {
             logger.info("Exception while getting a case from CCD", e);
             logger.info("Status Code: ", e.getStatusText());
-            logger.info("Body: ", e.getResponseBodyAsString());
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }
@@ -125,13 +124,12 @@ public class CoreCaseDataClient {
         } catch (HttpClientErrorException e) {
             logger.info("Exception while getting an event token from CCD", e);
             logger.info("Status Code: ", e.getStatusText());
-            logger.info("Body: ", e.getResponseBodyAsString());
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public JsonNode updatePaymentStatus(Long caseId, String userId,
+    public CcdCaseResponse updatePaymentStatus(Long caseId, String userId,
                                         String authorization,
                                         JsonNode token, PaymentResponse paymentResponse) {
         String url = UriComponentsBuilder.fromHttpUrl(getBaseUrl(userId)).pathSegment(CASES_RESOURCE, caseId.toString(),
@@ -140,7 +138,7 @@ public class CoreCaseDataClient {
         HttpEntity<JsonNode> ccdSaveRequest = requestFactory.createCcdSaveRequest(ccdData, authorization);
 
         logger.info("Update case payment url: {}", url);
-        return postRequestToUrl(ccdSaveRequest, url);
+        return new CcdCaseResponse(postRequestToUrl(ccdSaveRequest, url));
     }
 
     private JsonNode postRequestToUrl(HttpEntity<JsonNode> ccdSaveRequest, String url) {
@@ -152,7 +150,6 @@ public class CoreCaseDataClient {
         } catch (HttpClientErrorException e) {
             logger.info("Exception while saving case to CCD", e);
             logger.info("Status Code: ", e.getStatusText());
-            logger.info("Body: ", e.getResponseBodyAsString());
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }
@@ -163,6 +160,5 @@ public class CoreCaseDataClient {
 
     private void logResponse(ResponseEntity<JsonNode> response) {
         logger.info("Status code: {}", response.getStatusCodeValue());
-        logger.info("Response body: {}", response.toString());
     }
 }
