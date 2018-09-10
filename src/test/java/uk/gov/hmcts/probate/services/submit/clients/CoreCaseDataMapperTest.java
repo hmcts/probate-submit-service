@@ -327,15 +327,18 @@ public class CoreCaseDataMapperTest {
         String token  = "TOKEN123456";
         ObjectNode tokenNode = mapper.createObjectNode();
         tokenNode.put("token", token);
-        JsonNode paymentJsonNode = TestUtils.getJsonNodeFromFile("paymentV1Response.json");
+        JsonNode paymentJsonNode = TestUtils.getJsonNodeFromFile("paymentResponse.json");
         PaymentResponse paymentResponse = new PaymentResponse(paymentJsonNode);
         JsonNode updatedCcdJson = coreCaseDataMapper.updatePaymentStatus(paymentResponse,
                 CREATE_CASE_CCD_EVENT_ID, tokenNode);
 
-        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/status").asText(), is(equalTo("success")));
-        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/date").asText(), is(equalTo("2018-08-29")));
-        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/reference").asText(), is(equalTo("CODE4$$$Hill4314$$$CODE5$$$CODE2/100")));
-        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/amount").asText(), is(equalTo("5000")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/status").asText(), is(equalTo("Success")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/date").asText(), is(equalTo("2018-09-05")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/reference").asText(), is(equalTo("RC-1536-1457-4509-0641")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/amount").asText(), is(equalTo("36500")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/transactionId").asText(), is(equalTo("r4jb083f4pi6g8chhcnmb2gsa3")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/siteId").asText(), is(equalTo("P223")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/method").asText(), is(equalTo("online")));
         assertThat(updatedCcdJson.get("event_token"), is(equalTo(tokenNode)));
     }
 
@@ -344,16 +347,16 @@ public class CoreCaseDataMapperTest {
         String token  = "TOKEN123456";
         ObjectNode tokenNode = mapper.createObjectNode();
         tokenNode.put("token", token);
-        JsonNode paymentJsonNode = TestUtils.getJsonNodeFromFile("paymentV1Response.json");
-        ((ObjectNode) paymentJsonNode).put("date_created", "1234");
+        JsonNode paymentJsonNode = TestUtils.getJsonNodeFromFile("paymentResponse.json");
+        ((ObjectNode) paymentJsonNode).put("date", "1234");
         PaymentResponse paymentResponse = new PaymentResponse(paymentJsonNode);
         JsonNode updatedCcdJson = coreCaseDataMapper.updatePaymentStatus(paymentResponse,
                 CREATE_CASE_CCD_EVENT_ID, tokenNode);
 
-        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/status").asText(), is(equalTo("success")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/status").asText(), is(equalTo("Success")));
         assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/date").asText(), is(equalTo("")));
-        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/reference").asText(), is(equalTo("CODE4$$$Hill4314$$$CODE5$$$CODE2/100")));
-        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/amount").asText(), is(equalTo("5000")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/reference").asText(), is(equalTo("RC-1536-1457-4509-0641")));
+        assertThat(updatedCcdJson.at("/data/payments").get(0).at("/value/amount").asText(), is(equalTo("36500")));
         assertThat(updatedCcdJson.get("event_token"), is(equalTo(tokenNode)));
     }
 
