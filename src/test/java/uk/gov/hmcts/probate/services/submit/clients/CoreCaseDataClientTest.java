@@ -291,7 +291,7 @@ public class CoreCaseDataClientTest {
                 .thenReturn(response);
         when(response.getBody()).thenReturn(ccdData);
 
-        JsonNode updatePaymentStatus = coreCaseDataClient
+        CcdCaseResponse updatePaymentStatus = coreCaseDataClient
                 .updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, tokenJsonNode,
                         paymentResponse);
 

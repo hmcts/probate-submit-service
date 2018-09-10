@@ -31,6 +31,7 @@ public class ContractTestUtils {
     @PostConstruct
     public void init() {
         serviceToken = solCcdServiceAuthTokenGenerator.generateServiceToken();
+        System.out.println("Service Token: " + serviceToken);
         objectMapper = new ObjectMapper();
     }
 

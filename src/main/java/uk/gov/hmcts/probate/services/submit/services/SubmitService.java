@@ -4,6 +4,7 @@ import static net.logstash.logback.marker.Markers.append;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
@@ -53,7 +54,7 @@ public class SubmitService {
 
     public JsonNode submit(SubmitData submitData, String userId, String authorization) {
         FormData formData = persistenceClient.loadFormDataById(submitData.getApplicantEmailAddress());
-        if (formData.getSubmissionReference() != 0) {
+        if (formData.getSubmissionReference() != 0 && formData.getCcdCaseId() != null) {
             return new TextNode(DUPLICATE_SUBMISSION);
         }
         PersistenceResponse persistenceResponse = persistenceClient.saveSubmission(submitData);
@@ -72,11 +73,11 @@ public class SubmitService {
                 .withSubmissionTimestamp(submissionTimestamp)
                 .build();
 
-        Long caseId = submitCcdCase(ccdCreateCaseParams);
+        Optional<CcdCaseResponse> caseResponseOptional = submitCcdCase(ccdCreateCaseParams);
         persistenceClient.updateFormData(submitData.getApplicantEmailAddress(),
                 submissionReference.asLong(), formData.getJson());
         ObjectNode response = objectMapper.createObjectNode();
-        response.put("caseId", caseId);
+        caseResponseOptional.ifPresent(ccdCase -> addCaseDetailsToFormData(ccdCase, response));
         response.set("registry", registryData);
         response.set("submissionReference", submissionReference);
         return response;
@@ -87,21 +88,25 @@ public class SubmitService {
                 + ", number of executors: " + submitData.getNoOfExecutors();
     }
 
-    private Long submitCcdCase(CcdCreateCaseParams ccdCreateCaseParams) {
+    private void addCaseDetailsToFormData(CcdCaseResponse ccdCaseResponse, ObjectNode response){
+        response.set("caseId", new LongNode(ccdCaseResponse.getCaseId()));
+        response.set("caseState", new TextNode(ccdCaseResponse.getState()));
+        logger.info("submit case - caseId: {}, caseState: {}", ccdCaseResponse.getCaseId(), ccdCaseResponse.getState());
+    }
+
+    private Optional<CcdCaseResponse> submitCcdCase(CcdCreateCaseParams ccdCreateCaseParams) {
         if (!coreCaseDataEnabled) {
-            return 0L;
+            return Optional.empty();
         }
         Optional<CcdCaseResponse> caseResponseOptional = coreCaseDataClient
                 .getCase(ccdCreateCaseParams.getSubmitData(),
                         ccdCreateCaseParams.getUserId(), ccdCreateCaseParams.getAuthorization());
-        CcdCaseResponse ccdCaseResponse = caseResponseOptional.isPresent() ? caseResponseOptional.get()
-                : createCase(ccdCreateCaseParams);
-        return ccdCaseResponse.getCaseId();
+        return caseResponseOptional.isPresent() ? caseResponseOptional : createCase(ccdCreateCaseParams);
     }
 
-    private CcdCaseResponse createCase(CcdCreateCaseParams ccdCreateCaseParams) {
+    private Optional<CcdCaseResponse> createCase(CcdCreateCaseParams ccdCreateCaseParams) {
         JsonNode ccdStartCaseResponse = coreCaseDataClient.createCase(ccdCreateCaseParams);
-        return coreCaseDataClient.saveCase(ccdCreateCaseParams, ccdStartCaseResponse);
+        return Optional.of(coreCaseDataClient.saveCase(ccdCreateCaseParams, ccdStartCaseResponse));
     }
 
     public String resubmit(long submissionId) {
@@ -124,11 +129,17 @@ public class SubmitService {
         persistenceClient.saveSubmission(submitData);
         JsonNode tokenJson = coreCaseDataClient
                 .createCaseUpdatePaymentStatusEvent(userId, submitData.getCaseId(), authorization);
-        JsonNode updatePaymentStatusResponse = coreCaseDataClient
+        CcdCaseResponse updatePaymentStatusResponse = coreCaseDataClient
                 .updatePaymentStatus(submitData.getCaseId(), userId, authorization, tokenJson,
                         paymentStatus);
         Calendar submissionTimestamp = Calendar.getInstance();
         mailClient.execute(submitData.getJson(), submitData.getRegistry(), submissionTimestamp);
-        return updatePaymentStatusResponse;
+
+        ObjectNode response = objectMapper.createObjectNode();
+        response.set("caseState", new TextNode(updatePaymentStatusResponse.getState()));
+        logger.info("update payment status - caseId: {}, caseState: {}", updatePaymentStatusResponse.getCaseId(),
+                updatePaymentStatusResponse.getState());
+
+        return response;
     }
 }

@@ -2,6 +2,7 @@ package uk.gov.hmcts.probate.services.submit.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.animation.Animation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import java.util.Calendar;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -38,6 +40,7 @@ public class SubmitServiceTest {
 
     private static final String USER_ID = "12345";
     private static final Long CASE_ID = 99999L;
+    private static final String CASE_STATE = "CCD_STATE";
     private static final Long ID = 1L;
     private static final String AUTHORIZATION_TOKEN = "XXXXXX";
     private static final String APPLICANT_EMAIL_ADDRESS = "test@test.com";
@@ -117,6 +120,7 @@ public class SubmitServiceTest {
         when(submissionReference.asLong()).thenReturn(ID);
         when(sequenceService.nextRegistry(ID)).thenReturn(registryData);
         when(ccdCaseResponse.getCaseId()).thenReturn(CASE_ID);
+        when(ccdCaseResponse.getState()).thenReturn(CASE_STATE);
         when(formData.getJson()).thenReturn(formDataJson);
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
@@ -124,6 +128,9 @@ public class SubmitServiceTest {
         JsonNode submitResponse = submitService.submit(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
         assertThat(submitResponse, is(notNullValue()));
+        assertThat(submitResponse.at("/caseId").longValue(), is(equalTo(CASE_ID)));
+        assertThat(submitResponse.at("/caseState").asText(), is(equalTo(CASE_STATE)));
+        assertThat(submitResponse.at("/registry"), is(equalTo(registryData)));
         verify(persistenceClient, times(1)).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formDataJson);
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
         verify(persistenceClient, times(1)).saveSubmission(submitData);
@@ -145,6 +152,7 @@ public class SubmitServiceTest {
         when(submissionReference.asLong()).thenReturn(ID);
         when(sequenceService.nextRegistry(ID)).thenReturn(registryData);
         when(ccdCaseResponse.getCaseId()).thenReturn(CASE_ID);
+        when(ccdCaseResponse.getState()).thenReturn(CASE_STATE);
         when(formData.getJson()).thenReturn(formDataJson);
         Optional<CcdCaseResponse> caseResponseOptional = Optional.empty();
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
@@ -154,6 +162,9 @@ public class SubmitServiceTest {
         JsonNode submitResponse = submitService.submit(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
         assertThat(submitResponse, is(notNullValue()));
+        assertThat(submitResponse.at("/caseId").longValue(), is(equalTo(CASE_ID)));
+        assertThat(submitResponse.at("/caseState").asText(), is(equalTo(CASE_STATE)));
+        assertThat(submitResponse.at("/registry"), is(equalTo(registryData)));
         verify(persistenceClient, times(1)).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formDataJson);
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
         verify(persistenceClient, times(1)).saveSubmission(submitData);
@@ -237,7 +248,7 @@ public class SubmitServiceTest {
         when(coreCaseDataClient.createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN)).thenReturn(jsonNode);
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
-        when(coreCaseDataClient.updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse)).thenReturn(jsonNode);
+        when(coreCaseDataClient.updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse)).thenReturn(ccdCaseResponse);
         when(sequenceService.nextRegistry(ID)).thenReturn(registryData);
         when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);
 

@@ -13,4 +13,8 @@ public class CcdCaseResponse {
     public Long getCaseId() {
         return json.get("id").asLong();
     }
+
+    public String getState() {
+        return json.get("state").asText();
+    }
 }
