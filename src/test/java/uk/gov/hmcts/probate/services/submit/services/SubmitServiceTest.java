@@ -2,7 +2,6 @@ package uk.gov.hmcts.probate.services.submit.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.animation.Animation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
