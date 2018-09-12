@@ -1,0 +1,21 @@
+{
+  "event": {
+    "id": "createCase",
+    "description": "",
+    "summary": "Probate application"
+  },
+  "ignore_warning": true,
+  "event_token": "sampletoken",
+  "data": {
+    "payments": [
+      {
+        "value": {
+          "status": "Success",
+          "date": "2018-08-29",
+          "reference": "CODE4$$$Hill4314$$$CODE5$$$CODE2/100",
+          "amount": "5000"
+        }
+      }
+    ]
+  }
+}

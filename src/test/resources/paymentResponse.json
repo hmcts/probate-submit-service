@@ -1,0 +1,24 @@
+{
+  "date": "2018-09-05T11:09:05.227+0000",
+  "total": 365,
+  "amount": 365,
+  "copies": {
+    "uk": {
+      "cost": 50,
+      "number": 100
+    },
+    "overseas": {
+      "cost": 100,
+      "number": 200
+    }
+  },
+  "siteId": "P223",
+  "status": "Success",
+  "userId": 33,
+  "channel": "online",
+  "paymentId": "RC-1536-1457-4509-0641",
+  "reference": "RC-1536-1457-4509-0641",
+  "transactionId": "r4jb083f4pi6g8chhcnmb2gsa3",
+  "applicationFee": 215,
+  "paymentCreatedDate": "2018-09-05T11:09:05.227+0000"
+}

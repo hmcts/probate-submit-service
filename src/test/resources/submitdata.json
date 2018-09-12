@@ -1,119 +1,151 @@
 {
-    "submitdata": {
-        "applicantFirstName": "Applicant",
-        "applicantLastName": "NAme",
-        "applicantAddress": "my address\r\n",
-        "applicantPhone": "324234",
-        "applicantEmail": "nigel@haworthconsulting.co.uk",
-        "applicantIsExecutor": "Yes",
-        "deceasedFirstname": "deceased",
-        "deceasedSurname": "person",
-        "deceasedAliasAssets": "Yes",
-        "deceasedOtherNames": {
-            "name_0": {
-                "lastName": "name",
-                "firstName": "another"
-            },
-            "name_1": {
-                "lastName": "alias",
-                "firstName": "an"
-            },
-            "name_2": {
-                "lastName": "someoneelse",
-                "firstName": "aka"
-            }
-        },
-        "deceasedMarriedAfterDateOnWill": "Yes",
-        "deceasedAddress": "their address\r\n",
-        "deceasedDod": "1 February 2000",
-        "deceasedDob": "1 February 1900",
-        "deceasedDomicile": "live (domicile) permanently in England or Wales",
-        "willLeft": "Yes",
-        "willOriginal": "Yes",
-        "willWithCodicils": "No",
-        "ihtCompleted": "Yes",
-        "ihtForm": "online",
-        "ihtIdentifier": "12345678F12345",
-        "ihtGrossValue": 222222,
-        "ihtNetValue": 22222,
-        "copiesUK": 1,
-        "copiesOverseas": 2,
-        "totalFee": "216.50",
-        "paymentReference": "PRO1$$$person3222$$$P223$$$X0250$X0251-3/1$X0251-4/2",
-        "legalStatement": {
-            "will": "I will send and sign what I believe to be the true and original last will and testament of deceased person.",
-            "intro": "This statement is based on the information given in your application. It will be stored as a public record.",
-            "accept": "I confirm that the information I have provided is correct to the best of my knowledge.",
-            "deceased": "That deceased person, also known as another  name, an alias, aka someoneelse, of their address\r\n, was born on 1 February 1900 and died on 1 February 2000, domiciled in England and Wales.",
-            "executor": "I am an executor named in the will. To the best of my knowledge, information and belief, there was no land vested in the person who died which was settled previously to the death (and not by the will) of the person who died and which remained settled land notwithstanding such death.",
-            "applicant": "I, Applicant NAme, of my address\r\n make the following statement:",
-            "estateValue": "That the gross estate value for the estate amounts to &pound;222 and the net estate value amounts to &pound;22.",
-            "otherExecutors": ["executor two, another executor named in the will, died (before the person who has died).", "executor3 three, another executor named in the will, died (after the person who has died).", "executor4 four, another executor named in the will, doesn&rsquo;t want to apply now, but may do in the future. I have notified them in writing.", "executor5 five, another executor named in the will, doesn&rsquo;t want to apply now, and gives up the right to do so in the future."]
-        },
-        "declaration": {
-            "accept": "I confirm that I will administer the estate of the person who died according to law, and that my application is truthful.",
-            "confirm": "We confirm that we will administer the estate of deceased person, according to law. We will:",
-            "requests": "If the probate registry (court) asks us to do so, we will:",
-            "understand": "We understand that:",
-            "confirmItem1": "collect the whole estate",
-            "confirmItem2": "keep full details (an inventory) of the estate",
-            "confirmItem3": "keep a full account of how the estate has been distributed",
-            "requestsItem1": "provide the full details of the estate and how it has been distributed",
-            "requestsItem2": "return the grant of probate to the court",
-            "understandItem1": "our application will be rejected if we do not provide information (if asked)",
-            "understandItem2": "criminal proceedings for fraud may be brought against us if we are found to have been deliberately untruthful or dishonest"
-        },
-        "noOfApplicants": 3,
-        "noOfExecutors": 7,
-        "dealingWithEstate": "Yes",
-        "executorsNotApplying": [
-            {
-            "fullName" : "Second Executor Name",
-            "isApplying": false,
-            "isDead": true,
-            "notApplyingKey": "optionDiedBefore",
-            "notApplyingReason": "This executor died (before the person who has died)"
-            }, {
-            "fullName" : "Third Executor Name",
-            "isApplying": false,
-            "isDead": true,
-            "notApplyingKey": "optionDiedAfter",
-            "notApplyingReason": "This executor died (after the person who has died)"
-            }, {
-            "fullName" : "Fourth Executor Name",
-            "isApplying": false,
-            "isDead": false,
-            "executorNotified": "Yes",
-            "notApplyingKey": "optionPowerReserved",
-            "notApplyingReason": "This executor doesn&rsquo;t want to apply now, but may do in the future (this is also known as power reserved)"
-        }, {
-            "fullName" : "Fifth Executor Name",
-            "isApplying": false,
-            "isDead": false,
-            "notApplyingKey": "optionRenunciated",
-            "notApplyingReason": "This executor doesn&rsquo;t want to apply now, and gives up the right to do so in the future (this is also known as renunciation, and the executor will need to fill in a form)"
-        }],
-
-        "executorsApplying": [
-            {
-                "fullName" : "Sixth Executor Name",
-                "isApplying": true,
-                "isDead": false,
-                "address": "exec6_address",
-                "mobile":"07963456421",
-                "email": "zcaphkk@ucl.ac.uk",
-                "hasOtherName":true,
-                "currentName": "Executor6 other name"
-
-            }, {
-                "fullName" : "Seventh Executor Name",
-                "isApplying": true,
-                "isDead": false,
-                "address": "exec7_address",
-                "mobile":"07963456421",
-                "email": "zcaphkk@ucl.ac.uk",
-                "hasOtherName":false
-            }],
-        "softStop": "softStop"
+  "submitdata": {
+    "payloadVersion": "4.1.0",
+    "applicantFirstName": "Applicant",
+    "applicantLastName": "NAme",
+    "applicantAddress": "my address\r\n",
+    "applicantPhone": "324234",
+    "applicantEmail": "nigel@haworthconsulting.co.uk",
+    "applicantIsExecutor": "Yes",
+    "deceasedFirstname": "deceased",
+    "deceasedSurname": "person",
+    "deceasedAliasAssets": "Yes",
+    "deceasedOtherNames": {
+      "name_0": {
+        "lastName": "name",
+        "firstName": "another"
+      },
+      "name_1": {
+        "lastName": "alias",
+        "firstName": "an"
+      },
+      "name_2": {
+        "lastName": "someoneelse",
+        "firstName": "aka"
+      }
+    },
+    "deceasedMarriedAfterDateOnWill": "Yes",
+    "deceasedAddress": "their address\r\n",
+    "deceasedDod": "1 February 2000",
+    "deceasedDob": "1 February 1900",
+    "deceasedDomicile": "live (domicile) permanently in England or Wales",
+    "willLeft": "Yes",
+    "willOriginal": "Yes",
+    "willWithCodicils": "No",
+    "ihtCompleted": "Yes",
+    "ihtForm": "online",
+    "ihtIdentifier": "12345678F12345",
+    "ihtGrossValue": 222222,
+    "ihtNetValue": 22222,
+    "copiesUK": 1,
+    "copiesOverseas": 2,
+    "totalFee": "216.50",
+    "paymentReference": "PRO1$$$person3222$$$P223$$$X0250$X0251-3/1$X0251-4/2",
+    "legalStatement": {
+      "will": "I will send and sign what I believe to be the true and original last will and testament of deceased person.",
+      "intro": "This statement is based on the information given in your application. It will be stored as a public record.",
+      "accept": "I confirm that the information I have provided is correct to the best of my knowledge.",
+      "deceased": "That deceased person, also known as another  name, an alias, aka someoneelse, of their address\r\n, was born on 1 February 1900 and died on 1 February 2000, domiciled in England and Wales.",
+      "executor": "I am an executor named in the will. To the best of my knowledge, information and belief, there was no land vested in the person who died which was settled previously to the death (and not by the will) of the person who died and which remained settled land notwithstanding such death.",
+      "applicant": "I, Applicant NAme, of my address\r\n make the following statement:",
+      "estateValue": "That the gross estate value for the estate amounts to &pound;222 and the net estate value amounts to &pound;22.",
+      "otherExecutors": [
+        "executor two, another executor named in the will, died (before the person who has died).",
+        "executor3 three, another executor named in the will, died (after the person who has died).",
+        "executor4 four, another executor named in the will, doesn&rsquo;t want to apply now, but may do in the future. I have notified them in writing.",
+        "executor5 five, another executor named in the will, doesn&rsquo;t want to apply now, and gives up the right to do so in the future."
+      ]
+    },
+    "declaration": {
+      "accept": "I confirm that I will administer the estate of the person who died according to law, and that my application is truthful.",
+      "confirm": "We confirm that we will administer the estate of deceased person, according to law. We will:",
+      "requests": "If the probate registry (court) asks us to do so, we will:",
+      "understand": "We understand that:",
+      "confirmItem1": "collect the whole estate",
+      "confirmItem2": "keep full details (an inventory) of the estate",
+      "confirmItem3": "keep a full account of how the estate has been distributed",
+      "requestsItem1": "provide the full details of the estate and how it has been distributed",
+      "requestsItem2": "return the grant of probate to the court",
+      "understandItem1": "our application will be rejected if we do not provide information (if asked)",
+      "understandItem2": "criminal proceedings for fraud may be brought against us if we are found to have been deliberately untruthful or dishonest"
+    },
+    "noOfApplicants": 3,
+    "noOfExecutors": 7,
+    "dealingWithEstate": "Yes",
+    "executorsNotApplying": [
+      {
+        "fullName": "Second Executor Name",
+        "isApplying": false,
+        "isDead": true,
+        "notApplyingKey": "optionDiedBefore",
+        "notApplyingReason": "This executor died (before the person who has died)"
+      },
+      {
+        "fullName": "Third Executor Name",
+        "isApplying": false,
+        "isDead": true,
+        "notApplyingKey": "optionDiedAfter",
+        "notApplyingReason": "This executor died (after the person who has died)"
+      },
+      {
+        "fullName": "Fourth Executor Name",
+        "isApplying": false,
+        "isDead": false,
+        "executorNotified": "Yes",
+        "notApplyingKey": "optionPowerReserved",
+        "notApplyingReason": "This executor doesn&rsquo;t want to apply now, but may do in the future (this is also known as power reserved)"
+      },
+      {
+        "fullName": "Fifth Executor Name",
+        "isApplying": false,
+        "isDead": false,
+        "notApplyingKey": "optionRenunciated",
+        "notApplyingReason": "This executor doesn&rsquo;t want to apply now, and gives up the right to do so in the future (this is also known as renunciation, and the executor will need to fill in a form)"
+      }
+    ],
+    "executorsApplying": [
+      {
+        "fullName": "Sixth Executor Name",
+        "isApplying": true,
+        "isDead": false,
+        "address": "exec6_address",
+        "mobile": "07963456421",
+        "email": "zcaphkk@ucl.ac.uk",
+        "hasOtherName": true,
+        "currentName": "Executor6 other name"
+      },
+      {
+        "fullName": "Seventh Executor Name",
+        "isApplying": true,
+        "isDead": false,
+        "address": "exec7_address",
+        "mobile": "07963456421",
+        "email": "zcaphkk@ucl.ac.uk",
+        "hasOtherName": false
+      }
+    ],
+    "softStop": "softStop",
+    "caseId": 111111113,
+    "paymentResponse": {
+      "id": "24",
+      "amount": 5000,
+      "state": {
+        "status": "success",
+        "finished": true
+      },
+      "description": "Probate Payment: 50",
+      "reference": "CODE4$$$Hill4314$$$CODE5$$$CODE2/100",
+      "date_created": "2018-08-29T15:25:11.920+0000",
+      "_links": {}
+    },
+    "registry": {
+      "registry": {
+        "name": "Birmingham",
+        "email": "birmingham@email.com",
+        "address": "Line 1 Bham\nLine 2 Bham\nLine 3 Bham\nPostCode Bham",
+        "sequenceNumber": 20075
+      },
+      "submissionReference": 17
     }
+  }
 }

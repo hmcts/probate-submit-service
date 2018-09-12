@@ -28,9 +28,6 @@ public class MailMessageBuilderTest {
     @Autowired
     private SpringTemplateEngine templateEngine;
 
-    @Autowired
-    private TestUtils testUtils;
-
     private MailMessageBuilder mailMessageBuilder;
     private Calendar submissonTimestamp;
     private JsonNode registryData;
@@ -39,7 +36,7 @@ public class MailMessageBuilderTest {
     public void setUp() throws Exception {
         mailMessageBuilder = new MailMessageBuilder(templateEngine);
         submissonTimestamp = Calendar.getInstance();
-        registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
+        registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
     }
 
     @Test
@@ -48,7 +45,7 @@ public class MailMessageBuilderTest {
         messageProperties.put("subject", "subject");
         messageProperties.put("sender", "sender");
         messageProperties.put("recipient", "recipient");
-        JsonNode emailData = testUtils.getJsonNodeFromFile("formPayload.json");
+        JsonNode emailData = TestUtils.getJsonNodeFromFile("formPayload.json");
         JsonNode registry = registryData.get("registry");
 
         MimeMessage mimeMessage = mailMessageBuilder.buildMessage(emailData, registry, messageProperties, submissonTimestamp);

@@ -23,14 +23,14 @@ class MailMessageBuilder {
         this.templateEngine = templateEngine;
     }
 
-    public MimeMessage buildMessage(JsonNode submitData, JsonNode registryData, Properties messageProperties,  Calendar submissonTimestamp) throws MessagingException {
+    public MimeMessage buildMessage(JsonNode submitData, JsonNode registryData, Properties messageProperties,  Calendar submissionTimestamp) throws MessagingException {
         MimeMessage mailMessage = new MimeMessage(Session.getDefaultInstance(messageProperties));
         MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage);
         messageHelper.setSubject(messageProperties.getProperty("subject"));
         messageHelper.setFrom(messageProperties.getProperty("sender"));
         messageHelper.setTo(registryData.get("email").asText());
 
-        String messageText = templateEngine.process("email-template", createTemplateContext(submitData, registryData.get("sequenceNumber").asLong(), submissonTimestamp));
+        String messageText = templateEngine.process("email-template", createTemplateContext(submitData, registryData.get("sequenceNumber").asLong(), submissionTimestamp));
 
         messageHelper.setText(messageText, true);
         return mailMessage;
