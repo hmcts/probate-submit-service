@@ -53,34 +53,58 @@ public class SubmitService {
     }
 
     public JsonNode submit(SubmitData submitData, String userId, String authorization) {
+        Optional<CcdCaseResponse> caseResponseOptional = getCCDCase(submitData, userId, authorization);
         FormData formData = persistenceClient.loadFormDataById(submitData.getApplicantEmailAddress());
-        if (formData.getSubmissionReference() != 0 && formData.getCcdCaseId() != null) {
-            return new TextNode(DUPLICATE_SUBMISSION);
+        if (!caseResponseOptional.isPresent()) {
+            if (formData.getSubmissionReference() != 0) {
+                return new TextNode(DUPLICATE_SUBMISSION);
+            }
+            PersistenceResponse persistenceResponse = persistenceClient.saveSubmission(submitData);
+            JsonNode submissionReference = persistenceResponse.getIdAsJsonNode();
+            Calendar submissionTimestamp = Calendar.getInstance();
+            logger.info(append("tags", "Analytics"), generateMessage(submitData));
+            persistenceClient.updateFormData(submitData.getApplicantEmailAddress(),
+                    submissionReference.asLong(), formData.getJson());
+
+            JsonNode registryData = sequenceService.nextRegistry(persistenceResponse.getIdAsLong());
+
+            CcdCreateCaseParams ccdCreateCaseParams = new Builder()
+                    .withAuthorisation(authorization)
+                    .withRegistryData(registryData)
+                    .withSubmissionReference(persistenceResponse.getIdAsJsonNode())
+                    .withSubmitData(submitData)
+                    .withUserId(userId)
+                    .withSubmissionTimestamp(submissionTimestamp)
+                    .build();
+
+            caseResponseOptional = submitCcdCase(ccdCreateCaseParams);
+
+            ((ObjectNode) formData.getJson()).set("registry", registryData);
+            ((ObjectNode) formData.getJson()).set("submissionReference", submissionReference);
+            ((ObjectNode) formData.getJson()).set("processState", new TextNode("SUBMIT_SERVICE_SUBMITTED_TO_CCD"));
+            caseResponseOptional.ifPresent(ccdCase -> addCaseDetailsToFormData(ccdCase, ((ObjectNode) formData.getJson())));
+            persistenceClient.updateFormData(submitData.getApplicantEmailAddress(),
+                    submissionReference.asLong(), formData.getJson());
         }
-        PersistenceResponse persistenceResponse = persistenceClient.saveSubmission(submitData);
-        JsonNode submissionReference = persistenceResponse.getIdAsJsonNode();
-        Calendar submissionTimestamp = Calendar.getInstance();
-        logger.info(append("tags", "Analytics"), generateMessage(submitData));
-
-        JsonNode registryData = sequenceService.nextRegistry(persistenceResponse.getIdAsLong());
-
-        CcdCreateCaseParams ccdCreateCaseParams = new Builder()
-                .withAuthorisation(authorization)
-                .withRegistryData(registryData)
-                .withSubmissionReference(persistenceResponse.getIdAsJsonNode())
-                .withSubmitData(submitData)
-                .withUserId(userId)
-                .withSubmissionTimestamp(submissionTimestamp)
-                .build();
-
-        Optional<CcdCaseResponse> caseResponseOptional = submitCcdCase(ccdCreateCaseParams);
-        persistenceClient.updateFormData(submitData.getApplicantEmailAddress(),
-                submissionReference.asLong(), formData.getJson());
         ObjectNode response = objectMapper.createObjectNode();
-        caseResponseOptional.ifPresent(ccdCase -> addCaseDetailsToFormData(ccdCase, response));
-        response.set("registry", registryData);
-        response.set("submissionReference", submissionReference);
+        response.set("registry", formData.getRegistry());
+        response.set("submissionReference", formData.getSubmissionReferenceAsJsonNode());
+        setCCDItemsOnResponse(formData, response);
         return response;
+    }
+
+    private void setCCDItemsOnResponse(FormData formData, ObjectNode response) {
+        if (coreCaseDataEnabled) {
+            response.set("caseId", new LongNode(formData.getCcdCaseId()));
+            response.set("caseState", new TextNode(formData.getCcdCaseState()));
+        }
+    }
+
+    private Optional<CcdCaseResponse> getCCDCase(SubmitData submitData, String userId, String authorization) {
+        if (!coreCaseDataEnabled) {
+            return Optional.empty();
+        }
+        return coreCaseDataClient.getCase(submitData, userId, authorization);
     }
 
     private String generateMessage(SubmitData submitData) {
@@ -89,22 +113,17 @@ public class SubmitService {
     }
 
     private void addCaseDetailsToFormData(CcdCaseResponse ccdCaseResponse, ObjectNode response){
-        response.set("caseId", new LongNode(ccdCaseResponse.getCaseId()));
-        response.set("caseState", new TextNode(ccdCaseResponse.getState()));
-        logger.info("submit case - caseId: {}, caseState: {}", ccdCaseResponse.getCaseId(), ccdCaseResponse.getState());
+        ObjectNode ccdCase = objectMapper.createObjectNode();
+        ccdCase.set("id", new LongNode(ccdCaseResponse.getCaseId()));
+        ccdCase.set("state", new TextNode(ccdCaseResponse.getState()));
+        response.set("ccdCase", ccdCase);
+        logger.info("submitted case - caseId: {}, caseState: {}", ccdCaseResponse.getCaseId(), ccdCaseResponse.getState());
     }
 
     private Optional<CcdCaseResponse> submitCcdCase(CcdCreateCaseParams ccdCreateCaseParams) {
         if (!coreCaseDataEnabled) {
             return Optional.empty();
         }
-        Optional<CcdCaseResponse> caseResponseOptional = coreCaseDataClient
-                .getCase(ccdCreateCaseParams.getSubmitData(),
-                        ccdCreateCaseParams.getUserId(), ccdCreateCaseParams.getAuthorization());
-        return caseResponseOptional.isPresent() ? caseResponseOptional : createCase(ccdCreateCaseParams);
-    }
-
-    private Optional<CcdCaseResponse> createCase(CcdCreateCaseParams ccdCreateCaseParams) {
         JsonNode ccdStartCaseResponse = coreCaseDataClient.createCase(ccdCreateCaseParams);
         return Optional.of(coreCaseDataClient.saveCase(ccdCreateCaseParams, ccdStartCaseResponse));
     }

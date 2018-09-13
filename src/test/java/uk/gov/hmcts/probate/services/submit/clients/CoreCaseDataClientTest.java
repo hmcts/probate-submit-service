@@ -209,6 +209,8 @@ public class CoreCaseDataClientTest {
         ArrayNode arrayNode = objectMapper.createArrayNode();
         arrayNode.add(ccdData);
         when(response.getBody()).thenReturn(arrayNode);
+        when(ccdData.get("id")).thenReturn(new LongNode(123));
+        when(ccdData.get("state")).thenReturn(new TextNode("STATE"));
 
         Optional<CcdCaseResponse> optionalCcdCaseResponse = coreCaseDataClient
                 .getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
