@@ -78,6 +78,7 @@ public class CoreCaseDataClient {
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public Optional<CcdCaseResponse> getCase(SubmitData submitData, String userId,
                                              String authorization) {
+        logger.info("Checking if case already exists in CCD");
         String caseEndpointUrl = UriComponentsBuilder.fromHttpUrl(getBaseUrl(userId)).pathSegment(CASES_RESOURCE).toUriString();
 
         HttpEntity<JsonNode> request = requestFactory.createCcdStartRequest(authorization);
@@ -87,9 +88,12 @@ public class CoreCaseDataClient {
                     .exchange(url, HttpMethod.GET, request, JsonNode.class);
             ArrayNode caseResponses = (ArrayNode) response.getBody();
             if (caseResponses.size() == 0) {
+                logger.info("Existing case not found in CCD");
                 return Optional.empty();
             }
-            return Optional.of(new CcdCaseResponse(caseResponses.get(0)));
+            CcdCaseResponse ccdCaseResponse = new CcdCaseResponse(caseResponses.get(0));
+            logger.info("Found case in CCD - caseId: {}, caseState: {}", ccdCaseResponse.getCaseId(), ccdCaseResponse.getState());
+            return Optional.of(ccdCaseResponse);
         } catch (HttpClientErrorException e) {
             logger.info("Exception while getting a case from CCD", e);
             logger.info("Status Code: ", e.getStatusText());
