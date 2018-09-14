@@ -41,7 +41,7 @@ public class RequestFactoryTest {
         HttpEntity<JsonNode> persistenceRequest = requestFactory.createPersistenceRequest(jsonNode);
 
         assertEquals(persistenceRequest.getBody(), jsonNode);
-        assertEquals(persistenceRequest.getHeaders().getContentType(), MediaType.APPLICATION_JSON);
+        assertEquals( MediaType.APPLICATION_JSON, persistenceRequest.getHeaders().getContentType());
     }
     
     @Test
@@ -50,8 +50,8 @@ public class RequestFactoryTest {
         String authorization = "dummyToken";
         HttpEntity<JsonNode> request = requestFactory.createCcdSaveRequest(jsonNode, authorization);
 
-        assertEquals(request.getBody(), jsonNode);
-        assertEquals(request.getHeaders().getContentType(), MediaType.APPLICATION_JSON);
+        assertEquals(jsonNode, request.getBody());
+        assertEquals(MediaType.APPLICATION_JSON, request.getHeaders().getContentType());
         System.out.println(request.getHeaders().get("Authorization"));
         List<String> auth = new ArrayList<>();
         auth.add("Bearer dummyToken");
@@ -64,9 +64,9 @@ public class RequestFactoryTest {
         String authorization = "dummyToken";
         HttpEntity<JsonNode> request = requestFactory.createCcdStartRequest(authorization);
 
-        assertEquals(request.getHeaders().getContentType(), MediaType.APPLICATION_JSON);
+        assertEquals(MediaType.APPLICATION_JSON, request.getHeaders().getContentType());
         List<String> auth = new ArrayList<>();
         auth.add("Bearer dummyToken");
-        assertEquals(request.getHeaders().get("Authorization"), auth);
+        assertEquals(auth, request.getHeaders().get("Authorization"));
     }   
 }
