@@ -90,6 +90,7 @@ public class SubmitService {
         response.set("registry", formData.getRegistry());
         response.set("submissionReference", formData.getSubmissionReferenceAsJsonNode());
         setCCDItemsOnResponse(formData, response);
+        logger.info("Response on submit: {}", response);
         return response;
     }
 
