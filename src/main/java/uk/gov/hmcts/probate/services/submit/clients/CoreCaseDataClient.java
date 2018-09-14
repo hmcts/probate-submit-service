@@ -44,6 +44,9 @@ public class CoreCaseDataClient {
     public static final String PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD = "primaryApplicantEmailAddress";
     public static final String DECEASED_SURNAME_FIELD = "deceasedSurname";
     public static final String DECEASED_FORENAMES_FIELD = "deceasedForenames";
+    private static final String APPLICANT_EMAIL = "applicantEmail";
+    private static final String DECEASED_FIRSTNAME = "deceasedFirstname";
+    public static final String STATUS_CODE_LOG = "Status Code: {}";
 
     @Autowired
     public CoreCaseDataClient(RestTemplate restTemplate, RequestFactory requestFactory,
@@ -96,16 +99,16 @@ public class CoreCaseDataClient {
             return Optional.of(ccdCaseResponse);
         } catch (HttpClientErrorException e) {
             logger.info("Exception while getting a case from CCD", e);
-            logger.info("Status Code: ", e.getStatusText());
+            logger.info(STATUS_CODE_LOG, e.getStatusText());
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }
 
     private String generateUrlWithQueryParams(String baseUrl, JsonNode submitData) {
         return UriComponentsBuilder.fromHttpUrl(baseUrl)
-                .queryParam(CASE_QUERY_PARAM_PREFIX + PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD, submitData.get("applicantEmail").textValue())
-                .queryParam(CASE_QUERY_PARAM_PREFIX + DECEASED_SURNAME_FIELD, submitData.get("deceasedSurname").textValue())
-                .queryParam(CASE_QUERY_PARAM_PREFIX + DECEASED_FORENAMES_FIELD, submitData.get("deceasedFirstname").textValue())
+                .queryParam(CASE_QUERY_PARAM_PREFIX + PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD, submitData.get(APPLICANT_EMAIL).textValue())
+                .queryParam(CASE_QUERY_PARAM_PREFIX + DECEASED_SURNAME_FIELD, submitData.get(DECEASED_SURNAME_FIELD).textValue())
+                .queryParam(CASE_QUERY_PARAM_PREFIX + DECEASED_FORENAMES_FIELD, submitData.get(DECEASED_FIRSTNAME).textValue())
                 .toUriString();
     }
 
@@ -127,7 +130,7 @@ public class CoreCaseDataClient {
             return response.getBody().get(TOKEN_RESOURCE);
         } catch (HttpClientErrorException e) {
             logger.info("Exception while getting an event token from CCD", e);
-            logger.info("Status Code: ", e.getStatusText());
+            logger.info(STATUS_CODE_LOG, e.getStatusText());
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }
@@ -153,7 +156,7 @@ public class CoreCaseDataClient {
             return response.getBody();
         } catch (HttpClientErrorException e) {
             logger.info("Exception while saving case to CCD", e);
-            logger.info("Status Code: ", e.getStatusText());
+            logger.info(STATUS_CODE_LOG, e.getStatusText());
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }
@@ -163,7 +166,7 @@ public class CoreCaseDataClient {
     }
 
     private void logResponse(ResponseEntity<JsonNode> response) {
-        logger.info("Status code: {}", response.getStatusCodeValue());
+        logger.info(STATUS_CODE_LOG, response.getStatusCodeValue());
         logger.info("CCD Response: {}", response);
     }
 }
