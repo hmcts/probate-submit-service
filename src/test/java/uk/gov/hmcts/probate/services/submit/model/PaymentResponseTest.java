@@ -15,11 +15,16 @@ public class PaymentResponseTest {
 
     private PaymentResponse paymentResponse;
 
+    private PaymentResponse noPaymentResponse;
+
     @Before
     public void setUp() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(TestUtils.getJSONFromFile("paymentResponse.json"));
         paymentResponse = new PaymentResponse(jsonNode);
+
+        JsonNode noPaymentjsonNode = objectMapper.readTree(TestUtils.getJSONFromFile("noPaymentResponse.json"));
+        noPaymentResponse = new PaymentResponse(noPaymentjsonNode);
     }
 
     @Test
@@ -55,5 +60,10 @@ public class PaymentResponseTest {
     @Test
     public void shouldGetSiteId() {
         assertThat(paymentResponse.getSiteId(), is("P223"));
+    }
+
+    @Test
+    public void shouldCheckIfNoPayment() {
+        assertThat(noPaymentResponse.getTotal(), is(0L));
     }
 }

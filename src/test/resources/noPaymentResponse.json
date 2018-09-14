@@ -1,0 +1,15 @@
+{
+  "copies": {
+    "uk": {
+      "number": 0,
+      "cost": 0
+    },
+    "overseas": {
+      "number": 0,
+      "cost": 0
+    }
+  },
+  "applicationFee": 0,
+  "total": 0,
+  "userId": 33
+}
