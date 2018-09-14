@@ -146,6 +146,7 @@ public class SubmitService {
 
     public JsonNode updatePaymentStatus(SubmitData submitData, String userId, String authorization) {
         PaymentResponse paymentStatus = submitData.getPaymentResponse();
+        logger.info("Updating payment status - caseId: {}", submitData.getCaseId());
         persistenceClient.saveSubmission(submitData);
         JsonNode tokenJson = coreCaseDataClient
                 .createCaseUpdatePaymentStatusEvent(userId, submitData.getCaseId(), authorization);
@@ -157,7 +158,7 @@ public class SubmitService {
 
         ObjectNode response = objectMapper.createObjectNode();
         response.set("caseState", new TextNode(updatePaymentStatusResponse.getState()));
-        logger.info("update payment status - caseId: {}, caseState: {}", updatePaymentStatusResponse.getCaseId(),
+        logger.info("Updated payment status - caseId: {}, caseState: {}", updatePaymentStatusResponse.getCaseId(),
                 updatePaymentStatusResponse.getState());
 
         return response;
