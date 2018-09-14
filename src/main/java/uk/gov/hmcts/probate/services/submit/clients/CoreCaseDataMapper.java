@@ -443,7 +443,7 @@ public class CoreCaseDataMapper {
 
 
         ObjectNode probateData = mapper.createObjectNode();
-        if (!paymentResponse.isEmpty()) {
+        if (paymentResponse.getTotal() != 0L) {
             ObjectNode paymentNode = mapper.createObjectNode();
             ObjectNode paymentValueNode = mapper.createObjectNode();
             paymentValueNode.put("status", paymentResponse.getStatus());
