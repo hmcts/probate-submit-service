@@ -40,6 +40,10 @@ public class SubmitData {
         return json.at("/submitdata/caseId").asLong();
     }
 
+    public String getCaseState() {
+        return json.at("/submitdata/caseState").asText();
+    }
+
     public JsonNode getRegistry() {
         return json.at("/submitdata/registry");
     }
