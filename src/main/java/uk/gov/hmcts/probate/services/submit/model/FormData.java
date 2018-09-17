@@ -27,7 +27,7 @@ public class FormData {
     }
 
     public JsonNode getRegistry(){
-        return json.at("/registry");
+        return json.at("/formdata/registry");
     }
 
     public JsonNode getJson() {

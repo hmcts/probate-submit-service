@@ -49,6 +49,7 @@ public class CoreCaseDataClientTest {
     private static final Calendar SUBMISSION_TIMESTAMP = Calendar.getInstance();
     private static final JsonNode SEQUENCE_NUMBER = new LongNode(123L);
     private static final String APPLY_FOR_GRANT_CCD_EVENT_ID = "applyForGrant";
+    private static final String CCD_EVENT_ID = "CCD_EVENT_ID";
     private static final String TOKEN_RESOURCE = "token";
     private static final String UPDATE_PAYMENT_STATUS_CCD_EVENT_ID = "createCase";
 
@@ -271,7 +272,7 @@ public class CoreCaseDataClientTest {
         when(ccdData.get(TOKEN_RESOURCE)).thenReturn(tokenJsonNode);
 
         JsonNode caseTokenJson = coreCaseDataClient
-                .createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN);
+                .createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, UPDATE_PAYMENT_STATUS_CCD_EVENT_ID);
 
         assertThat(caseTokenJson, is(notNullValue()));
         verify(restTemplate, times(1)).exchange(url, HttpMethod.GET, ccdRequest, JsonNode.class);
@@ -295,7 +296,7 @@ public class CoreCaseDataClientTest {
 
         CcdCaseResponse updatePaymentStatus = coreCaseDataClient
                 .updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, tokenJsonNode,
-                        paymentResponse);
+                        paymentResponse, UPDATE_PAYMENT_STATUS_CCD_EVENT_ID);
 
         assertThat(updatePaymentStatus, is(notNullValue()));
         verify(ccdDataMapper, times(1)).updatePaymentStatus(paymentResponse,

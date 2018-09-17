@@ -33,6 +33,11 @@ public class SubmitService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private static final String CREATE_CASE_CCD_EVENT_ID = "createCase";
+    private static final String CREATE_CASE_PAYMENT_FAILED_CCD_EVENT_ID = "createCasePaymentFailed";
+    private static final String CREATE_CASE_PAYMENT_FAILED_MULTIPLE_CCD_EVENT_ID = "createCasePaymentFailedMultiple";
+    private static final String CREATE_CASE_PAYMENT_SUCCESS_CCD_EVENT_ID = "createCasePaymentSuccess";
+    private static final String CASE_PAYMENT_FAILED_STATE = "CasePaymentFailed";
     private static final String DUPLICATE_SUBMISSION = "DUPLICATE_SUBMISSION";
     private MailClient mailClient;
     private PersistenceClient persistenceClient;
@@ -56,7 +61,7 @@ public class SubmitService {
         Optional<CcdCaseResponse> caseResponseOptional = getCCDCase(submitData, userId, authorization);
         FormData formData = persistenceClient.loadFormDataById(submitData.getApplicantEmailAddress());
         if (!caseResponseOptional.isPresent()) {
-            if (formData.getSubmissionReference() != 0) {
+            if (formData.getSubmissionReference() != 0 ) {
                 return new TextNode(DUPLICATE_SUBMISSION);
             }
             PersistenceResponse persistenceResponse = persistenceClient.saveSubmission(submitData);
@@ -79,25 +84,35 @@ public class SubmitService {
 
             caseResponseOptional = submitCcdCase(ccdCreateCaseParams);
 
-            ((ObjectNode) formData.getJson()).set("registry", registryData);
-            ((ObjectNode) formData.getJson()).set("submissionReference", submissionReference);
-            ((ObjectNode) formData.getJson()).set("processState", new TextNode("SUBMIT_SERVICE_SUBMITTED_TO_CCD"));
+            updateFormData(formData, submissionReference, registryData);
             caseResponseOptional.ifPresent(ccdCase -> addCaseDetailsToFormData(ccdCase, ((ObjectNode) formData.getJson())));
             persistenceClient.updateFormData(submitData.getApplicantEmailAddress(),
                     submissionReference.asLong(), formData.getJson());
         }
-        ObjectNode response = objectMapper.createObjectNode();
-        response.set("registry", formData.getRegistry());
-        response.set("submissionReference", formData.getSubmissionReferenceAsJsonNode());
-        setCCDItemsOnResponse(formData, response);
+        ObjectNode response = createResponse(caseResponseOptional, formData);
         logger.info("Response on submit: {}", response);
         return response;
     }
 
-    private void setCCDItemsOnResponse(FormData formData, ObjectNode response) {
+    private ObjectNode createResponse(Optional<CcdCaseResponse> caseResponseOptional, FormData formData) {
+        ObjectNode response = objectMapper.createObjectNode();
+        response.set("registry", formData.getRegistry());
+        response.set("submissionReference", formData.getSubmissionReferenceAsJsonNode());
+        setCCDItemsOnResponse(caseResponseOptional, response);
+        return response;
+    }
+
+    private void updateFormData(FormData formData, JsonNode submissionReference, JsonNode registryData) {
+        ((ObjectNode)formData.getJson().get("formdata")).set("registry", registryData);
+        ((ObjectNode) formData.getJson()).set("submissionReference", submissionReference);
+        ((ObjectNode) formData.getJson()).set("processState", new TextNode("SUBMIT_SERVICE_SUBMITTED_TO_CCD"));
+    }
+
+    private void setCCDItemsOnResponse(Optional<CcdCaseResponse> caseResponseOptional, ObjectNode response) {
         if (coreCaseDataEnabled) {
-            response.set("caseId", new LongNode(formData.getCcdCaseId()));
-            response.set("caseState", new TextNode(formData.getCcdCaseState()));
+            CcdCaseResponse ccdCaseResponse = caseResponseOptional.get();
+            response.set("caseId", new LongNode(ccdCaseResponse.getCaseId()));
+            response.set("caseState", new TextNode(ccdCaseResponse.getState()));
         }
     }
 
@@ -145,14 +160,16 @@ public class SubmitService {
     }
 
     public JsonNode updatePaymentStatus(SubmitData submitData, String userId, String authorization) {
-        PaymentResponse paymentStatus = submitData.getPaymentResponse();
+        PaymentResponse paymentResponse = submitData.getPaymentResponse();
         logger.info("Updating payment status - caseId: {}", submitData.getCaseId());
         persistenceClient.saveSubmission(submitData);
+        
+        String eventId = getEventIdFromStatus(paymentResponse, submitData.getCaseState());
         JsonNode tokenJson = coreCaseDataClient
-                .createCaseUpdatePaymentStatusEvent(userId, submitData.getCaseId(), authorization);
+                .createCaseUpdatePaymentStatusEvent(userId, submitData.getCaseId(), authorization, eventId);
         CcdCaseResponse updatePaymentStatusResponse = coreCaseDataClient
                 .updatePaymentStatus(submitData.getCaseId(), userId, authorization, tokenJson,
-                        paymentStatus);
+                        paymentResponse, eventId);
         Calendar submissionTimestamp = Calendar.getInstance();
         mailClient.execute(submitData.getJson(), submitData.getRegistry(), submissionTimestamp);
 
@@ -162,5 +179,26 @@ public class SubmitService {
                 updatePaymentStatusResponse.getState());
 
         return response;
+    }
+
+    private String getEventIdFromStatus(PaymentResponse paymentResponse, String state) {
+        if (paymentResponse.getStatus() != null && !paymentResponse.getStatus().equals("Success")) {
+            return getFailedPaymentEventIdFromState(state);
+        }
+        return getSuccessPaymentEventIdFromState(state);
+    }
+
+    private String getFailedPaymentEventIdFromState(String state) {
+        if (state.equals(CASE_PAYMENT_FAILED_STATE)) {
+            return CREATE_CASE_PAYMENT_FAILED_MULTIPLE_CCD_EVENT_ID;
+        }
+        return CREATE_CASE_PAYMENT_FAILED_CCD_EVENT_ID;
+    }
+
+    private String getSuccessPaymentEventIdFromState(String state) {
+        if (state.equals(CASE_PAYMENT_FAILED_STATE)) {
+            return CREATE_CASE_PAYMENT_SUCCESS_CCD_EVENT_ID;
+        }
+        return CREATE_CASE_CCD_EVENT_ID;
     }
 }
