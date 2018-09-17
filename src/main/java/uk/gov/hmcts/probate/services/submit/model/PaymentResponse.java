@@ -24,6 +24,9 @@ public class PaymentResponse {
     }
 
     public String getStatus() {
+        if (paymentNode.get("status") == null) {
+            return null;
+        }
         return paymentNode.get("status").asText();
     }
 

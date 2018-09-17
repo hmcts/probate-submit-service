@@ -9,6 +9,7 @@ import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class PaymentResponseTest {
@@ -45,6 +46,11 @@ public class PaymentResponseTest {
     @Test
     public void shouldGetStatus() {
         assertThat(paymentResponse.getStatus(), is("Success"));
+    }
+
+    @Test
+    public void shouldGetStatusForNoPayment() {
+        assertThat(noPaymentResponse.getStatus(), is(nullValue()));
     }
 
     @Test
