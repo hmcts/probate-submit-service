@@ -41,10 +41,7 @@ public class CoreCaseDataClient {
     private static final String CASE_QUERY_PARAM_PREFIX = "case.";
 
     public static final String PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD = "primaryApplicantEmailAddress";
-    public static final String DECEASED_SURNAME_FIELD = "deceasedSurname";
-    public static final String DECEASED_FORENAMES_FIELD = "deceasedForenames";
     private static final String APPLICANT_EMAIL = "applicantEmail";
-    private static final String DECEASED_FIRSTNAME = "deceasedFirstname";
     public static final String STATUS_CODE_LOG = "Status Code: {}";
 
     @Autowired
@@ -106,8 +103,6 @@ public class CoreCaseDataClient {
     private String generateUrlWithQueryParams(String baseUrl, JsonNode submitData) {
         return UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam(CASE_QUERY_PARAM_PREFIX + PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD, submitData.get(APPLICANT_EMAIL).textValue())
-                .queryParam(CASE_QUERY_PARAM_PREFIX + DECEASED_SURNAME_FIELD, submitData.get(DECEASED_SURNAME_FIELD).textValue())
-                .queryParam(CASE_QUERY_PARAM_PREFIX + DECEASED_FORENAMES_FIELD, submitData.get(DECEASED_FIRSTNAME).textValue())
                 .toUriString();
     }
 

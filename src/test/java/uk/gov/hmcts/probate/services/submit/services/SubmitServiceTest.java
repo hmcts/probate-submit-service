@@ -250,7 +250,7 @@ public class SubmitServiceTest {
         ObjectNode formDataNode = objectMapper.createObjectNode();
         ccdObjectNode.set("registry", registryData);
         formDataObjectNode.set("formdata", formDataNode);
-        FormData formData = new FormData(formDataObjectNode);;
+        FormData formData = new FormData(formDataObjectNode);
 
         when(submitData.getApplicantEmailAddress()).thenReturn(APPLICANT_EMAIL_ADDRESS);
         when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);

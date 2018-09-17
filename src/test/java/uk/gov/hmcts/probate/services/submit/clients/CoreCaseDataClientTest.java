@@ -201,9 +201,7 @@ public class CoreCaseDataClientTest {
     @Test
     public void shouldGetCaseWhenExistForQueryParameters() {
         String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/" +
-                "cases?case.primaryApplicantEmailAddress=test@test.com" +
-                "&case.deceasedSurname=Brown" +
-                "&case.deceasedForenames=Bobby";
+                "cases?case.primaryApplicantEmailAddress=test@test.com";
         when(restTemplate.exchange(eq(url), eq(HttpMethod.GET), eq(ccdRequest),
                 eq(JsonNode.class))).thenReturn(response);
         when(requestFactory.createCcdStartRequest(AUTHORIZATION_TOKEN)).thenReturn(ccdRequest);
@@ -225,9 +223,7 @@ public class CoreCaseDataClientTest {
     @Test(expected = HttpClientErrorException.class)
     public void shouldThrowHttpClientErrorExceptionOnGetCaseWhenRestTemplateException() {
         String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/" +
-                "cases?case.primaryApplicantEmailAddress=test@test.com" +
-                "&case.deceasedSurname=Brown" +
-                "&case.deceasedForenames=Bobby";
+                "cases?case.primaryApplicantEmailAddress=test@test.com";
         doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(restTemplate)
                 .exchange(eq(url), eq(HttpMethod.GET), eq(ccdRequest),
                         eq(JsonNode.class));
@@ -242,9 +238,7 @@ public class CoreCaseDataClientTest {
     @Test
     public void shouldReturnEmptyOptionalOnGetCaseWhenCaseDoesNotExist() {
         String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/" +
-                "cases?case.primaryApplicantEmailAddress=test@test.com" +
-                "&case.deceasedSurname=Brown" +
-                "&case.deceasedForenames=Bobby";
+                "cases?case.primaryApplicantEmailAddress=test@test.com";
         when(restTemplate.exchange(eq(url), eq(HttpMethod.GET), eq(ccdRequest),
                 eq(JsonNode.class))).thenReturn(response);
         when(requestFactory.createCcdStartRequest(AUTHORIZATION_TOKEN)).thenReturn(ccdRequest);
