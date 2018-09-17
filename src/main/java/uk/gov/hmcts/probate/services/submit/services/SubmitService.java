@@ -109,7 +109,10 @@ public class SubmitService {
     }
 
     private void setCCDItemsOnResponse(Optional<CcdCaseResponse> caseResponseOptional, ObjectNode response) {
-        if (coreCaseDataEnabled) {
+        if (!coreCaseDataEnabled) {
+            return;
+        }
+        if (caseResponseOptional.isPresent()) {
             CcdCaseResponse ccdCaseResponse = caseResponseOptional.get();
             response.set("caseId", new LongNode(ccdCaseResponse.getCaseId()));
             response.set("caseState", new TextNode(ccdCaseResponse.getState()));
