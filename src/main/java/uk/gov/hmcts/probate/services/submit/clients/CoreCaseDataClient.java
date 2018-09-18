@@ -130,10 +130,10 @@ public class CoreCaseDataClient {
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public CcdCaseResponse updatePaymentStatus(Long caseId, String userId,
+    public CcdCaseResponse updatePaymentStatus(SubmitData submitData, String userId,
                                         String authorization,
                                         JsonNode token, PaymentResponse paymentResponse, String eventId) {
-        String url = UriComponentsBuilder.fromHttpUrl(getBaseUrl(userId)).pathSegment(CASES_RESOURCE, caseId.toString(),
+        String url = UriComponentsBuilder.fromHttpUrl(getBaseUrl(userId)).pathSegment(CASES_RESOURCE, submitData.getCaseId().toString(),
                 EVENTS_RESOURCE).toUriString();
         JsonNode ccdData = ccdMapper.updatePaymentStatus(paymentResponse, eventId, token);
         HttpEntity<JsonNode> ccdSaveRequest = requestFactory.createCcdSaveRequest(ccdData, authorization);

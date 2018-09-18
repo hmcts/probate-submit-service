@@ -164,23 +164,27 @@ public class SubmitService {
 
     public JsonNode updatePaymentStatus(SubmitData submitData, String userId, String authorization) {
         PaymentResponse paymentResponse = submitData.getPaymentResponse();
-        logger.info("Updating payment status - caseId: {}", submitData.getCaseId());
-        persistenceClient.saveSubmission(submitData);
-        
-        String eventId = getEventIdFromStatus(paymentResponse, submitData.getCaseState());
-        JsonNode tokenJson = coreCaseDataClient
-                .createCaseUpdatePaymentStatusEvent(userId, submitData.getCaseId(), authorization, eventId);
-        CcdCaseResponse updatePaymentStatusResponse = coreCaseDataClient
-                .updatePaymentStatus(submitData.getCaseId(), userId, authorization, tokenJson,
-                        paymentResponse, eventId);
-        Calendar submissionTimestamp = Calendar.getInstance();
-        mailClient.execute(submitData.getJson(), submitData.getRegistry(), submissionTimestamp);
-
+        Optional<CcdCaseResponse> ccdCaseResponse = getCCDCase(submitData, userId, authorization);
         ObjectNode response = objectMapper.createObjectNode();
-        response.set("caseState", new TextNode(updatePaymentStatusResponse.getState()));
-        logger.info("Updated payment status - caseId: {}, caseState: {}", updatePaymentStatusResponse.getCaseId(),
-                updatePaymentStatusResponse.getState());
+        if (ccdCaseResponse.isPresent() &&
+                !ccdCaseResponse.get().getPaymentReference().equals(paymentResponse.getReference())) {
+            logger.info("Updating payment status - caseId: {}", submitData.getCaseId());
+            persistenceClient.saveSubmission(submitData);
 
+            String eventId = getEventIdFromStatus(paymentResponse, submitData.getCaseState());
+            JsonNode tokenJson = coreCaseDataClient
+                    .createCaseUpdatePaymentStatusEvent(userId, submitData.getCaseId(), authorization, eventId);
+            CcdCaseResponse updatePaymentStatusResponse = coreCaseDataClient
+                    .updatePaymentStatus(submitData, userId, authorization, tokenJson,
+                            paymentResponse, eventId);
+            Calendar submissionTimestamp = Calendar.getInstance();
+            mailClient.execute(submitData.getJson(), submitData.getRegistry(), submissionTimestamp);
+
+            response.set("caseState", new TextNode(updatePaymentStatusResponse.getState()));
+            logger.info("Updated payment status - caseId: {}, caseState: {}", updatePaymentStatusResponse.getCaseId(),
+                    updatePaymentStatusResponse.getState());
+            return response;
+        }
         return response;
     }
 
