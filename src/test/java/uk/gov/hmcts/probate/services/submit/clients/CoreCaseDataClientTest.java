@@ -287,9 +287,10 @@ public class CoreCaseDataClientTest {
         when(restTemplate.exchange(url, HttpMethod.POST, ccdRequest, JsonNode.class))
                 .thenReturn(response);
         when(response.getBody()).thenReturn(ccdData);
+        when(submitData.getCaseId()).thenReturn(CASE_ID);
 
         CcdCaseResponse updatePaymentStatus = coreCaseDataClient
-                .updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, tokenJsonNode,
+                .updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, tokenJsonNode,
                         paymentResponse, UPDATE_PAYMENT_STATUS_CCD_EVENT_ID);
 
         assertThat(updatePaymentStatus, is(notNullValue()));

@@ -286,6 +286,8 @@ public class SubmitServiceTest {
         when(submitData.getApplicantEmailAddress()).thenReturn(APPLICANT_EMAIL_ADDRESS);
         when(submitData.getPaymentResponse()).thenReturn(paymentResponse);
         when(paymentResponse.getStatus()).thenReturn("Success");
+        when(paymentResponse.getReference()).thenReturn("RC-1537-1988-5489-1985");
+        when(ccdCaseResponse.getPaymentReference()).thenReturn("RC-1537-1988-5489-1986");
         when(submissionReference.asLong()).thenReturn(ID);
         when(formData.getSubmissionReference()).thenReturn(0L);
         when(submitData.getCaseId()).thenReturn(CASE_ID);
@@ -294,15 +296,16 @@ public class SubmitServiceTest {
         when(coreCaseDataClient.createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID)).thenReturn(jsonNode);
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
-        when(coreCaseDataClient.updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
+        when(coreCaseDataClient.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
         when(sequenceService.nextRegistry(ID)).thenReturn(registryData);
         when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);
+        when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
 
         JsonNode submitResponse = submitService.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
         assertThat(submitResponse, is(notNullValue()));
         verify(coreCaseDataClient, times(1)).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID);
-        verify(coreCaseDataClient, times(1)).updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID);
+        verify(coreCaseDataClient, times(1)).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID);
         verify(mockMailClient, times(1)).execute(any(), any(), any());
     }
 
@@ -313,21 +316,24 @@ public class SubmitServiceTest {
         when(submitData.getCaseState()).thenReturn(CASE_STATE);
 
         when(paymentResponse.getStatus()).thenReturn(null);
+        when(paymentResponse.getReference()).thenReturn("RC-1537-1988-5489-1985");
+        when(ccdCaseResponse.getPaymentReference()).thenReturn("RC-1537-1988-5489-1986");
         when(submissionReference.asLong()).thenReturn(ID);
         when(formData.getSubmissionReference()).thenReturn(0L);
         when(submitData.getCaseId()).thenReturn(CASE_ID);
         when(coreCaseDataClient.createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID)).thenReturn(jsonNode);
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
-        when(coreCaseDataClient.updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
+        when(coreCaseDataClient.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
         when(sequenceService.nextRegistry(ID)).thenReturn(registryData);
         when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);
+        when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
 
         JsonNode submitResponse = submitService.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
         assertThat(submitResponse, is(notNullValue()));
         verify(coreCaseDataClient, times(1)).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID);
-        verify(coreCaseDataClient, times(1)).updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID);
+        verify(coreCaseDataClient, times(1)).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID);
         verify(mockMailClient, times(1)).execute(any(), any(), any());
     }
 
@@ -335,24 +341,27 @@ public class SubmitServiceTest {
     public void shouldUpdatePaymentStatusSuccessfullyWithPaymentNotSuccess() {
         when(submitData.getApplicantEmailAddress()).thenReturn(APPLICANT_EMAIL_ADDRESS);
         when(submitData.getPaymentResponse()).thenReturn(paymentResponse);
-        when(paymentResponse.getStatus()).thenReturn("Failed");
+        when(paymentResponse.getStatus()).thenReturn("Reference");
+        when(paymentResponse.getReference()).thenReturn("Failed");
         when(submissionReference.asLong()).thenReturn(ID);
         when(formData.getSubmissionReference()).thenReturn(0L);
         when(submitData.getCaseId()).thenReturn(CASE_ID);
         when(submitData.getCaseState()).thenReturn(PA_APP_CREATED_STATE);
         when(ccdCaseResponse.getState()).thenReturn(PA_APP_CREATED_STATE);
+        when(ccdCaseResponse.getPaymentReference()).thenReturn("Reference");
         when(coreCaseDataClient.createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_PAYMENT_FAILED_CCD_EVENT_ID)).thenReturn(jsonNode);
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
-        when(coreCaseDataClient.updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_PAYMENT_FAILED_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
+        when(coreCaseDataClient.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_PAYMENT_FAILED_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
         when(sequenceService.nextRegistry(ID)).thenReturn(registryData);
         when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);
+        when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
 
         JsonNode submitResponse = submitService.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
         assertThat(submitResponse, is(notNullValue()));
         verify(coreCaseDataClient, times(1)).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_PAYMENT_FAILED_CCD_EVENT_ID);
-        verify(coreCaseDataClient, times(1)).updatePaymentStatus(CASE_ID, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_PAYMENT_FAILED_CCD_EVENT_ID);
+        verify(coreCaseDataClient, times(1)).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_PAYMENT_FAILED_CCD_EVENT_ID);
         verify(mockMailClient, times(1)).execute(any(), any(), any());
     }
 
