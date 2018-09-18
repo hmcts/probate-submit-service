@@ -25,6 +25,23 @@ public class CcdCaseResponseTest {
     public void shouldGetCaseId() {
         Long caseId = ccdCaseResponse.getCaseId();
 
-        assertThat(caseId, is(equalTo(1535578731181993L)));
+        assertThat(caseId, is(equalTo(1537198819302615L)));
+    }
+
+    @Test
+    public void shouldGetPaymentReference() {
+        String reference = ccdCaseResponse.getPaymentReference();
+
+        assertThat(reference, is(equalTo("RC-1537-1988-5489-1985")));
+    }
+
+    @Test
+    public void shouldReturnEmptyStringWhenNoPaymentReference() throws IOException {
+        JsonNode jsonNode = TestUtils.getJsonNodeFromFile("ccdCaseResponseNoPayments.json");
+        ccdCaseResponse = new CcdCaseResponse(jsonNode);
+
+        String reference = ccdCaseResponse.getPaymentReference();
+
+        assertThat(reference, is(equalTo("")));
     }
 }

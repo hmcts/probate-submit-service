@@ -13,20 +13,6 @@
       "AddressLine1": "zxccx"
     },
     "deceasedAnyOtherNames": "No",
-    "payments": [
-      {
-        "value": {
-          "status": "Success",
-          "date": "2018-09-17",
-          "reference": "RC-1537-1988-5489-1985",
-          "amount": "27000",
-          "method": "online",
-          "transactionId": "r23k178busa0rp2mh27m0vchja",
-          "siteId": "P223"
-        },
-        "id": "dec627d3-f2da-4c47-8885-077fd3fe9ae8"
-      }
-    ],
     "willHasCodicils": "No",
     "deceasedDateOfBirth": "1980-01-01",
     "willAccessOriginal": "Yes",
