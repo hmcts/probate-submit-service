@@ -1,5 +1,10 @@
 package uk.gov.hmcts.probate.services.submit.clients;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
@@ -11,11 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.constraints.NotNull;
-import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -114,7 +114,7 @@ public class CoreCaseDataMapperTest {
 
     @Test
     public void mapMonetaryValueTest() {
-        Optional expected = Optional.of(new TextNode("2222200"));
+        Optional expected = Optional.of(new TextNode("99999999956"));
         Optional<JsonNode> mappedData = coreCaseDataMapper.monetaryValueMapper(submitdata, "ihtNetValue");
         assertEquals(expected, mappedData);
     }
