@@ -161,6 +161,5 @@ public class CoreCaseDataClient {
 
     private void logResponse(ResponseEntity<JsonNode> response) {
         logger.info(STATUS_CODE_LOG, response.getStatusCodeValue());
-        logger.info("CCD Response: {}", response);
     }
 }
