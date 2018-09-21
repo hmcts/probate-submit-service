@@ -37,6 +37,15 @@ import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 @ConfigurationProperties(prefix = "ccd")
 public class CoreCaseDataMapper {
 
+    private static final String VALUE = "value";
+    private static final String DECEASED = "deceased";
+    private static final String DECEASED_OTHER_NAMES = "deceasedOtherNames";
+    private static final String DECEASED_ESTATE_VALUE = "deceasedEstateValue";
+    private static final String DECEASED_ESTATE_LAND = "deceasedEstateLand";
+    private static final String EXECUTORS_NOT_APPLYING = "executorsNotApplying";
+    private static final String EXECUTORS_APPLYING = "executorsApplying";
+    private static final String INTRO = "intro";
+    private static final String APPLICANT = "applicant";
     private final Logger logger = LoggerFactory.getLogger(CoreCaseDataMapper.class);
     private final DateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
     private final DateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -272,7 +281,7 @@ public class CoreCaseDataMapper {
             value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
         }
 
-        ccdFormat.set("value", value);
+        ccdFormat.set(VALUE, value);
         return Optional.of(ccdFormat);
     }
 
@@ -325,7 +334,7 @@ public class CoreCaseDataMapper {
         ObjectNode value = mapper.createObjectNode();
         value.set("Forenames", alias.get("firstName"));
         value.set("LastName", alias.get("lastName"));
-        ccdFormat.set("value", value);
+        ccdFormat.set(VALUE, value);
         return Optional.of(ccdFormat);
     }
 
@@ -374,36 +383,36 @@ public class CoreCaseDataMapper {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode ccdLegalStatement = mapper.createObjectNode();
             ObjectNode value = mapper.createObjectNode();
-            ccdLegalStatement.set("applicant", legalStatement.get().get("applicant"));
-            ccdLegalStatement.set("deceased", legalStatement.get().get("deceased"));
+            ccdLegalStatement.set(APPLICANT, legalStatement.get().get(APPLICANT));
+            ccdLegalStatement.set(DECEASED, legalStatement.get().get(DECEASED));
 
-            if (legalStatement.get().has("deceasedOtherNames")) {
-                ccdLegalStatement.set("deceasedOtherNames", legalStatement.get().get("deceasedOtherNames"));
+            if (legalStatement.get().has(DECEASED_OTHER_NAMES)) {
+                ccdLegalStatement.set(DECEASED_OTHER_NAMES, legalStatement.get().get(DECEASED_OTHER_NAMES));
             }
 
-            ccdLegalStatement.set("deceased", legalStatement.get().get("deceased"));
+            ccdLegalStatement.set(DECEASED, legalStatement.get().get(DECEASED));
 
-            if (legalStatement.get().has("deceasedEstateValue")) {
-                ccdLegalStatement.set("deceasedEstateValue", legalStatement.get().get("deceasedEstateValue"));
+            if (legalStatement.get().has(DECEASED_ESTATE_VALUE)) {
+                ccdLegalStatement.set(DECEASED_ESTATE_VALUE, legalStatement.get().get(DECEASED_ESTATE_VALUE));
             }
 
-            if (legalStatement.get().has("deceasedEstateLand")) {
-                ccdLegalStatement.set("deceasedEstateLand", legalStatement.get().get("deceasedEstateLand"));
+            if (legalStatement.get().has(DECEASED_ESTATE_LAND)) {
+                ccdLegalStatement.set(DECEASED_ESTATE_LAND, legalStatement.get().get(DECEASED_ESTATE_LAND));
             }
 
-            if (legalStatement.get().has("executorsNotApplying")) {
+            if (legalStatement.get().has(EXECUTORS_NOT_APPLYING)) {
                 ArrayNode executorsNotApplying = mapper.createArrayNode();
-                legalStatement.get().get("executorsNotApplying").elements().forEachRemaining(executor -> mapExecNotApplying(executor).ifPresent(executorsNotApplying::add));
-                ccdLegalStatement.set("executorsNotApplying", executorsNotApplying);
+                legalStatement.get().get(EXECUTORS_NOT_APPLYING).elements().forEachRemaining(executor -> mapExecNotApplying(executor).ifPresent(executorsNotApplying::add));
+                ccdLegalStatement.set(EXECUTORS_NOT_APPLYING, executorsNotApplying);
             }
 
-            if (legalStatement.get().has("executorsApplying")) {
+            if (legalStatement.get().has(EXECUTORS_APPLYING)) {
                 ArrayNode executorsApplying = mapper.createArrayNode();
-                legalStatement.get().get("executorsApplying").elements().forEachRemaining(executorApplying -> mapExecApplying(executorApplying).ifPresent(executorsApplying::add));
-                ccdLegalStatement.set("executorsApplying", executorsApplying);
+                legalStatement.get().get(EXECUTORS_APPLYING).elements().forEachRemaining(executorApplying -> mapExecApplying(executorApplying).ifPresent(executorsApplying::add));
+                ccdLegalStatement.set(EXECUTORS_APPLYING, executorsApplying);
             }
 
-            ccdLegalStatement.set("intro", legalStatement.get().get("intro"));
+            ccdLegalStatement.set(INTRO, legalStatement.get().get(INTRO));
 
             return Optional.of(ccdLegalStatement);
         }
@@ -416,7 +425,7 @@ public class CoreCaseDataMapper {
         ObjectNode ccdExecutorsNotApplying = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
         value.set("executor", executor);
-        ccdExecutorsNotApplying.set("value", value);
+        ccdExecutorsNotApplying.set(VALUE, value);
         return Optional.of(ccdExecutorsNotApplying);
     }
 
@@ -426,7 +435,7 @@ public class CoreCaseDataMapper {
         ObjectNode value = mapper.createObjectNode();
         value.set("name", executorApplying.get("name"));
         value.set("sign", executorApplying.get("sign"));
-        ccdExecutorsApplying.set("value", value);
+        ccdExecutorsApplying.set(VALUE, value);
         return Optional.of(ccdExecutorsApplying);
     }
 
@@ -453,7 +462,7 @@ public class CoreCaseDataMapper {
             paymentValueNode.put("method", paymentResponse.getChannel());
             paymentValueNode.put("transactionId", paymentResponse.getTransactionId());
             paymentValueNode.put("siteId", paymentResponse.getSiteId());
-            paymentNode.set("value", paymentValueNode);
+            paymentNode.set(VALUE, paymentValueNode);
             ArrayNode paymentArrayNode = mapper.createArrayNode();
             paymentArrayNode.add(paymentNode);
             probateData.set("payments", paymentArrayNode);
