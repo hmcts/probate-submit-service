@@ -3,6 +3,7 @@ package uk.gov.hmcts.probate.contract.ccdintegrationtests;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
+@Ignore
 @RunWith(SerenityRunner.class)
 public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
 
