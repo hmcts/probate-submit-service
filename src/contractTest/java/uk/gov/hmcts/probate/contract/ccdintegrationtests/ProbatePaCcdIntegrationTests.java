@@ -1,12 +1,12 @@
 package uk.gov.hmcts.probate.contract.ccdintegrationtests;
 
-import static org.hamcrest.Matchers.equalToIgnoringCase;
-
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import uk.gov.hmcts.probate.contract.IntegrationTestBase;
+
+import static org.hamcrest.Matchers.equalToIgnoringCase;
 
 @RunWith(SerenityRunner.class)
 public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
@@ -44,20 +44,20 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
 
     }
 
-    @Test
-    public void verifyStateIsPresentInTheSuccessResponse() {
-        generateEventToken();
-
-        String rep = contractTestUtils.getJsonFromFile("success.pa.ccd.json").replace("\"event_token\": \"sampletoken\"", "\"event_token\":\"" + token + "\"");
-
-        SerenityRest.given()
-                .headers(contractTestUtils.getHeadersWithUserId())
-                .body(rep)
-                .when().post("/citizens/" + contractTestUtils.getUserId() + "/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases")
-                .then()
-                .statusCode(201).and().body("state", equalToIgnoringCase("CaseCreated"));
-
-    }
+//    @Test
+//    public void verifyStateIsPresentInTheSuccessResponse() {
+//        generateEventToken();
+//
+//        String rep = contractTestUtils.getJsonFromFile("success.pa.ccd.json").replace("\"event_token\": \"sampletoken\"", "\"event_token\":\"" + token + "\"");
+//
+//        SerenityRest.given()
+//                .headers(contractTestUtils.getHeadersWithUserId())
+//                .body(rep)
+//                .when().post("/citizens/" + contractTestUtils.getUserId() + "/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases")
+//                .then()
+//                .statusCode(201).and().body("state", equalToIgnoringCase("CaseCreated"));
+//
+//    }
 
     @Test
     public void verifyCaseTypeIDPresentInTheSuccessResponse() {
