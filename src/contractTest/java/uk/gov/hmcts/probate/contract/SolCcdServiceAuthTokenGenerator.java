@@ -57,7 +57,6 @@ public class SolCcdServiceAuthTokenGenerator {
 
     public String generateServiceToken() {
         String sAuth = tokenGenerator.generate();
-        //System.out.println("SERVICE "+sAuth);
         return sAuth;
     }
 
@@ -67,7 +66,6 @@ public class SolCcdServiceAuthTokenGenerator {
                 .get(idamUserBaseUrl + "/details")
                 .body()
                 .path("id");
-        //System.out.println("USER "+userid_local);
         return userid_local;
     }
 
@@ -88,7 +86,6 @@ public class SolCcdServiceAuthTokenGenerator {
                 "&grant_type=authorization_code")
                 .body().path("access_token");
 
-        //System.out.println("AUTH "+token);
         return "Bearer " + token;
     }
 

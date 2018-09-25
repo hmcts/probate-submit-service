@@ -187,11 +187,9 @@ public class CoreCaseDataMapper {
         ccdData.put("applicationSubmittedDate", localDate.toString());
         ccdData.put("deceasedDomicileInEngWales", "live (domicile) permanently in England or Wales".equalsIgnoreCase(probateData.get("deceasedDomicile").asText()) ? "Yes" : "No");
         boolean ihtCompletedOnline = "online".equalsIgnoreCase(probateData.get("ihtForm").asText());
-        //System.out.println("************* ihtCompletedOnline "+ihtCompletedOnline);
         String ihtFormId = probateData.get("ihtFormId") == null ? "" : probateData.get("ihtFormId").asText();
         ccdData.put("ihtFormCompletedOnline", ihtCompletedOnline ? "Yes" : "No");
         ccdData.put("ihtFormId", ihtCompletedOnline ? IHT_FORM_VALUE_205 : ihtFormId);
-        //System.out.println("*************"+ccdData.get("ihtFormId"));
         ccdData.put("softStop", "True".equalsIgnoreCase(probateData.get("softStop").asText()) ? "Yes" : "No");
         ccdData.set("registryLocation", registry.get("name"));
         ccdData.put("applicationType", "Personal");

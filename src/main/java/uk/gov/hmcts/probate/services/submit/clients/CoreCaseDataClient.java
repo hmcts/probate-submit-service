@@ -72,7 +72,6 @@ public class CoreCaseDataClient {
         String saveUrl = UriComponentsBuilder.fromHttpUrl(getBaseUrl(ccdCreateCaseParams.getUserId()))
                 .pathSegment(CASES_RESOURCE).toUriString();
         logger.info("Save case url: {}", saveUrl);
-        //System.out.println("************ ccdSaveRequest"+ccdSaveRequest.toString());
         return new CcdCaseResponse(postRequestToUrl(ccdSaveRequest, saveUrl));
     }
 
