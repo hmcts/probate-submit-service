@@ -365,11 +365,11 @@ public class CoreCaseDataMapperTest {
     }
 
     @Test
-    public void shouldNotUpdatePaymentStatusWhenNoPaymentResponse() {
+    public void shouldNotUpdatePaymentStatusWhenNoPaymentResponse() throws IOException {
         String token  = "TOKEN123456";
         ObjectNode tokenNode = mapper.createObjectNode();
         tokenNode.put("token", token);
-        JsonNode paymentJsonNode = MissingNode.getInstance();
+        JsonNode paymentJsonNode = TestUtils.getJsonNodeFromFile("noPaymentResponse.json");
         PaymentResponse paymentResponse = new PaymentResponse(paymentJsonNode);
         JsonNode updatedCcdJson = coreCaseDataMapper.updatePaymentStatus(paymentResponse,
                 CREATE_CASE_CCD_EVENT_ID, tokenNode);

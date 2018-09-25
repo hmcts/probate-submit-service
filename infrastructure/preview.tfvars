@@ -11,3 +11,5 @@ capacity = "1"   //changed until internal memory to changed to persistence
 idam_service_api  = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
 ccd_baseUrl = "http://ccd-data-store-api-aat.service.core-compute-aat.internal"
 services_persistence_baseUrl = "http://probate-persistence-service-aat.service.core-compute-aat.internal"
+asp_name = "probate-aat-asp-aat-asp"
+asp_rg = "mgmt-asp-aat"

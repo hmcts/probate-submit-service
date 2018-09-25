@@ -12,7 +12,7 @@
     password: dummyKey
 
     host: localhost
-    port: 2525
+    port: 1025
 
     javaMailProperties.subject: Online Probate Application
     javaMailProperties.sender: dummySender@email.hmcts

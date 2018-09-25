@@ -90,6 +90,5 @@ public class PersistenceClient {
     private void logHttpClientErrorException(HttpClientErrorException e) {
         logger.error("Exception while talking to probate-persistence-service: ", e);
         logger.error(e.getMessage());
-        logger.error(e.getResponseBodyAsString());
     }
 }

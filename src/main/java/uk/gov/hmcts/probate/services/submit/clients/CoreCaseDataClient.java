@@ -38,12 +38,11 @@ public class CoreCaseDataClient {
     private static final String EVENTS_RESOURCE = "events";
     private static final String TOKEN_RESOURCE = "token";
     private static final String CASES_RESOURCE = "cases";
-    private static final String CREATE_CASE_CCD_EVENT_ID = "createCase";
     private static final String CASE_QUERY_PARAM_PREFIX = "case.";
 
     public static final String PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD = "primaryApplicantEmailAddress";
-    public static final String DECEASED_SURNAME_FIELD = "deceasedSurname";
-    public static final String DECEASED_FORENAMES_FIELD = "deceasedForenames";
+    private static final String APPLICANT_EMAIL = "applicantEmail";
+    public static final String STATUS_CODE_LOG = "Status Code: {}";
 
     @Autowired
     public CoreCaseDataClient(RestTemplate restTemplate, RequestFactory requestFactory,
@@ -78,6 +77,7 @@ public class CoreCaseDataClient {
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public Optional<CcdCaseResponse> getCase(SubmitData submitData, String userId,
                                              String authorization) {
+        logger.info("Checking if case already exists in CCD");
         String caseEndpointUrl = UriComponentsBuilder.fromHttpUrl(getBaseUrl(userId)).pathSegment(CASES_RESOURCE).toUriString();
 
         HttpEntity<JsonNode> request = requestFactory.createCcdStartRequest(authorization);
@@ -87,31 +87,31 @@ public class CoreCaseDataClient {
                     .exchange(url, HttpMethod.GET, request, JsonNode.class);
             ArrayNode caseResponses = (ArrayNode) response.getBody();
             if (caseResponses.size() == 0) {
+                logger.info("Existing case not found in CCD");
                 return Optional.empty();
             }
-            return Optional.of(new CcdCaseResponse(caseResponses.get(0)));
+            CcdCaseResponse ccdCaseResponse = new CcdCaseResponse(caseResponses.get(0));
+            logger.info("Found case in CCD - caseId: {}, caseState: {}", ccdCaseResponse.getCaseId(), ccdCaseResponse.getState());
+            return Optional.of(ccdCaseResponse);
         } catch (HttpClientErrorException e) {
             logger.info("Exception while getting a case from CCD", e);
-            logger.info("Status Code: ", e.getStatusText());
-            logger.info("Body: ", e.getResponseBodyAsString());
+            logger.info(STATUS_CODE_LOG, e.getStatusText());
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }
 
     private String generateUrlWithQueryParams(String baseUrl, JsonNode submitData) {
         return UriComponentsBuilder.fromHttpUrl(baseUrl)
-                .queryParam(CASE_QUERY_PARAM_PREFIX + PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD, submitData.get("applicantEmail").textValue())
-                .queryParam(CASE_QUERY_PARAM_PREFIX + DECEASED_SURNAME_FIELD, submitData.get("deceasedSurname").textValue())
-                .queryParam(CASE_QUERY_PARAM_PREFIX + DECEASED_FORENAMES_FIELD, submitData.get("deceasedFirstname").textValue())
+                .queryParam(CASE_QUERY_PARAM_PREFIX + PRIMARY_APPLICANT_EMAIL_ADDRESS_FIELD, submitData.get(APPLICANT_EMAIL).textValue())
                 .toUriString();
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public JsonNode createCaseUpdatePaymentStatusEvent(String userId, Long caseId,
-                                                       String authorization) {
+                                                       String authorization, String eventId) {
         String url = UriComponentsBuilder.fromHttpUrl(getBaseUrl(userId)).pathSegment(CASES_RESOURCE, caseId.toString(),
                 EVENT_TRIGGERS_RESOURCE,
-                CREATE_CASE_CCD_EVENT_ID, TOKEN_RESOURCE).toUriString();
+                eventId, TOKEN_RESOURCE).toUriString();
         return getEventToken(authorization, url);
     }
 
@@ -124,23 +124,22 @@ public class CoreCaseDataClient {
             return response.getBody().get(TOKEN_RESOURCE);
         } catch (HttpClientErrorException e) {
             logger.info("Exception while getting an event token from CCD", e);
-            logger.info("Status Code: ", e.getStatusText());
-            logger.info("Body: ", e.getResponseBodyAsString());
+            logger.info(STATUS_CODE_LOG, e.getStatusText());
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public JsonNode updatePaymentStatus(Long caseId, String userId,
+    public CcdCaseResponse updatePaymentStatus(SubmitData submitData, String userId,
                                         String authorization,
-                                        JsonNode token, PaymentResponse paymentResponse) {
-        String url = UriComponentsBuilder.fromHttpUrl(getBaseUrl(userId)).pathSegment(CASES_RESOURCE, caseId.toString(),
+                                        JsonNode token, PaymentResponse paymentResponse, String eventId) {
+        String url = UriComponentsBuilder.fromHttpUrl(getBaseUrl(userId)).pathSegment(CASES_RESOURCE, submitData.getCaseId().toString(),
                 EVENTS_RESOURCE).toUriString();
-        JsonNode ccdData = ccdMapper.updatePaymentStatus(paymentResponse, CREATE_CASE_CCD_EVENT_ID, token);
+        JsonNode ccdData = ccdMapper.updatePaymentStatus(paymentResponse, eventId, token);
         HttpEntity<JsonNode> ccdSaveRequest = requestFactory.createCcdSaveRequest(ccdData, authorization);
 
         logger.info("Update case payment url: {}", url);
-        return postRequestToUrl(ccdSaveRequest, url);
+        return new CcdCaseResponse(postRequestToUrl(ccdSaveRequest, url));
     }
 
     private JsonNode postRequestToUrl(HttpEntity<JsonNode> ccdSaveRequest, String url) {
@@ -151,8 +150,7 @@ public class CoreCaseDataClient {
             return response.getBody();
         } catch (HttpClientErrorException e) {
             logger.info("Exception while saving case to CCD", e);
-            logger.info("Status Code: ", e.getStatusText());
-            logger.info("Body: ", e.getResponseBodyAsString());
+            logger.info(STATUS_CODE_LOG, e.getStatusText());
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }
@@ -162,7 +160,6 @@ public class CoreCaseDataClient {
     }
 
     private void logResponse(ResponseEntity<JsonNode> response) {
-        logger.info("Status code: {}", response.getStatusCodeValue());
-        logger.info("Response body: {}", response.toString());
+        logger.info(STATUS_CODE_LOG, response.getStatusCodeValue());
     }
 }

@@ -1,11 +1,9 @@
 package uk.gov.hmcts.probate.services.submit.clients;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 
 import java.util.Calendar;
-
-import uk.gov.hmcts.probate.services.submit.model.FormData;
-import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 
 public class CcdCreateCaseParams {
 

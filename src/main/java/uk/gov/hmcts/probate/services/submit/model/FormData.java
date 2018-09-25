@@ -14,12 +14,20 @@ public class FormData {
         return json.at("/submissionReference").asLong();
     }
 
+    public JsonNode getSubmissionReferenceAsJsonNode() {
+        return json.at("/submissionReference");
+    }
+
     public Long getCcdCaseId(){
         return json.at("/ccdCase/id").asLong();
     }
 
+    public String getCcdCaseState(){
+        return json.at("/ccdCase/state").asText();
+    }
+
     public JsonNode getRegistry(){
-        return json.at("/registry");
+        return json.at("/formdata/registry");
     }
 
     public JsonNode getJson() {

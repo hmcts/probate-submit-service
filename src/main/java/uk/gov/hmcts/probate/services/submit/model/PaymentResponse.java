@@ -9,11 +9,7 @@ public class PaymentResponse {
     public PaymentResponse(JsonNode paymentNode) {
         this.paymentNode = paymentNode;
     }
-
-    public boolean isEmpty() {
-        return paymentNode.isMissingNode();
-    }
-
+    
     public Long getAmount() {
         return paymentNode.get("amount").asLong() * 100L;
     }
@@ -28,6 +24,9 @@ public class PaymentResponse {
     }
 
     public String getStatus() {
+        if (paymentNode.get("status") == null) {
+            return null;
+        }
         return paymentNode.get("status").asText();
     }
 
@@ -41,5 +40,9 @@ public class PaymentResponse {
 
     public String getSiteId() {
         return paymentNode.get("siteId").asText();
+    }
+
+    public Long getTotal() {
+        return paymentNode.get("total").asLong();
     }
 }
