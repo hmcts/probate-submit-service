@@ -111,7 +111,9 @@ sourceSets {
 task functionalTask(type: Test) {
   description = "Runs functional Tests"
   testClassesDirs = sourceSets.testFunctional.output.classesDirs
+  testClassesDirs += sourceSets.testContract.output.classesDirs
   classpath = sourceSets.testFunctional.runtimeClasspath
+  classpath += sourceSets.testContract.runtimeClasspath
   finalizedBy aggregate
 }
 
