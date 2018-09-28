@@ -36,6 +36,7 @@
         "willCodicilsNumber": "2",
         "ihtCompleted": "Yes",
         "ihtForm": "online",
+        "ihtFormId": "IHT205",
         "ihtIdentifier": "12345678F12345",
         "ihtGrossValue": 222222,
         "ihtNetValue": 22222,
@@ -138,7 +139,7 @@
                 "emailSent": true
             }
         ],
-        "softStop": "softStop"
+        "softStop": "True"
     },
     "registry": {
         "sequenceNumber": 12345,
