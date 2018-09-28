@@ -1,8 +1,6 @@
 package uk.gov.hmcts.probate.functional;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import org.junit.Before;
@@ -11,6 +9,7 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.containsString;
 
 @RunWith(SerenityRunner.class)
 public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
@@ -77,14 +76,14 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getNextSequenceNumberSuccess() {
-        validateSequenceNumberSuccess();
+    public void getNextRegistrySuccess() {
+        validateNextRegistrySuccess(1234);
     }
 
     @Test
-    public void getNextSequenceNumberFailure() {
-        String errorMessage = "Registry not configured: dundee";
-        validateSequenceNumberFailure("dundee", 404, errorMessage);
+    public void getNextRegistryFailure() {
+        String errorMessage = "java.lang.NumberFormatException: For input string: \"invalid_submission\"";
+        validateNextRegistryFailure("invalid_submission", errorMessage);
     }
 
     private void validateSaveSubmissionSuccess() {
@@ -169,21 +168,21 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
         response.then().assertThat().statusCode(errorCode);
     }
 
-    private void validateSequenceNumberSuccess() {
+    private void validateNextRegistrySuccess(long submissionReference) {
         SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.getHeaders(SESSION_ID))
-                .when().get(persistenceServiceUrl + "/sequence-number/oxford")
+                .when().get(persistenceServiceUrl + "/registry/" + submissionReference)
                 .then().assertThat().statusCode(200);
     }
 
-    private void validateSequenceNumberFailure(String registryName, int errorCode, String errorMsg) {
+    private void validateNextRegistryFailure(String invalidSubmissionReference, String errorMsg) {
         Response response = SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.getHeaders(SESSION_ID))
-                .when().get(persistenceServiceUrl + "/sequence-number/" + registryName)
+                .when().get(persistenceServiceUrl + "/registry/" + invalidSubmissionReference)
                 .thenReturn();
 
-        response.then().assertThat().statusCode(errorCode)
-                .and().body("error", equalTo("Not Found"))
-                .and().body("message", equalTo(errorMsg));
+        response.then().assertThat().statusCode(400)
+                .and().body("error", equalTo("Bad Request"))
+                .and().body("message", containsString(errorMsg));
     }
 }

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Calendar;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import uk.gov.hmcts.probate.services.submit.clients.MailClient;
@@ -30,7 +32,7 @@ public class SubmitServiceTest {
     private MailClient mockMailClient;
     private PersistenceClient persistenceClient;
     private CoreCaseDataClient coreCaseDataClient;
-    private SequenceService sequenceService;
+    private RegistryService registryService;
     private Calendar submissionTimestamp;
     private JsonNode registryData;
 
@@ -40,8 +42,8 @@ public class SubmitServiceTest {
         persistenceClient = mock(PersistenceClient.class);
         mockMailClient = mock(MailClient.class);
         coreCaseDataClient = mock(CoreCaseDataClient.class);
-        sequenceService = mock(SequenceService.class);
-        submitService = new SubmitService(mockMailClient, persistenceClient, coreCaseDataClient, sequenceService);
+        registryService = mock(RegistryService.class);
+        submitService = new SubmitService(mockMailClient, persistenceClient, coreCaseDataClient, registryService);
         submissionTimestamp = Calendar.getInstance();
         registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
     }
@@ -54,7 +56,7 @@ public class SubmitServiceTest {
         when(persistenceClient.loadFormDataById(anyString())).thenReturn(submitData);
         when(persistenceClient.saveSubmission(submitData)).thenReturn(submitData);
         when(mockMailClient.execute(submitData, registryData, submissionTimestamp)).thenReturn("12345678");
-        when(sequenceService.nextRegistry(submitData.get("id").asLong())).thenReturn(registryData);
+        when(persistenceClient.getNextRegistry(submitData.get("id").asLong())).thenReturn(registryData);
         JsonNode dummmyCcdStartCaseRespose =  testUtils.getJsonNodeFromFile("ccdStartCaseResponse.json");
 
         JsonNode response = submitService.submit(submitData, userId, authorizationToken);
@@ -69,7 +71,7 @@ public class SubmitServiceTest {
         JsonNode registryData = testUtils.getJsonNodeFromFile("registryDataResubmitNewApplication.json");
         when(persistenceClient.loadSubmission(Long.parseLong("112233"))).thenReturn(resubmitData);
         when(persistenceClient.loadFormDataBySubmissionReference(Long.parseLong("112233"))).thenReturn(formData);
-        when(sequenceService.populateRegistryResubmitData(Long.parseLong("112233"), formData)).thenReturn(registryData);
+        when(registryService.populateRegistryData(Long.parseLong("112233"), formData)).thenReturn(registryData);
         when(mockMailClient.execute(eq(resubmitData), eq(registryData), any(Calendar.class) )).thenReturn("12345678");
 
         String response = submitService.resubmit(Long.parseLong("112233"));

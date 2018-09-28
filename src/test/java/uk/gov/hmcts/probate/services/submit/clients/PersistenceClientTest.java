@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -25,13 +26,17 @@ public class PersistenceClientTest {
     @Mock
     private PersistenceEntityBuilder entityBuilder;
     private PersistenceClient persistenceClient;
+    private TestUtils testUtils;
+    private JsonNode registryData;
     @Mock
     private RestTemplate restTemplate;
-    
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         persistenceClient = new PersistenceClient(restTemplate, entityBuilder);
+        testUtils = new TestUtils();
+        registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
     }
 
     @Test
@@ -101,12 +106,12 @@ public class PersistenceClientTest {
     }
 
     @Test
-    public void getNextSequenceNumber(){
-        ResponseEntity<Long> mockResponse = new ResponseEntity<>(1234l, HttpStatus.CREATED);
-        doReturn(mockResponse).when(restTemplate).getForEntity(endsWith("/RegistryName"), eq(Long.class));
+    public void getNextRegistry(){
+        ResponseEntity<JsonNode> mockResponse = new ResponseEntity<>(registryData, HttpStatus.CREATED);
+        doReturn(mockResponse).when(restTemplate).getForEntity(endsWith("/1234"), eq(JsonNode.class));
 
-        Long result = persistenceClient.getNextSequenceNumber("RegistryName");
-        verify(restTemplate, times(1)).getForEntity(endsWith("/RegistryName"), eq(Long.class));
+        JsonNode result = persistenceClient.getNextRegistry(1234);
+        verify(restTemplate, times(1)).getForEntity(endsWith("/1234"), eq(JsonNode.class));
         assertEquals(result, mockResponse.getBody());
     }
 }

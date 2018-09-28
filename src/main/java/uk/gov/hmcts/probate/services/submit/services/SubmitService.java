@@ -1,11 +1,14 @@
 package uk.gov.hmcts.probate.services.submit.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.probate.services.submit.clients.CoreCaseDataClient;
 import uk.gov.hmcts.probate.services.submit.clients.MailClient;
@@ -20,20 +23,21 @@ public class SubmitService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final String DUPLICATE_SUBMISSION = "DUPLICATE_SUBMISSION";
+
     private MailClient mailClient;
     private PersistenceClient persistenceClient;
     private CoreCaseDataClient coreCaseDataClient;
-    private SequenceService sequenceService;
+    private RegistryService registryService;
     @Value("${services.coreCaseData.enabled}")
     private boolean coreCaseDataEnabled;
 
     @Autowired
     public SubmitService(MailClient mailClient, PersistenceClient persistenceClient,
-                         CoreCaseDataClient coreCaseDataClient, SequenceService sequenceService) {
+                         CoreCaseDataClient coreCaseDataClient, RegistryService registryService) {
         this.mailClient = mailClient;
         this.persistenceClient = persistenceClient;
         this.coreCaseDataClient = coreCaseDataClient;
-        this.sequenceService = sequenceService;
+        this.registryService = registryService;
     }
 
     public JsonNode submit(JsonNode submitData, String userId, String authorization) {
@@ -43,7 +47,7 @@ public class SubmitService {
             String message = "Application submitted, payload version: " +  submitData.at("/submitdata/payloadVersion").asText() + ", number of executors: " + submitData.at("/submitdata/noOfExecutors").asText();
             JsonNode persistenceResponse = persistenceClient.saveSubmission(submitData);
             JsonNode submissionReference = persistenceResponse.get("id");
-            JsonNode registryData = sequenceService.nextRegistry(submissionReference.asLong());
+            JsonNode registryData = persistenceClient.getNextRegistry(submissionReference.asLong());
             Calendar submissionTimestamp = Calendar.getInstance();
             mailClient.execute(submitData, registryData, submissionTimestamp);
             logger.info(append("tags","Analytics"), message);
@@ -70,7 +74,7 @@ public class SubmitService {
         try {
             JsonNode resubmitData = persistenceClient.loadSubmission(submissionId);
             JsonNode formData = persistenceClient.loadFormDataBySubmissionReference(submissionId);
-            JsonNode registryData = sequenceService.populateRegistryResubmitData(submissionId, formData);
+            JsonNode registryData = registryService.populateRegistryData(submissionId, formData);
             Calendar submissionTimestamp = Calendar.getInstance();
             logger.info("Application re-submitted, registry data payload: " + registryData);
             return mailClient.execute(resubmitData, registryData, submissionTimestamp);
