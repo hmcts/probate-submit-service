@@ -101,7 +101,6 @@ public class CoreCaseDataMapperTest {
     public void mapDataTest() {
         JsonNode mappedData = coreCaseDataMapper.mapData(submitdata, submissonTimestamp, registryData);
         JsonNode registry = registryData.get("registry");
-        assertTrue(mappedData.get("applicationSubmittedDate").asText().equals("2017-08-24"));
         assertTrue(mappedData.get("applicationID").equals(registryData.get("submissionReference")));
         assertTrue(mappedData.get("registryLocation").equals(registry.get("name")));
         assertNotNull(mappedData.get("primaryApplicantForenames"));

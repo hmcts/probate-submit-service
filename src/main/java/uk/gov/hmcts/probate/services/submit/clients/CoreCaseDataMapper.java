@@ -452,6 +452,10 @@ public class CoreCaseDataMapper {
 
 
         ObjectNode probateData = mapper.createObjectNode();
+        if ("Success".equalsIgnoreCase(paymentResponse.getStatus())) {
+            LocalDate localDate = LocalDateTime.now().toLocalDate();
+            probateData.put("applicationSubmittedDate", localDate.toString());
+        }
         if (paymentResponse.getTotal() != 0L) {
             ObjectNode paymentNode = mapper.createObjectNode();
             ObjectNode paymentValueNode = mapper.createObjectNode();
