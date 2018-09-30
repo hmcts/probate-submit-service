@@ -36,6 +36,7 @@ import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 @Configuration
 @ConfigurationProperties(prefix = "ccd")
 public class CoreCaseDataMapper {
+    private static final String IHT_FORM_VALUE_205 = "IHT205";
     private static final String VALUE = "value";
     private static final String DECEASED = "deceased";
     private static final String DECEASED_OTHER_NAMES = "deceasedOtherNames";
