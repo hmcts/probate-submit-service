@@ -303,8 +303,7 @@ public class CoreCaseDataMapper {
             try {
                 ret = field
                         .map(f -> new BigDecimal(f.asText()))
-                        .map(i -> i.multiply(new BigDecimal(100)))
-                        .map(BigDecimal::intValue)
+                        .map(i -> i.multiply(new BigDecimal(100)).setScale(0))
                         .map(String::valueOf)
                         .map(TextNode::new);
 

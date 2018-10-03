@@ -1,6 +1,5 @@
 package uk.gov.hmcts.probate.contract.ccdintegrationtests;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
@@ -9,13 +8,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.probate.contract.IntegrationTestBase;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 
+import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static net.serenitybdd.rest.SerenityRest.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+
 
 @RunWith(SerenityRunner.class)
 public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
@@ -117,6 +119,7 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
                 .statusCode(201).and().body("state", equalToIgnoringCase("PaAppCreated"));
 
     }
+
 
     @Test
     public void verifyCaseTypeIDPresentInTheSuccessResponse() throws IOException {

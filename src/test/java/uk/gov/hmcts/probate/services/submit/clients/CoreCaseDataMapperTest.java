@@ -1,5 +1,10 @@
 package uk.gov.hmcts.probate.services.submit.clients;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.MissingNode;
@@ -26,14 +31,18 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.validation.constraints.NotNull;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.validation.annotation.Validated;
+import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -129,7 +138,7 @@ public class CoreCaseDataMapperTest {
 
     @Test
     public void mapMonetaryValueTest() {
-        Optional expected = Optional.of(new TextNode("2222200"));
+        Optional expected = Optional.of(new TextNode("99999999956"));
         Optional<JsonNode> mappedData = coreCaseDataMapper.monetaryValueMapper(submitdata, "ihtNetValue");
         assertEquals(expected, mappedData);
     }
