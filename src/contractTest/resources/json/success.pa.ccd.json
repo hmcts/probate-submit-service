@@ -10,6 +10,7 @@
     "applicationID": "603",
     "applicationSubmittedDate": "2018-05-17",
     "deceasedDomicileInEngWales": "Yes",
+    "ihtFormId": "IHT205",
     "ihtFormCompletedOnline": "Yes",
     "softStop": "No",
     "registryLocation": "Birmingham",
@@ -24,7 +25,7 @@
     "deceasedForenames": "Suki",
     "numberOfApplicants": 3,
     "willAccessOriginal": "Yes",
-    "primaryApplicantEmailAddress": "harjeet2",
+    "primaryApplicantEmailAddress": "test@test.com",
     "primaryApplicantIsApplying": "Yes",
     "willExists": "Yes",
     "primaryApplicantForenames": "Amal",
@@ -36,43 +37,32 @@
     "deceasedDateOfDeath": "1983-12-22",
     "deceasedDateOfBirth": "1902-10-06",
     "executorsNotApplying": [
-
       {
         "value": {
           "notApplyingExecutorName": "Burton Leonard2",
           "notApplyingExecutorReason": "DiedBefore"
-
         }
-
       },
-
       {
         "value": {
           "notApplyingExecutorName": "Jerry Curry3",
           "notApplyingExecutorReason": "DiedAfter"
-
         }
-
       },
-
       {
         "value": {
           "notApplyingExecutorName": "Hilel Ferrell6",
           "notApplyingExecutorReason": "PowerReserved"
-
         }
-
       },
       {
         "value": {
           "notApplyingExecutorName": "Madeline Jordan7",
           "notApplyingExecutorReason": "Renunciation"
-
         }
       }
     ],
     "executorsApplying": [
-
       {
         "value": {
           "applyingExecutorName": "Inga Giles4",
@@ -80,12 +70,10 @@
           "applyingExecutorEmail": "nigel.dunne@hmcts.net",
           "applyingExecutorAddress": {
             "AddressLine1": "ddddddddddddddddddddddddddddd"
-
           },
           "applyingExecutorOtherNames": "Eric Lloyd4"
         }
       },
-
       {
         "value": {
           "applyingExecutorName": "Devin Wade5",
@@ -178,5 +166,4 @@
       "AddressLine1": "ssssssssssssssssssssssssssssssssssssssss"
     }
   }
-
 }

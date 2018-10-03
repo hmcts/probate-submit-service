@@ -24,11 +24,6 @@ public class SubmitServiceSubmitControllerTests extends IntegrationTestBase {
     }
 
     @Test
-    public void submitSuccess() {
-        validateSubmitSuccess();
-    }
-
-    @Test
     public void submitFailure() {
         validateSubmitFailure(ERROR_CODE);
     }

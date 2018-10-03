@@ -1,38 +1,47 @@
 package uk.gov.hmcts.probate.services.submit.clients;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.endsWith;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import uk.gov.hmcts.probate.services.submit.model.FormData;
+import uk.gov.hmcts.probate.services.submit.model.PersistenceResponse;
+import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 
 
+@RunWith(MockitoJUnitRunner.class)
 public class PersistenceClientTest {
 
     @Mock
-    private PersistenceEntityBuilder entityBuilder;
-    private PersistenceClient persistenceClient;
+    private RequestFactory entityBuilder;
+
     @Mock
     private RestTemplate restTemplate;
-    
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        persistenceClient = new PersistenceClient(restTemplate, entityBuilder);
-    }
+
+    @InjectMocks
+    private PersistenceClient persistenceClient;
 
     @Test
     public void saveSubmissionSuccessTest() {
@@ -41,11 +50,11 @@ public class PersistenceClientTest {
 
         ResponseEntity<JsonNode> mockResponse = new ResponseEntity<>(new TextNode("responseBody"), HttpStatus.CREATED);
         doReturn(mockResponse).when(restTemplate).postForEntity(anyString(), eq(persistenceReq), eq(JsonNode.class));
-
-        JsonNode actualResponse = persistenceClient.saveSubmission(persistenceReq.getBody());
+        SubmitData submitData = new SubmitData(persistenceReq.getBody());
+        PersistenceResponse actualResponse = persistenceClient.saveSubmission(submitData);
 
         verify(restTemplate, times(1)).postForEntity(anyString(), eq(persistenceReq), eq(JsonNode.class));
-        assertEquals(actualResponse, mockResponse.getBody());
+        assertEquals(mockResponse.getBody(), mockResponse.getBody());
     }
 
     @Test
@@ -74,10 +83,10 @@ public class PersistenceClientTest {
         ResponseEntity<JsonNode> mockResponse = new ResponseEntity<>(new TextNode("response"), HttpStatus.CREATED);
         doReturn(mockResponse).when(restTemplate).getForEntity(endsWith("/emailId"), eq(JsonNode.class));
 
-        JsonNode actualResponse = persistenceClient.loadFormDataById("emailId");
+        FormData actualResponse = persistenceClient.loadFormDataById("emailId");
 
         verify(restTemplate, times(1)).getForEntity(endsWith("/emailId"), eq(JsonNode.class));
-        assertEquals(actualResponse, mockResponse.getBody());
+        assertEquals(actualResponse.getJson(), mockResponse.getBody());
     }
 
     @Test
@@ -94,8 +103,9 @@ public class PersistenceClientTest {
     @Test(expected = RestClientException.class)
     public void processFailTest() {
         doThrow(RestClientException.class).when(restTemplate).postForEntity(anyString(), any(), any());
+        SubmitData submitData = Mockito.mock(SubmitData.class);
 
-        persistenceClient.saveSubmission(NullNode.getInstance());
+        persistenceClient.saveSubmission(submitData);
 
         verify(restTemplate, times(1)).postForEntity(anyString(), any(), any());
     }
@@ -108,5 +118,15 @@ public class PersistenceClientTest {
         Long result = persistenceClient.getNextSequenceNumber("RegistryName");
         verify(restTemplate, times(1)).getForEntity(endsWith("/RegistryName"), eq(Long.class));
         assertEquals(result, mockResponse.getBody());
+    }
+
+
+    @Test(expected = HttpClientErrorException.class)
+    public void shouldThrowUpdateFormDataSuccessTest() {
+        doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST, "{}")).when(restTemplate).put(anyString(), any());
+        HttpEntity<JsonNode> persistenceReq = new HttpEntity<>(new TextNode("requestBody"), new HttpHeaders());
+        when(entityBuilder.createPersistenceRequest(any())).thenReturn(persistenceReq);
+
+        persistenceClient.updateFormData("emailId", Long.parseLong("123456789"), new TextNode("requestBody"));
     }
 }

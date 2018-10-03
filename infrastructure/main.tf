@@ -46,13 +46,15 @@ locals {
   //java_proxy_variables: "-Dhttp.proxyHost=${var.proxy_host} -Dhttp.proxyPort=${var.proxy_port} -Dhttps.proxyHost=${var.proxy_host} -Dhttps.proxyPort=${var.proxy_port}"
 
   //probate_frontend_hostname = "probate-frontend-aat.service.core-compute-aat.internal"
-  previewVaultName = "pro-submit-ser"
-  nonPreviewVaultName = "pro-submit-ser-${var.env}"
+  previewVaultName = "${var.raw_product}-aat"
+  nonPreviewVaultName = "${var.raw_product}-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
+  localenv = "${(var.env == "preview" || var.env == "spreview") ? "aat": "${var.env}"}"
+}
 
-  nonPreviewVaultUri = "${module.probate-submit-service-vault.key_vault_uri}"
-  previewVaultUri = "https://pro-submit-ser-aat.vault.azure.net/"
-  vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
+data "azurerm_key_vault" "probate_key_vault" {
+  name = "${local.vaultName}"
+  resource_group_name = "${local.vaultName}"
 }
 
 module "probate-submit-service" {
@@ -101,15 +103,4 @@ module "probate-submit-service" {
     //ROOT_APPENDER = "JSON_CONSOLE" //Remove json logging
 
   }
-}
-
-module "probate-submit-service-vault" {
-  source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
-  name                = "${local.vaultName}"
-  product             = "${var.product}"
-  env                 = "${var.env}"
-  tenant_id           = "${var.tenant_id}"
-  object_id           = "${var.jenkins_AAD_objectId}"
-  resource_group_name = "${module.probate-submit-service.resource_group_name}"
-  product_group_object_id = "33ed3c5a-bd38-4083-84e3-2ba17841e31e"
 }

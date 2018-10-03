@@ -33,7 +33,7 @@ public class SolCcdServiceAuthTokenGenerator {
     @Value("${idam.username}")
     private String idamUsername;
 
-    @Value("${idam.password}")
+    @Value("${idam.userpassword}")
     private String idamPassword;
 
     @Value("${env}")
@@ -56,11 +56,13 @@ public class SolCcdServiceAuthTokenGenerator {
     private ServiceAuthTokenGenerator tokenGenerator;
 
     public String generateServiceToken() {
-        return tokenGenerator.generate();
+        String sAuth = tokenGenerator.generate();
+        return sAuth;
     }
 
-    public int getUserId() {
-        int userid_local = RestAssured.given()
+
+    public String getUserId() {
+        String userid_local = "" + RestAssured.given()
                 .header("Authorization", userToken)
                 .get(idamUserBaseUrl + "/details")
                 .body()

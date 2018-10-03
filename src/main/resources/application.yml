@@ -12,7 +12,7 @@
     password: dummyKey
 
     host: localhost
-    port: 2525
+    port: 1025
 
     javaMailProperties.subject: Online Probate Application
     javaMailProperties.sender: dummySender@email.hmcts
@@ -51,14 +51,14 @@
       sequenceNumber.url:  ${services.persistence.baseUrl}/sequence-number
 
     coreCaseData:
-      baseUrl: https://case-data-app.dev.ccd.reform.hmcts.net:4451
+      baseUrl: http://localhost:4452
       url: ${services.coreCaseData.baseUrl}/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfRepresentation
-      enabled: ${USE_CCD:false}
+      enabled: ${USE_CCD:true}
 
   auth.provider.service.client:
     baseUrl: http://localhost:4502
     microservice: 'probate_backend'
-    key: dummyKey
+    key: 'AAAAAAAAAAAAAAAA'
     tokenTimeToLiveInSeconds: '900'
 
   idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
@@ -105,6 +105,7 @@
       noOfApplicants: numberOfApplicants
       noOfExecutors: numberOfExecutors
       ihtIdentifier: ihtReferenceNumber
+      ihtFormId: ihtFormId
       copiesUK: extraCopiesOfGrant
       copiesOverseas: outsideUKGrantCopies
       paymentReference: paymentReferenceNumber
