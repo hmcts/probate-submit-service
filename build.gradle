@@ -81,12 +81,12 @@ dependencyCheck {
 
 sourceSets {
   testFunctional {
-    java {
-      compileClasspath += main.output
-      runtimeClasspath += main.output
-      srcDir file('src/functionalTest/java')
-    }
-    resources.srcDir file('src/functionalTest/resources')
+    // java {
+    //   compileClasspath += main.output
+    //   runtimeClasspath += main.output
+    //   srcDir file('src/functionalTest/java')
+    // }
+    // resources.srcDir file('src/functionalTest/resources')
   }
 
   testSmoke {
@@ -99,12 +99,12 @@ sourceSets {
   }
 
   testContract {
-    java {
-      compileClasspath += main.output
-      runtimeClasspath += main.output
-      srcDir file('src/contractTest/java')
-    }
-    resources.srcDir file('src/contractTest/resources')
+    // java {
+    //   compileClasspath += main.output
+    //   runtimeClasspath += main.output
+    //   srcDir file('src/contractTest/java')
+    // }
+    // resources.srcDir file('src/contractTest/resources')
   }
 }
 

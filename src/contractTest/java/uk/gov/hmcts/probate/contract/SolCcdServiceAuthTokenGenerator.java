@@ -56,7 +56,8 @@ public class SolCcdServiceAuthTokenGenerator {
     private ServiceAuthTokenGenerator tokenGenerator;
 
     public String generateServiceToken() {
-        return tokenGenerator.generate();
+        String sAuth = tokenGenerator.generate();
+        return sAuth;
     }
 
 

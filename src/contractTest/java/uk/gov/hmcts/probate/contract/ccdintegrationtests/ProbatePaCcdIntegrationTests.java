@@ -17,12 +17,10 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
-
 @RunWith(SerenityRunner.class)
 public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private static final String CCD_EVENT_TOKEN_FIELD = "event_token";
     private static final String APPLY_FOR_GRANT_TOKEN_URL_PATH = "/event-triggers/applyForGrant/token";
     private static final String CREATE_CASE_TOKEN_URL_PATH = "/cases/%s/event-triggers/createCase/token";

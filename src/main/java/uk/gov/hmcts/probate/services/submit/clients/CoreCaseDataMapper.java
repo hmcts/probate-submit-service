@@ -36,7 +36,7 @@ import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 @Configuration
 @ConfigurationProperties(prefix = "ccd")
 public class CoreCaseDataMapper {
-
+    private static final String IHT_FORM_VALUE_205 = "IHT205";
     private static final String VALUE = "value";
     private static final String DECEASED = "deceased";
     private static final String DECEASED_OTHER_NAMES = "deceasedOtherNames";
@@ -194,7 +194,10 @@ public class CoreCaseDataMapper {
         LocalDate localDate = LocalDateTime.ofInstant(submissionTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
         ccdData.put("applicationSubmittedDate", localDate.toString());
         ccdData.put("deceasedDomicileInEngWales", "live (domicile) permanently in England or Wales".equalsIgnoreCase(probateData.get("deceasedDomicile").asText()) ? "Yes" : "No");
-        ccdData.put("ihtFormCompletedOnline", "online".equalsIgnoreCase(probateData.get("ihtForm").asText()) ? "Yes" : "No");
+        boolean ihtCompletedOnline = "online".equalsIgnoreCase(probateData.get("ihtForm").asText());
+        String ihtFormId = probateData.get("ihtFormId") == null ? "" : probateData.get("ihtFormId").asText();
+        ccdData.put("ihtFormCompletedOnline", ihtCompletedOnline ? "Yes" : "No");
+        ccdData.put("ihtFormId", ihtCompletedOnline ? IHT_FORM_VALUE_205 : ihtFormId);
         ccdData.put("softStop", "True".equalsIgnoreCase(probateData.get("softStop").asText()) ? "Yes" : "No");
         ccdData.set("registryLocation", registry.get("name"));
         ccdData.put("applicationType", "Personal");
