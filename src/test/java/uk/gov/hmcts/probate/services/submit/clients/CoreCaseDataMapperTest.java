@@ -103,6 +103,7 @@ public class CoreCaseDataMapperTest {
         JsonNode registry = registryData.get("registry");
 
         assertTrue(mappedData.get("ihtFormCompletedOnline").asText().equals("Yes"));
+        assertTrue(mappedData.get("applicationSubmittedDate").asText().equals("2017-08-24"));
         assertTrue(mappedData.get("ihtFormId").asText().equals("IHT205"));
         assertTrue(mappedData.get("softStop").asText().equals("Yes"));
         assertTrue(mappedData.get("applicationSubmittedDate").asText().equals("2017-08-24"));
