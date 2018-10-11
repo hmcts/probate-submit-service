@@ -81,6 +81,22 @@
                     <td th:text="${applicantLastName}">--</td>
                 </tr>
                 <tr>
+                    <td th:text="#{applicantSameWillName}">Is applicant name the same as what appears on the will:</td>
+                    <td th:text="${applicantSameWillName}">--</td>
+                </tr>
+                <tr th:if="${applicantAlias} != null">
+                    <td th:text="#{applicantAlias}">How is applicant name written on the will:</td>
+                    <td th:text="${applicantAlias}">--</td>
+                </tr>
+                <tr th:if="${applicantAlias} != null">
+                    <td th:text="#{applicantAliasReason}">Reason for applicant name change:</td>
+                    <td th:text="${applicantAliasReason}">--</td>
+                </tr>
+                <tr th:if="${applicantOtherReason} != null">
+                    <td th:text="#{applicantOtherReason}">What is the other reason for applicant name change:</td>
+                    <td th:text="${applicantOtherReason}">--</td>
+                </tr>
+                <tr>
                     <td th:text="#{applicantAddress}">Applicant address:</td>
                     <td th:text="${applicantAddress}">--</td>
                 </tr>

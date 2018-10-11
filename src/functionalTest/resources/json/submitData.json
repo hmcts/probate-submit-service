@@ -2,6 +2,10 @@
   "submitdata":{
     "applicantFirstName":"Lead",
     "applicantLastName":"Applicant",
+    "applicantSameWillName":"No",
+    "applicantAlias":"Lead_Applicant_Alias",
+    "applicantAliasReason":"other",
+    "applicantOtherReason":"nickname",
     "applicantAddress":"fsdfdfdfd",
     "applicantPhone":"07123456789",
     "applicantEmail":"tom@email.com",

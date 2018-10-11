@@ -56,6 +56,10 @@ public class MailMessageBuilderTest {
         assertThat(mimeMessage.getRecipients(Message.RecipientType.TO), arrayContaining(new InternetAddress("oxford@email.com")));
         assertThat(mailContent, containsString(emailData.at("/submitdata/applicantFirstName").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/applicantLastName").asText()));
+        assertThat(mailContent, containsString(emailData.at("/submitdata/applicantSameWillName").asText()));
+        assertThat(mailContent, containsString(emailData.at("/submitdata/applicantAlias").asText()));
+        assertThat(mailContent, containsString(emailData.at("/submitdata/applicantAliasReason").asText()));
+        assertThat(mailContent, containsString(emailData.at("/submitdata/applicantOtherReason").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/applicantAddress").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/applicantPostcode").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/applicantPhone").asText()));

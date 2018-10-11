@@ -4,6 +4,10 @@
     "submitdata": {
         "applicantFirstName": "Applicant",
         "applicantLastName": "NAme",
+        "applicantSameWillName":"No",
+        "applicantAlias":"Lead_Applicant_Alias",
+        "applicantAliasReason":"other",
+        "applicantOtherReason":"nickname",
         "applicantAddress": "my address\r\n",
         "applicantPhone": "324234",
         "applicantEmail": "nigel@haworthconsulting.co.uk",
