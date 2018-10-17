@@ -94,8 +94,8 @@ public class CoreCaseDataClient {
             logger.info("Found case in CCD - caseId: {}, caseState: {}", ccdCaseResponse.getCaseId(), ccdCaseResponse.getState());
             return Optional.of(ccdCaseResponse);
         } catch (HttpClientErrorException e) {
-            logger.info("Exception while getting a case from CCD", e);
-            logger.info(STATUS_CODE_LOG, e.getStatusText());
+            logger.error("Exception while getting a case from CCD", e);
+            logger.error(STATUS_CODE_LOG, e.getStatusText());
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }
@@ -123,8 +123,8 @@ public class CoreCaseDataClient {
                     .exchange(url, HttpMethod.GET, request, JsonNode.class);
             return response.getBody().get(TOKEN_RESOURCE);
         } catch (HttpClientErrorException e) {
-            logger.info("Exception while getting an event token from CCD", e);
-            logger.info(STATUS_CODE_LOG, e.getStatusText());
+            logger.error("Exception while getting an event token from CCD", e);
+            logger.error(STATUS_CODE_LOG, e.getStatusText());
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }
@@ -149,8 +149,8 @@ public class CoreCaseDataClient {
             logResponse(response);
             return response.getBody();
         } catch (HttpClientErrorException e) {
-            logger.info("Exception while saving case to CCD", e);
-            logger.info(STATUS_CODE_LOG, e.getStatusText());
+            logger.error("Exception while saving case to CCD", e);
+            logger.error(STATUS_CODE_LOG, e.getStatusText());
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }
