@@ -15,7 +15,14 @@ List<LinkedHashMap<String, Object>> secrets = [
     secret('probateCcdDataStoreApi', 'CCD_DATA_STORE_API_URL'),
     secret('probateServiceAuthUrl', 'SERVICE_AUTH_PROVIDER_BASE_URL'),
     secret('probateUserAuthUrl', 'USER_AUTH_PROVIDER_OAUTH2_URL'),
-    secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI')
+    secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI'),
+    secret('spring-application-json-submit-service-azure', 'SUB_SER_SPRING_JSON'),
+    secret('probate-mail-host', 'PROBATE_SUB_MAIL_HOST'),
+    secret('probate-mail-username', 'PROBATE_SUB_MAIL_USERNAME'),
+    secret('probate-mail-password', 'PROBATE_SUB_MAIL_PASSWORD'),
+    secret('probate-mail-port', 'PROBATE_SUB_MAIL_PORT'),
+    secret('probate-mail-sender', 'PROBATE_SUB_MAIL_SENDER'),
+    secret('probate-mail-recipient', 'PROBATE_SUB_MAIL_REC')
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
@@ -28,9 +35,11 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withPipeline("java", product, component) {
-
+  setVaultName('probate')
   loadVaultSecrets(secrets)
   enableSlackNotifications('#probate-jenkins')
+  enableDockerBuild()
+  enableDeployToAKS()
 
   after('test') {
     try {

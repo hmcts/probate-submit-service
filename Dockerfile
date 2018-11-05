@@ -1,21 +1,14 @@
-FROM gradle:jdk8 as requestBuilder
+FROM hmcts/cnp-java-base:openjdk-jre-8-alpine-1.4
 
-COPY . /home/gradle/src
-USER root
-RUN chown -R gradle:gradle /home/gradle/src
-USER gradle
-
-WORKDIR /home/gradle/src
-RUN gradle assemble
-
-FROM openjdk:8-alpine
-
-RUN mkdir -p /usr/local/bin
+# Mandatory!
+ENV APP submit-service.jar
+ENV APPLICATION_TOTAL_MEMORY 1024M
+ENV APPLICATION_SIZE_ON_DISK_IN_MB 66
 
 COPY docker/entrypoint.sh /
-COPY --from=requestFactory /home/gradle/src/build/libs/submit-service.jar /submit-service.jar
+COPY build/libs/$APP /opt/app/
 
-HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy= curl --silent --fail http://localhost:8181/health
+HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" wget -q --spider http://localhost:8080/health || exit 1
 
 EXPOSE 8181
 
