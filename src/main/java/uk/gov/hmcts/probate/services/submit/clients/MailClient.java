@@ -36,10 +36,8 @@ public class MailClient implements Client<JsonNode, String> {
             MimeMessage message = mailMessageBuilder.buildMessage(submitData, registryData, mailSender.getJavaMailProperties(), submissionTimestamp);
             mailSender.send(message);
             String submissionReference = submitData.at("/submitdata/submissionReference").asText();
-            if (registryData != null) {
-                if (registryData.get("email") != null) {
-                    logger.info("Mail sent to {} with submission reference {}", registryData.get("email").asText(), submissionReference);
-                }
+            if (registryData != null && registryData.get("email") != null) {
+                logger.info("Mail sent to {} with submission reference {}", registryData.get("email").asText(), submissionReference);
             }
             return submissionReference;
         } catch (MessagingException ex) {
