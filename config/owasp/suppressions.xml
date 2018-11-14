@@ -639,6 +639,56 @@
     <cpe>cpe:/a:apache:httpasyncclient</cpe>
   </suppress>
 
+  <suppress>
+    <notes><![CDATA[
+   file name: javax.ws.rs-api-2.0.1.jar
+   ]]></notes>
+    <gav regex="true">^javax\.ws\.rs:javax\.ws\.rs-api:.*$</gav>
+    <cpe>cpe:/a:restful_project:restful</cpe>
+  </suppress>
+
+  <suppress>
+    <notes><![CDATA[
+   file name: hibernate-validator-5.3.6.Final.jar
+   ]]></notes>
+    <gav regex="true">^org\.hibernate:hibernate-validator:.*$</gav>
+    <cpe>cpe:/a:bean_project:bean</cpe>
+  </suppress>
+
+  <suppress>
+    <notes><![CDATA[
+   file name: spring-core-4.3.18.RELEASE.jar
+   ]]></notes>
+    <gav regex="true">^org\.springframework:spring-core:.*$</gav>
+    <cpe>cpe:/a:springsource:spring_framework</cpe>
+  </suppress>
+
+  <suppress>
+    <notes><![CDATA[
+   file name: spring-core-4.3.18.RELEASE.jar
+   ]]></notes>
+    <gav regex="true">^org\.springframework:spring-core:.*$</gav>
+    <cpe>cpe:/a:vmware:springsource_spring_framework</cpe>
+  </suppress>
+
+  <suppress>
+    <notes><![CDATA[
+   file name: netty-codec-http-4.0.27.Final.jar
+   ]]></notes>
+    <gav regex="true">^io\.netty:netty-codec-http:.*$</gav>
+    <cpe>cpe:/a:async-http-client_project:async-http-client</cpe>
+  </suppress>
+
+  <suppress>
+    <notes><![CDATA[
+   file name: applicationinsights-web-2.0.2.jar/META-INF/maven/org.apache.httpcomponents/httpasyncclient/pom.xml
+   ]]></notes>
+    <gav regex="true">^org\.apache\.httpcomponents:httpasyncclient:.*$</gav>
+    <cpe>cpe:/a:async-http-client_project:async-http-client</cpe>
+  </suppress>
+
+
+
 
 
 </suppressions>
