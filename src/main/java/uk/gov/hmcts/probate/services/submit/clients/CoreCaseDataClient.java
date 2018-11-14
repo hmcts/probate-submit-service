@@ -71,7 +71,9 @@ public class CoreCaseDataClient {
         String saveUrl = UriComponentsBuilder.fromHttpUrl(getBaseUrl(ccdCreateCaseParams.getUserId()))
                 .pathSegment(CASES_RESOURCE).toUriString();
         logger.info("Save case url: {}", saveUrl);
-        logger.info("Save case body: {}", ccdData.toString());
+        if (ccdData != null) {
+            logger.info("Save case body: {}", ccdData);
+        }
         return new CcdCaseResponse(postRequestToUrl(ccdSaveRequest, saveUrl));
     }
 
@@ -140,7 +142,9 @@ public class CoreCaseDataClient {
         HttpEntity<JsonNode> ccdSaveRequest = requestFactory.createCcdSaveRequest(ccdData, authorization);
 
         logger.info("Update case payment url: {}", url);
-        logger.info("Update case payment body : {}", ccdData.toString());
+        if (ccdData != null) {
+            logger.info("Update case payment body : {}", ccdData);
+        }
         return new CcdCaseResponse(postRequestToUrl(ccdSaveRequest, url));
     }
 
