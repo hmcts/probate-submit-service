@@ -218,7 +218,7 @@ compileJava {
   options.compilerArgs << '-parameters'
 }
 
-jar {
+bootJar {
   archiveName = 'submit-service.jar'
   manifest {
 
