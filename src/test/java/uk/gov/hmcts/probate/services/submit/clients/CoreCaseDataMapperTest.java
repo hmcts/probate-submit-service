@@ -154,6 +154,15 @@ public class CoreCaseDataMapperTest {
     }
 
     @Test
+    public void mapUnmappableMonetaryValueWithDecimalTestLessThanOnePound() {
+        Optional expected = Optional.of(new TextNode("50"));
+        JsonNode value = mapper.createObjectNode().set("totalFee", new TextNode("0.50"));
+
+        Optional<JsonNode> mappedData = coreCaseDataMapper.monetaryValueMapper(value, "totalFee");
+        assertEquals(expected, mappedData);
+    }
+
+    @Test
     public void mapFieldsTest() {
         Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getFieldMap(), coreCaseDataMapper::fieldMapper);
 

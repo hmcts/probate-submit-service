@@ -5,7 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -23,15 +31,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotNull;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 
 @Configuration
 @ConfigurationProperties(prefix = "ccd")
@@ -306,12 +305,6 @@ public class CoreCaseDataMapper {
         return Optional.of(ccdFormat);
     }
 
-    public String getText(JsonNode jsonNode, String fieldname) {
-        return Optional.ofNullable(jsonNode.get(fieldname))
-                .map(JsonNode::asText)
-                .orElse("");
-    }
-
     public Optional<JsonNode> monetaryValueMapper(JsonNode probateData, String fieldName) {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> field = Optional.ofNullable(probateData.get(fieldName));
@@ -321,8 +314,7 @@ public class CoreCaseDataMapper {
             try {
                 ret = field
                         .map(f -> new BigDecimal(f.asText()))
-                        .map(i -> i.multiply(new BigDecimal(100)))
-                        .map(BigDecimal::intValue)
+                        .map(i -> i.multiply(new BigDecimal(100)).setScale(0))
                         .map(String::valueOf)
                         .map(TextNode::new);
 

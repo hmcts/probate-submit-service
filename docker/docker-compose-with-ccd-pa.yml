@@ -122,19 +122,6 @@ services:
       shared-database:
         condition: service_healthy
 
-  shared-database:
-    image: postgres:9.6-alpine
-    container_name: shared-database
-    ports:
-      - 5342:5432
-    healthcheck:
-      test: psql -c 'select 1' -d postgres -U postgres
-      retries: 2
-    mem_limit: 160m
-    memswap_limit: 0
-    volumes:
-      - ./init-db-pa.sh:/docker-entrypoint-initdb.d/init-db.sh
-
   smtp-server:
     container_name: smtp-server
     image: mailhog/mailhog
@@ -353,7 +340,7 @@ services:
       - PROXY_DEFINITION_DATA=http://ccd-definition-store-api:4451/api/data
       - PROXY_DEFINITION_DISPLAY=http://ccd-definition-store-api:4451/api/display
       # this NEEDS to be your local ip address
-      - PROXY_PRINT_SERVICE=http://172.16.10.195:3100
+      - PROXY_PRINT_SERVICE=http://172.16.10.254:3100
       - PROXY_DOCUMENT_MANAGEMENT=http://document-management-store:8081
     ports:
       - 3453:3453
@@ -374,7 +361,7 @@ services:
     image: docker.artifactory.reform.hmcts.net/common-components/payments-api:latest
     container_name: payments-api
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.16.10.195:5430/payment
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.16.10.254:5430/payment
       - SPRING_DATASOURCE_USERNAME=payment
       - SPRING_DATASOURCE_PASSWORD=
       - AUTH_PROVIDER_SERVICE_CLIENT_BASEURL=http://service-auth-provider-api:8080/
@@ -426,6 +413,37 @@ services:
      - service-auth-provider-api
      - idam-api
 
+  persistence-service:
+    image: hmcts/probate-persistence-service
+    command: --wait-for-database 30
+    container_name: persistence-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://shared-database:5432/probate
+      - PROBATE_POSTGRESQL_HOSTNAME=shared-database
+      - PROBATE_POSTGRESQL_PORT=5432
+      - PROBATE_POSTGRESQL_DATABASE=probate
+      - PROBATE_POSTGRESQL_USER=probate
+      - PROBATE_POSTGRESQL_PASSWORD=probate
+      - PROBATE_PERSISTENCE_PORT=8282
+      - http_proxy=
+      - https_proxy=
+      - no_proxy=
+      - LIQUIBASE_AT_STARTUP=true
+    ports:
+     - 8282:8282
+    depends_on:
+      - shared-database
+
+  business-service:
+    image: hmcts/probate-business-service
+    container_name: business-service
+    environment:
+      - SERVER_PORT=8082
+      - http_proxy=
+      - https_proxy=
+      - no_proxy=
+    ports:
+     - 8082:8081
 
   payments-database:
     image: docker.artifactory.reform.hmcts.net/common-components/payments-database

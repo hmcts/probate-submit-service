@@ -2,6 +2,8 @@ package uk.gov.hmcts.probate.services.submit.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.math.BigDecimal;
+
 public class PaymentResponse {
 
     private final JsonNode paymentNode;
@@ -11,7 +13,8 @@ public class PaymentResponse {
     }
     
     public Long getAmount() {
-        return paymentNode.get("amount").asLong() * 100L;
+        BigDecimal amount = new BigDecimal(paymentNode.get("amount").asText());
+        return amount.multiply(new BigDecimal(100)).setScale(0).longValue();
     }
 
     public String getReference() {

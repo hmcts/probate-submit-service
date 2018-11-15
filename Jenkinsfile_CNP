@@ -16,7 +16,7 @@ List<LinkedHashMap<String, Object>> secrets = [
     secret('probateServiceAuthUrl', 'SERVICE_AUTH_PROVIDER_BASE_URL'),
     secret('probateUserAuthUrl', 'USER_AUTH_PROVIDER_OAUTH2_URL'),
     secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI'),
-    secret('spring-application-json-submit-service-azure', 'SUB_SER_SPRING_JSON'),
+    secret('spring-application-json-submit-service-azure', 'SUB_SER_SPRING_JSON1'),
     secret('probate-mail-host', 'PROBATE_SUB_MAIL_HOST'),
     secret('probate-mail-username', 'PROBATE_SUB_MAIL_USERNAME'),
     secret('probate-mail-password', 'PROBATE_SUB_MAIL_PASSWORD'),
@@ -35,6 +35,7 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withPipeline("java", product, component) {
+  env.SUB_SER_SPRING_JSON = '{"registries":[{"address":"Digital Application\nOxford District Probate Registry\nCombined Court Building\nSt Aldates\nOxford\nOX1 1LY","email":"test.probate.inbox@gmail.com","id":0,"name":"oxford"},{"address":"Digital Application\nBirmingham Probate Registry\nThe Priory Courts\n33 Bull Street\nBirmingham\nWest Midlands\nB4 6DU\n","email":"test2.probate.inbox@gmail.com","id":1,"name":"birmingham"},{"address":"Digital Applications\nManchester District Probate Registry\nCivil Justice Centre\nGround Floor\n1 Bridge Street West\nP.O. BOX 4240\nManchester\nM60 1WJ","email":"test3.probate.inbox@gmail.com","id":2,"name":"manchester"}]}'
   setVaultName('probate')
   loadVaultSecrets(secrets)
   enableSlackNotifications('#probate-jenkins')
