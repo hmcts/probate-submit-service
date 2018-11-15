@@ -1,24 +1,14 @@
 package uk.gov.hmcts.probate.services.submit.clients;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.endsWith;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,12 +20,25 @@ import uk.gov.hmcts.probate.services.submit.model.FormData;
 import uk.gov.hmcts.probate.services.submit.model.PersistenceResponse;
 import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+
 public class PersistenceClientTest {
+
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     private RequestFactory entityBuilder;
+
+    @Mock
+    private SubmitData submitDataMock;
 
     @Mock
     private RestTemplate restTemplate;
@@ -49,11 +52,11 @@ public class PersistenceClientTest {
         when(entityBuilder.createPersistenceRequest(eq(persistenceReq.getBody()))).thenReturn(persistenceReq);
 
         ResponseEntity<JsonNode> mockResponse = new ResponseEntity<>(new TextNode("responseBody"), HttpStatus.CREATED);
-        doReturn(mockResponse).when(restTemplate).postForEntity(anyString(), eq(persistenceReq), eq(JsonNode.class));
+        doReturn(mockResponse).when(restTemplate).postForEntity(nullable(String.class), eq(persistenceReq), eq(JsonNode.class));
         SubmitData submitData = new SubmitData(persistenceReq.getBody());
         PersistenceResponse actualResponse = persistenceClient.saveSubmission(submitData);
 
-        verify(restTemplate, times(1)).postForEntity(anyString(), eq(persistenceReq), eq(JsonNode.class));
+        verify(restTemplate, times(1)).postForEntity(nullable(String.class), eq(persistenceReq), eq(JsonNode.class));
         assertEquals(mockResponse.getBody(), mockResponse.getBody());
     }
 
@@ -102,16 +105,15 @@ public class PersistenceClientTest {
 
     @Test(expected = RestClientException.class)
     public void processFailTest() {
-        doThrow(RestClientException.class).when(restTemplate).postForEntity(anyString(), any(), any());
-        SubmitData submitData = Mockito.mock(SubmitData.class);
+        doThrow(RestClientException.class).when(restTemplate).postForEntity(nullable(String.class), any(), any());
 
-        persistenceClient.saveSubmission(submitData);
+        persistenceClient.saveSubmission(submitDataMock);
 
         verify(restTemplate, times(1)).postForEntity(anyString(), any(), any());
     }
 
     @Test
-    public void getNextSequenceNumber(){
+    public void getNextSequenceNumber() {
         ResponseEntity<Long> mockResponse = new ResponseEntity<>(1234l, HttpStatus.CREATED);
         doReturn(mockResponse).when(restTemplate).getForEntity(endsWith("/RegistryName"), eq(Long.class));
 

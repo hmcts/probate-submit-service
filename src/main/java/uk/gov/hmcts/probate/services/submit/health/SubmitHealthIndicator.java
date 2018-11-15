@@ -9,12 +9,8 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.UnknownHttpStatusCodeException;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
-@AllArgsConstructor
 public class SubmitHealthIndicator implements HealthIndicator {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SubmitHealthIndicator.class);
 	
 	private final static String EXCEPTION_KEY = "exception";
 	private final static String MESSAGE_KEY = "message";
@@ -22,7 +18,12 @@ public class SubmitHealthIndicator implements HealthIndicator {
 
     private final String url;
     private RestTemplate restTemplate;
-    
+
+    public SubmitHealthIndicator(String servicesCcdBaseUrl, RestTemplate restTemplate) {
+        this.url = servicesCcdBaseUrl;
+        this.restTemplate = restTemplate;
+    }
+
     @Override
     public Health health() {
     	ResponseEntity<String> responseEntity;
@@ -42,7 +43,7 @@ public class SubmitHealthIndicator implements HealthIndicator {
             return getHealthWithDownStatus(url, uhsce.getMessage(), "UnknownHttpStatusCodeException - " + uhsce.getStatusText());
         }
 
-        if (responseEntity != null && !responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+        if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
             return getHealthWithDownStatus(url, "HTTP Status code not 200", "HTTP Status: " + responseEntity.getStatusCodeValue());
         }
 

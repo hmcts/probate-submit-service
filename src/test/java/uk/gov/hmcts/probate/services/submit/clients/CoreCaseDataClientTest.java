@@ -1,44 +1,35 @@
 package uk.gov.hmcts.probate.services.submit.clients;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.LongNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.google.common.collect.ImmutableMap;
-
-import java.util.Calendar;
-import java.util.Map;
-import java.util.Optional;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.*;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.probate.services.submit.model.CcdCaseResponse;
-import uk.gov.hmcts.probate.services.submit.model.FormData;
 import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 
-@RunWith(MockitoJUnitRunner.class)
+import java.util.Calendar;
+import java.util.Optional;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class CoreCaseDataClientTest {
 
     private static final String CORE_CASE_DATA_URL =
@@ -122,7 +113,7 @@ public class CoreCaseDataClientTest {
         when(submitData.getSubmitData()).thenReturn(submitDataJson);
         when(submitDataJson.get(APPLICANT_EMAIL_ADDRESS_FIELD))
                 .thenReturn(PRIMARY_APPLICANT_EMAIL_ADDRESS);
-        when(submitDataJson.get(DECEASED_SURNAME_FIELD)).thenReturn(DECEASED_SURNAME);
+
         when(submitDataJson.get(DECEASED_FORENAMES_FIELD)).thenReturn(DECEASED_FORENAMES);
 
         when(ccdCaseResponse.getCaseId()).thenReturn(CASE_ID);
@@ -132,12 +123,18 @@ public class CoreCaseDataClientTest {
     public void shouldCreateCase() {
         String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/" +
                 "event-triggers/applyForGrant/token";
-        when(restTemplate.exchange(url, HttpMethod.GET, ccdRequest, JsonNode.class))
-                .thenReturn(response);
+
+        String val = "{\"token\":\"token\"}";
+        
         when(requestFactory.createCcdStartRequest(ccdCreateCaseParams.getAuthorization()))
                 .thenReturn(ccdRequest);
         when(response.getBody()).thenReturn(ccdData);
         when(ccdData.get(TOKEN_RESOURCE)).thenReturn(tokenJsonNode);
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode objectNode = objectMapper.createObjectNode();
+        objectNode.set("token", TextNode.valueOf("token"));
+        ResponseEntity<JsonNode> responseEntity = new ResponseEntity<>(objectNode, HttpStatus.CREATED);
+        when(restTemplate.exchange(url, HttpMethod.GET, ccdRequest, JsonNode.class)).thenReturn(responseEntity);
 
         JsonNode caseTokenJson = coreCaseDataClient.createCase(ccdCreateCaseParams);
 

@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import uk.gov.hmcts.probate.services.submit.Registry;
 import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
@@ -23,7 +23,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
+//TODO: Remove linient strictness for quality test maintanance
 public class SequenceServiceTest {
 
     @Mock
@@ -73,7 +74,6 @@ public class SequenceServiceTest {
         JsonNode registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
         when(sequenceService.identifyNextRegistry()).thenReturn(mockRegistry);
         when(mockRegistry.capitalizeRegistryName()).thenReturn("Oxford");
-        when(persistenceClient.getNextSequenceNumber("oxford")).thenReturn(1234L);
         when(sequenceService.getRegistrySequenceNumber(mockRegistry)).thenReturn(20013L);
         when(mockRegistry.getEmail()).thenReturn("oxford@email.com");
         when(mockRegistry.getAddress()).thenReturn("Test Address Line 1\nTest Address Line 2\nTest Address Postcode");
