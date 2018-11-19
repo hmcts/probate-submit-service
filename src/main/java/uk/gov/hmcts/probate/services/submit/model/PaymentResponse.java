@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.math.BigDecimal;
 
-import static java.math.BigDecimal.ZERO;
-
 public class PaymentResponse {
 
     private final JsonNode paymentNode;
@@ -13,10 +11,9 @@ public class PaymentResponse {
     public PaymentResponse(JsonNode paymentNode) {
         this.paymentNode = paymentNode;
     }
-
+    
     public Long getAmount() {
-        JsonNode amountNode = paymentNode.get("amount");
-        BigDecimal amount = amountNode == null ? ZERO : new BigDecimal(amountNode.asText());
+        BigDecimal amount = new BigDecimal(paymentNode.get("amount").asText());
         return amount.multiply(new BigDecimal(100)).setScale(0).longValue();
     }
 
@@ -48,4 +45,7 @@ public class PaymentResponse {
         return paymentNode.get("siteId").asText();
     }
 
+    public Long getTotal() {
+        return paymentNode.get("total").asLong();
+    }
 }

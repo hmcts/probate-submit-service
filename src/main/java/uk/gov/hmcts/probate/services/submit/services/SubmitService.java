@@ -168,7 +168,7 @@ public class SubmitService {
         Optional<CcdCaseResponse> ccdCaseResponse = getCCDCase(submitData, userId, authorization);
         ObjectNode response = objectMapper.createObjectNode();
         if (ccdCaseResponse.isPresent() &&
-                ((paymentResponse.getAmount() == 0) || !ccdCaseResponse.get().getPaymentReference().equals(paymentResponse.getReference()))) {
+                ((paymentResponse.getTotal() == 0) || !ccdCaseResponse.get().getPaymentReference().equals(paymentResponse.getReference()))) {
             logger.info("Updating payment status - caseId: {}", submitData.getCaseId());
             persistenceClient.saveSubmission(submitData);
 

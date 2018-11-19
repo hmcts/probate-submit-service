@@ -3,20 +3,10 @@
     basic:
       enabled: false
 
-#  management:
-#    security:
-#      enabled: false 
-
   management:
-    endpoints:
-      web:
-        exposure:
-          include: '*'
-        base-path: /
-    endpoint:
-      health:
-        show-details: always
-
+    security:
+      enabled: false
+  
   mail:
     username: localhost
     password: dummyKey

@@ -1,33 +1,42 @@
 package uk.gov.hmcts.probate.services.submit.clients;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.LongNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.collect.ImmutableMap;
+
+import java.util.Calendar;
+import java.util.Map;
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.http.*;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.probate.services.submit.model.CcdCaseResponse;
+import uk.gov.hmcts.probate.services.submit.model.FormData;
 import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 import uk.gov.hmcts.probate.services.submit.model.SubmitData;
-
-import java.util.Calendar;
-import java.util.Optional;
-
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CoreCaseDataClientTest {
@@ -40,13 +49,16 @@ public class CoreCaseDataClientTest {
     private static final Calendar SUBMISSION_TIMESTAMP = Calendar.getInstance();
     private static final JsonNode SEQUENCE_NUMBER = new LongNode(123L);
     private static final String APPLY_FOR_GRANT_CCD_EVENT_ID = "applyForGrant";
+    private static final String CCD_EVENT_ID = "CCD_EVENT_ID";
     private static final String TOKEN_RESOURCE = "token";
     private static final String UPDATE_PAYMENT_STATUS_CCD_EVENT_ID = "createCase";
 
     public static final String APPLICANT_EMAIL_ADDRESS_FIELD = "applicantEmail";
+    public static final String DECEASED_SURNAME_FIELD = "deceasedSurname";
     public static final String DECEASED_FORENAMES_FIELD = "deceasedFirstname";
 
     public static final JsonNode PRIMARY_APPLICANT_EMAIL_ADDRESS = new TextNode("test@test.com");
+    public static final JsonNode DECEASED_SURNAME = new TextNode("Brown");
     public static final JsonNode DECEASED_FORENAMES = new TextNode("Bobby");
 
     private CcdCreateCaseParams ccdCreateCaseParams;
@@ -110,22 +122,22 @@ public class CoreCaseDataClientTest {
         when(submitData.getSubmitData()).thenReturn(submitDataJson);
         when(submitDataJson.get(APPLICANT_EMAIL_ADDRESS_FIELD))
                 .thenReturn(PRIMARY_APPLICANT_EMAIL_ADDRESS);
+        when(submitDataJson.get(DECEASED_SURNAME_FIELD)).thenReturn(DECEASED_SURNAME);
+        when(submitDataJson.get(DECEASED_FORENAMES_FIELD)).thenReturn(DECEASED_FORENAMES);
+
+        when(ccdCaseResponse.getCaseId()).thenReturn(CASE_ID);
     }
 
     @Test
     public void shouldCreateCase() {
         String url = "http://localhost:4452/citizens/12345/jurisdictions/PROBATE/case-types/GrantOfRepresentation/" +
                 "event-triggers/applyForGrant/token";
-
-        String val = "{\"token\":\"token\"}";
-        
+        when(restTemplate.exchange(url, HttpMethod.GET, ccdRequest, JsonNode.class))
+                .thenReturn(response);
         when(requestFactory.createCcdStartRequest(ccdCreateCaseParams.getAuthorization()))
                 .thenReturn(ccdRequest);
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode objectNode = objectMapper.createObjectNode();
-        objectNode.set("token", TextNode.valueOf("token"));
-        ResponseEntity<JsonNode> responseEntity = new ResponseEntity<>(objectNode, HttpStatus.CREATED);
-        when(restTemplate.exchange(url, HttpMethod.GET, ccdRequest, JsonNode.class)).thenReturn(responseEntity);
+        when(response.getBody()).thenReturn(ccdData);
+        when(ccdData.get(TOKEN_RESOURCE)).thenReturn(tokenJsonNode);
 
         JsonNode caseTokenJson = coreCaseDataClient.createCase(ccdCreateCaseParams);
 
@@ -142,6 +154,8 @@ public class CoreCaseDataClientTest {
                 .when(restTemplate).exchange(url, HttpMethod.GET, ccdRequest, JsonNode.class);
         when(requestFactory.createCcdStartRequest(ccdCreateCaseParams.getAuthorization()))
                 .thenReturn(ccdRequest);
+        when(response.getBody()).thenReturn(ccdData);
+        when(ccdData.get(TOKEN_RESOURCE)).thenReturn(tokenJsonNode);
 
         coreCaseDataClient.createCase(ccdCreateCaseParams);
     }
@@ -216,6 +230,7 @@ public class CoreCaseDataClientTest {
         when(requestFactory.createCcdStartRequest(AUTHORIZATION_TOKEN)).thenReturn(ccdRequest);
         ArrayNode arrayNode = objectMapper.createArrayNode();
         arrayNode.add(ccdData);
+        when(response.getBody()).thenReturn(arrayNode);
 
         coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
     }
