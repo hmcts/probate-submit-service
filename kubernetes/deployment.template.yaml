@@ -34,8 +34,6 @@ spec:
               value: 'Probate Application'
             - name: AUTH_PROVIDER_SERVICE_CLIENT_KEY
               value: ${S2S_AUTH_TOTP_SECRET}
-            - name: SPRING_APPLICATION_JSON
-              value: ${SUB_SER_SPRING_JSON | JSON}
             - name: MAIL_USERNAME
               value: ${PROBATE_SUB_MAIL_USERNAME}
             - name: MAIL_PASSWORD
