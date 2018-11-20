@@ -19,19 +19,19 @@ spec:
           name: ${SERVICE_NAME}
           env:
             - name: REFORM_TEAM
-              value: 'probate'
+              value: "probate"
             - name: REFORM_SERVICE_NAME
-              value: 'submit-service'
+              value: "submit-service"
             - name: LOG_LEVEL
-              value: 'DEBUG'
+              value: "DEBUG"
             - name: MAIL_JAVAMAILPROPERTIES_MAIL_SMTP_SSL_ENABLE
-              value: 'false'
+              value: "false"
             - name: MAIL_JAVAMAILPROPERTIES_MAIL_SMTP_AUTH
-              value: 'false'
+              value: "false"
             - name: SERVICES_CORECASEDATA_ENABLED
-              value: 'true'
+              value: "true"
             - name: MAIL_JAVAMAILPROPERTIES_SUBJECT
-              value: 'Probate Application'
+              value: "Probate Application"
             - name: AUTH_PROVIDER_SERVICE_CLIENT_KEY
               value: ${S2S_AUTH_TOTP_SECRET}
             - name: MAIL_USERNAME
@@ -41,7 +41,7 @@ spec:
             - name: MAIL_HOST
               value: ${PROBATE_SUB_MAIL_HOST}
             - name: MAIL_PORT
-              value: ${PROBATE_SUB_MAIL_PORT}
+              value: "${PROBATE_SUB_MAIL_PORT}"
             - name: MAIL_JAVAMAILPROPERTIES_SENDER
               value: ${PROBATE_SUB_MAIL_SENDER}
             - name: MAIL_JAVAMAILPROPERTIES_RECIPIENT
@@ -51,11 +51,11 @@ spec:
                 name: ${SERVICE_NAME}-config
           resources:
             requests:
-              memory: '1024Mi'
-              cpu: '200m'
+              memory: "1024Mi"
+              cpu: "200m"
             limits:
-              memory: '2048Mi'
-              cpu: '2500m'
+              memory: "2048Mi"
+              cpu: "2500m"
           ports:
             - containerPort: 8181
               name: http
