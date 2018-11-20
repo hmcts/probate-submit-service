@@ -33,19 +33,19 @@ spec:
             - name: MAIL_JAVAMAILPROPERTIES_SUBJECT
               value: "Probate Application"
             - name: AUTH_PROVIDER_SERVICE_CLIENT_KEY
-              value: ${S2S_AUTH_TOTP_SECRET}
+              value: "${S2S_AUTH_TOTP_SECRET}"
             - name: MAIL_USERNAME
-              value: ${PROBATE_SUB_MAIL_USERNAME}
+              value: "${PROBATE_SUB_MAIL_USERNAME}"
             - name: MAIL_PASSWORD
-              value: ${PROBATE_SUB_MAIL_PASSWORD}
+              value: "${PROBATE_SUB_MAIL_PASSWORD}"
             - name: MAIL_HOST
-              value: ${PROBATE_SUB_MAIL_HOST}
+              value: "${PROBATE_SUB_MAIL_HOST}"
             - name: MAIL_PORT
               value: "${PROBATE_SUB_MAIL_PORT}"
             - name: MAIL_JAVAMAILPROPERTIES_SENDER
-              value: ${PROBATE_SUB_MAIL_SENDER}
+              value: "${PROBATE_SUB_MAIL_SENDER}"
             - name: MAIL_JAVAMAILPROPERTIES_RECIPIENT
-              value: ${PROBATE_SUB_MAIL_REC}
+              value: "${PROBATE_SUB_MAIL_REC}"
           envFrom:
             - configMapRef:
                 name: ${SERVICE_NAME}-config
