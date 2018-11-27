@@ -1,7 +1,7 @@
 buildscript {
   dependencies {
     classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.5'
-    classpath("net.serenity-bdd:serenity-gradle-plugin:1.5.2")
+    classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.15")
   }
   
 }
@@ -166,7 +166,7 @@ processResources {
 
 def versions = [
     logging: '3.0.3',
-    serenity: '2.0.18'
+    serenity: '2.0.15'
 ]
 
 
@@ -206,10 +206,10 @@ dependencies {
   testSmokeCompile sourceSets.main.runtimeClasspath
   testSmokeCompile sourceSets.test.runtimeClasspath
 
-  testContractCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '1.5.2'
-  testContractCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '1.5.2'
-  testContractCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '1.5.2'
-  testContractCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '1.0.26'
+  testContractCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
+  testContractCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
+  testContractCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
+  testContractCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
   testContractCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
   testContractCompile sourceSets.main.runtimeClasspath
   testContractCompile sourceSets.test.runtimeClasspath
