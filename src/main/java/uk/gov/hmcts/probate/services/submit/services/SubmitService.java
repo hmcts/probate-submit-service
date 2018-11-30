@@ -62,9 +62,7 @@ public class SubmitService {
         Optional<CcdCaseResponse> caseResponseOptional = getCCDCase(submitData, userId, authorization);
         FormData formData = persistenceClient.loadFormDataById(submitData.getApplicantEmailAddress());
         if (!caseResponseOptional.isPresent()) {
-            if (formData.getSubmissionReference() != 0 ) {
-                return new TextNode(DUPLICATE_SUBMISSION);
-            }
+
             PersistenceResponse persistenceResponse = persistenceClient.saveSubmission(submitData);
             JsonNode submissionReference = persistenceResponse.getIdAsJsonNode();
             Calendar submissionTimestamp = Calendar.getInstance();
