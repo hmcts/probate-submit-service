@@ -5,7 +5,7 @@ services:
     build:
       context: .
     image: probate/submit-service
-    # image: docker.artifactory.reform.hmcts.net/probate/submit-service
+    ## image: docker.artifactory.reform.hmcts.net/probate/submit-service
     container_name: submit-service
     environment:
       - SERVER_PORT=8181
