@@ -1,12 +1,12 @@
-#ingressHost: chart-probate-submit-service.service.core-compute-preview.internal
-#ingressHost: ${SERVICE_FQDN}
-
-#apiGateway:
-#  s2sKey: "AAAAAAAAAAAAAAAA"
-#  idamClientSecret: "123456"
-
-#dataStoreApi:
-#  s2sKey: "AAAAAAAAAAAAAAAA"
-
-#definitionStoreApi:
-#  s2sKey: "AAAAAAAAAAAAAAAA"
+java:
+  applicationPort: 8080
+  environment:
+    REFORM_TEAM: probate
+    REFORM_SERVICE_NAME: submit-service
+    SERVICES_NOTIFY_APIKEY: ${PRO_SERVICES_NOTIFY_APIKEY}
+    SERVICES_NOTIFY_INVITEDATA_TEMPLATEID: ${PRO_SERVICES_NOTIFY_INVITEDATA_TEMPLATEID}
+    SERVICES_NOTIFY_PIN_TEMPLATEID: ${PRO_SERVICES_NOTIFY_PIN_TEMPLATEID}
+    SERVICES_AUTH_PROVIDER_TOTP_SECRET: ${S2S_AUTH_TOTP_SECRET}
+  # Don't modify below here
+  image: ${IMAGE_NAME}
+  ingressHost: ${SERVICE_FQDN}

@@ -5,3 +5,6 @@ version: 0.1.1
 icon: https://github.com/hmcts/chart-ccd/raw/master/images/icons8-java-50.png
 keywords:
   - probate-submit-service
+maintainers:
+  - name: HMCTS Probate Team
+    email: Probate@hmcts.net
