@@ -1,12 +1,12 @@
-ingressHost: chart-probate-submit-service.service.core-compute-preview.internal
+#ingressHost: chart-probate-submit-service.service.core-compute-preview.internal
 #ingressHost: ${SERVICE_FQDN}
 
-apiGateway:
-  s2sKey: "AAAAAAAAAAAAAAAA"
-  idamClientSecret: "123456"
+#apiGateway:
+#  s2sKey: "AAAAAAAAAAAAAAAA"
+#  idamClientSecret: "123456"
 
-dataStoreApi:
-  s2sKey: "AAAAAAAAAAAAAAAA"
+#dataStoreApi:
+#  s2sKey: "AAAAAAAAAAAAAAAA"
 
-definitionStoreApi:
-  s2sKey: "AAAAAAAAAAAAAAAA"
+#definitionStoreApi:
+#  s2sKey: "AAAAAAAAAAAAAAAA"
