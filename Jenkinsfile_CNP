@@ -22,8 +22,7 @@ List<LinkedHashMap<String, Object>> secrets = [
     secret('probate-mail-password', 'PROBATE_SUB_MAIL_PASSWORD'),
     secret('probate-mail-port', 'PROBATE_SUB_MAIL_PORT'),
     secret('probate-mail-sender', 'PROBATE_SUB_MAIL_SENDER'),
-    secret('probate-mail-recipient', 'PROBATE_SUB_MAIL_REC'),
-    secret('idam-client-secret', 'IDAM_CLIENT_SECRET') // optional, this is an example
+    secret('probate-mail-recipient', 'PROBATE_SUB_MAIL_REC')
     ]
 
 
