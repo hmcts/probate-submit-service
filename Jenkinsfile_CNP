@@ -25,6 +25,20 @@ List<LinkedHashMap<String, Object>> secrets = [
     secret('probate-mail-recipient', 'PROBATE_SUB_MAIL_REC')
 ]
 
+def secrets = [
+  'probate-${env}': [
+    secret('idam-client-secret', 'IDAM_CLIENT_SECRET') // optional, this is an example
+  ],
+  's2s-${env}'      : [
+    secret('microservicekey-ccd-data', 'DATA_STORE_S2S_KEY'),
+    secret('microservicekey-ccd-definition', 'DEFINITION_STORE_S2S_KEY'),
+    secret('microservicekey-ccd-gw', 'API_GATEWAY_S2S_KEY'),
+  ],
+  'ccd-${env}'      : [
+    secret('ccd-api-gateway-oauth2-client-secret', 'API_GATEWAY_IDAM_SECRET')
+  ]
+]
+
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
   [ $class: 'AzureKeyVaultSecret',
     secretType: 'Secret',
@@ -39,7 +53,8 @@ withPipeline("java", product, component) {
   loadVaultSecrets(secrets)
   enableSlackNotifications('#probate-jenkins')
   enableDockerBuild()
-  enableDeployToAKS()
+  installCharts()
+//  enableDeployToAKS()
 
   after('test') {
     try {
