@@ -1,4 +1,5 @@
-ingressHost: ${SERVICE_FQDN}
+ingressHost: chart-probate-submit-service.service.core-compute-preview.internal
+#ingressHost: ${SERVICE_FQDN}
 
 apiGateway:
   s2sKey: "AAAAAAAAAAAAAAAA"
