@@ -1,4 +1,4 @@
 dependencies:
-  - name: ccd
-    version: '0.1.0'
-    repository: '@hmcts'
+#  - name: ccd
+#    version: '0.1.0'
+#    repository: '@hmcts'
