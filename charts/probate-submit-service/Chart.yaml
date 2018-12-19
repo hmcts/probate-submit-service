@@ -1,10 +1,10 @@
 apiVersion: v1
 description: A Helm chart for the HMCTS probate product
-name: probate
+name: probate-submit-service
 version: 0.1.1
 icon: https://github.com/hmcts/chart-ccd/raw/master/images/icons8-java-50.png
 keywords:
-  - probate
+  - probate-submit-service
   - ccd
   - core-case-data
   - cdm
