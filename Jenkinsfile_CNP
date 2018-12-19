@@ -25,7 +25,7 @@ List<LinkedHashMap<String, Object>> secrets = [
     secret('probate-mail-recipient', 'PROBATE_SUB_MAIL_REC'),
     secret('idam-client-secret', 'IDAM_CLIENT_SECRET') // optional, this is an example
     ]
-]
+],
 
 secrets = [
         's2s-${env}'      : [
