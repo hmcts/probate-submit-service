@@ -1,4 +1,5 @@
 java:
+  applicationPort: 8181
   environment:
     REFORM_TEAM: probate
     REFORM_SERVICE_NAME: submit-service
