@@ -313,7 +313,7 @@
                         <p th:text="${legalStatement.get('deceasedOtherNames')} != null ? ${legalStatement.get('deceasedOtherNames').asText()}">--</p>
                         <th:block th:each="executor : ${legalStatement.get('executorsApplying')}">
                         <p th:text="${executor.get('name').asText()}">--</p>
-                        <p th:text="${executor.get('sign').asText()}">--</p>
+                        <p th:text="${executor.get('send')} != null ? ${executor.get('send').asText()}">--</p>
                         </th:block>
                         <p th:utext="${legalStatement.get('deceasedEstateValue')} != null ?${legalStatement.get('deceasedEstateValue').asText()}">--</p>
                         <p th:text="${legalStatement.get('deceasedEstateLand')} != null ? ${legalStatement.get('deceasedEstateLand').asText()}">--</p>
