@@ -34,4 +34,9 @@ ccd:
   definitionStoreApi:
     s2sKey: ${DEFINITION_STORE_S2S_KEY}
 
+  caseManagementWeb:
+    enabled: true
 
+global:
+  subscriptionId: ${SUBSCRIPTION_ID}
+  tenantId: ${TENANT_ID}
