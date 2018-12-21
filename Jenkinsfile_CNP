@@ -24,6 +24,7 @@ def secrets = [
                 secret('probate-mail-port', 'PROBATE_SUB_MAIL_PORT'),
                 secret('probate-mail-sender', 'PROBATE_SUB_MAIL_SENDER'),
                 secret('probate-mail-recipient', 'PROBATE_SUB_MAIL_REC')
+        ],
         's2s-${env}'      : [
                 secret('microservicekey-ccd-data', 'DATA_STORE_S2S_KEY'),
                 secret('microservicekey-ccd-definition', 'DEFINITION_STORE_S2S_KEY'),
