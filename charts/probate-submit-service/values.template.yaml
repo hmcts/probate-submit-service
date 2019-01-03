@@ -38,6 +38,6 @@ ccd:
   caseManagementWeb:
     enabled: true
 
-global:
-  subscriptionId: ${SUBSCRIPTION_ID}
-  tenantId: ${TENANT_ID}
+  importer:
+    definitions:
+      - https://github.com/hmcts/Probate-CCD-Import-Spreadsheets/tree/master/spreadsheet/CCD_Probate_V21.02-Dev.xlsx
