@@ -1,6 +1,6 @@
 #!groovy
 
-@Library("Infrastructure@fix/executeClosure")
+@Library("Infrastructure")
 
 def type = "java"
 String product = "probate"
