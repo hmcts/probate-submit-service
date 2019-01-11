@@ -69,16 +69,28 @@
                     <td>Personal</td>
                 </tr>
                 <tr>
-                    <td th:text="#{applicantIsExecutor}">Is the applicant an executor:</td>
-                    <td th:text="${applicantIsExecutor}">--</td>
-                </tr>
-                <tr>
                     <td th:text="#{applicantFirstName}">Applicant forename(s):</td>
                     <td th:text="${applicantFirstName}">--</td>
                 </tr>
                 <tr>
                     <td th:text="#{applicantLastName}">Applicant surname:</td>
                     <td th:text="${applicantLastName}">--</td>
+                </tr>
+                <tr>
+                    <td th:text="#{applicantSameWillName}">Is applicant name the same as what appears on the will:</td>
+                    <td th:text="${applicantSameWillName}">--</td>
+                </tr>
+                <tr th:if="${applicantAlias} != null">
+                    <td th:text="#{applicantAlias}">How is applicant name written on the will:</td>
+                    <td th:text="${applicantAlias}">--</td>
+                </tr>
+                <tr th:if="${applicantAlias} != null">
+                    <td th:text="#{applicantAliasReason}">Reason for applicant name change:</td>
+                    <td th:text="${applicantAliasReason}">--</td>
+                </tr>
+                <tr th:if="${applicantOtherReason} != null">
+                    <td th:text="#{applicantOtherReason}">What is the other reason for applicant name change:</td>
+                    <td th:text="${applicantOtherReason}">--</td>
                 </tr>
                 <tr>
                     <td th:text="#{applicantAddress}">Applicant address:</td>
@@ -105,11 +117,6 @@
                     <td th:text="${deceasedSurname}">--</td>
                 </tr>
                 <tr>
-                    <td th:text="#{deceasedDomicile}">At the time of their death the person who died:</td>
-                    <td th:text="${deceasedDomicile}">--</td>
-                </tr>
-
-                <tr>
                     <td th:text="#{deceasedAddress}">Deceased address:</td>
                     <td th:text="${deceasedAddress}">--</td>
                 </tr>
@@ -128,14 +135,6 @@
                 <tr>
                     <td th:text="#{deceasedDod}">Deceased date of death:</td>
                     <td th:text="${deceasedDod}">--/--/----</td>
-                </tr>
-                <tr>
-                    <td th:text="#{willLeft}">Will Y/N</td>
-                    <td>Yes</td>
-                </tr>
-                <tr>
-                    <td th:text="#{willOriginal}">Is the will original:</td>
-                    <td th:text="${willOriginal}">--</td>
                 </tr>
                 <tr>
                     <td th:text="#{willWithCodicils}">Will with codicils:</td>
@@ -174,7 +173,7 @@
                 </tr>
 
                 <tr>
-                    <td colspan="2" th:text="#{executorsApplying}">Other Executors applying (name + email + number + othernames used)</td>
+                    <td colspan="2" th:text="#{executorsApplying}">Other Executors applying (name + email + number + othernames used +reason)</td>
                 </tr>
 
                 <tr th:each="executor: ${executorsApplying}">
@@ -188,6 +187,12 @@
                         --
                     </td>
                     <td th:utext="${executor.class.simpleName} == 'ObjectNode' and ${executor.get('currentName')} != null? ${executor.get('currentName').asText()}">
+                        --
+                    </td>
+                    <td th:utext="${executor.class.simpleName} == 'ObjectNode' and ${executor.get('currentNameReason')} != null? ${executor.get('currentNameReason').asText()}">
+                        --
+                    </td>
+                    <td th:utext="${executor.class.simpleName} == 'ObjectNode' and ${executor.get('otherReason')} != null? ${executor.get('otherReason').asText()}">
                         --
                     </td>
                 </tr>

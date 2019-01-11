@@ -1,6 +1,6 @@
 package uk.gov.hmcts.probate.functional;
 
-import net.thucydides.junit.spring.SpringIntegration;
+import net.serenitybdd.junit.spring.integration.SpringIntegrationMethodRule;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -32,10 +32,10 @@ public abstract class IntegrationTestBase {
     }
 
     @Rule
-    public SpringIntegration springIntegration;
+    public SpringIntegrationMethodRule springIntegrationMethodRule;
 
     IntegrationTestBase() {
-        this.springIntegration = new SpringIntegration();
+        this.springIntegrationMethodRule = new SpringIntegrationMethodRule();
     }
 
     void populateFormDataTable() {

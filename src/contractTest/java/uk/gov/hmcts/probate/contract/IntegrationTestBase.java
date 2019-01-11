@@ -2,7 +2,7 @@ package uk.gov.hmcts.probate.contract;
 
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
-import net.thucydides.junit.spring.SpringIntegration;
+import net.serenitybdd.junit.spring.integration.SpringIntegrationMethodRule;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +32,9 @@ public abstract class IntegrationTestBase {
 
 
     @Rule
-    public SpringIntegration springIntegration;
+    public SpringIntegrationMethodRule springIntegrationMethodRule;
 
     public IntegrationTestBase() {
-        this.springIntegration = new SpringIntegration();
-
+        this.springIntegrationMethodRule = new SpringIntegrationMethodRule();
     }
 }

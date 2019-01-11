@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.containsString;
 public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
 
     private static String SESSION_ID = "tom@email.com";
-    private static long SUBMISSION_REFERENCE = 123;
+    private static long SUBMISSION_REFERENCE = 123456;
     private static boolean INITIALISED = false;
 
     @Before
@@ -42,7 +42,7 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
 
     @Test
     public void loadSubmissionFailure() {
-        validateLoadSubmissionFailure(999, 404);
+        validateLoadSubmissionFailure(9999, 404);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
 
     @Test
     public void loadFormDataBySubmissionReferenceFailure() {
-        validateLoadFormDataBySubmissionReferenceFailure(999, 404);
+        validateLoadFormDataBySubmissionReferenceFailure(9999, 404);
     }
 
     @Test

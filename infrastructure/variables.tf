@@ -1,7 +1,8 @@
 // Infrastructural variables
+variable "product" {}
 
-variable "product" {
-  default = "probate"
+variable "raw_product" {
+  default = "probate" // jenkins-library overrides product for PRs and adds e.g. pr-118-cmc
 }
 
 variable "microservice" {
@@ -52,6 +53,10 @@ variable "no_proxy" {
   default = "localhost,127.0.0.0/8,127.0.0.1,127.0.0.1*,local.home,reform.hmcts.net,*.reform.hmcts.net,betaDevBprobateApp01.reform.hmcts.net,betaDevBprobateApp02.reform.hmcts.net,betaDevBccidamAppLB.reform.hmcts.net,*.internal,*.platform.hmcts.net"
 }
 
+variable "appinsights_instrumentation_key" {
+  description = "Instrumentation key of the App Insights instance this webapp should use. Module will create own App Insights resource if this is not provided"
+  default = ""
+}
 
 variable "services_persistence_baseUrl" {
   default = "/"

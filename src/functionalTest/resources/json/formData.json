@@ -45,7 +45,10 @@
       "phoneNumber" : "07123456789",
       "addressFound" : "none",
       "freeTextAddress" : "Lead Applicant Address",
-      "nameAsOnTheWill" : "Yes"
+      "nameAsOnTheWill" : "No",
+      "alias": "Lead_Applicant_Alias",
+      "aliasReason": "other",
+      "otherReason": "nickname"
     },
     "executors" : {
       "list" : [ {
@@ -105,7 +108,7 @@
     "applicantEmail" : "tom@email.com",
     "payloadVersion" : "4.1.0"
   },
-  "submissionReference" : 123,
+  "submissionReference" : 123456,
   "_links" : {
     "self" : {
       "href" : "http://localhost:8282/formdata/5D4l9o38y-3tapBqAXTOsrNQKYPBlXv4"

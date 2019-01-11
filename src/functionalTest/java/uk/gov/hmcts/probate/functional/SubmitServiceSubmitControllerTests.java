@@ -12,7 +12,6 @@ import static org.hamcrest.Matchers.equalTo;
 public class SubmitServiceSubmitControllerTests extends IntegrationTestBase {
     private static String SESSION_ID = "tom@email.com";
     private static boolean INITIALISED = false;
-    private static long SUBMISSION_ID = 59;
     private static String INVALID_ID = "invalid_id";
     private static int ERROR_CODE = 400;
 
@@ -21,11 +20,6 @@ public class SubmitServiceSubmitControllerTests extends IntegrationTestBase {
         if (INITIALISED) return;
         populateFormDataTable();
         INITIALISED = true;
-    }
-
-    @Test
-    public void submitSuccess() {
-        validateSubmitSuccess();
     }
 
     @Test
@@ -63,7 +57,7 @@ public class SubmitServiceSubmitControllerTests extends IntegrationTestBase {
     private void validateReSubmitSuccess() {
         SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.getHeaders(SESSION_ID))
-                .when().get(submitServiceUrl + "/resubmit/" + SUBMISSION_ID)
+                .when().get(submitServiceUrl + "/resubmit/" + submissionId)
                 .then().assertThat().statusCode(200);
     }
 

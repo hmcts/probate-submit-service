@@ -17,7 +17,9 @@
       },
       "applyingExecutorPhoneNumber": "2222222222",
       "applyingExecutorEmail": "hi@hotmail.co.uk",
-      "applyingExecutorOtherNames": "exec_7_new_name"
+      "applyingExecutorOtherNames": "exec_7_new_name",
+      "applyingExecutorOtherNamesReason": "other",
+      "applyingExecutorOtherReason": "nickname"
     }
   }
 ]

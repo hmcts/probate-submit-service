@@ -3,16 +3,26 @@
     basic:
       enabled: false
 
+#  management:
+#    security:
+#      enabled: false
+
   management:
-    security:
-      enabled: false
-  
+    endpoints:
+      web:
+        exposure:
+          include: '*'
+        base-path: /
+    endpoint:
+      health:
+        show-details: always
+
   mail:
     username: localhost
     password: dummyKey
 
     host: localhost
-    port: 2525
+    port: 1025
 
     javaMailProperties.subject: Online Probate Application
     javaMailProperties.sender: dummySender@email.hmcts
@@ -51,14 +61,14 @@
       registry.url:  ${services.persistence.baseUrl}/registry
 
     coreCaseData:
-      baseUrl: https://case-data-app.dev.ccd.reform.hmcts.net:4451
+      baseUrl: http://localhost:4452
       url: ${services.coreCaseData.baseUrl}/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfRepresentation
-      enabled: ${USE_CCD:false}
+      enabled: ${USE_CCD:true}
 
   auth.provider.service.client:
     baseUrl: http://localhost:4502
     microservice: 'probate_backend'
-    key: dummyKey
+    key: 'AAAAAAAAAAAAAAAA'
     tokenTimeToLiveInSeconds: '900'
 
   idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
@@ -73,8 +83,12 @@
       mobile: mobile
       hasOtherName: hasOtherName
       currentName: currentName
-    ccd:  
-      notApplyingExecutorName: notApplyingExecutorName    
+      currentNameReason: currentNameReason
+      otherReason: otherReason
+      filename: filename
+      url: url
+    ccd:
+      notApplyingExecutorName: notApplyingExecutorName
       notApplyingExecutorReason: notApplyingExecutorReason
       value: value
       applyingExecutorName: applyingExecutorName
@@ -82,6 +96,14 @@
       applyingExecutorPhoneNumber: applyingExecutorPhoneNumber
       applyingExecutorAddress: applyingExecutorAddress
       applyingExecutorOtherNames: applyingExecutorOtherNames
+      applyingExecutorOtherNamesReason: applyingExecutorOtherNamesReason
+      applyingExecutorOtherReason: applyingExecutorOtherReason
+      DocumentType: DocumentType
+      DocumentLink: DocumentLink
+      documentUrl: document_url
+      documentBinaryUrl: document_binary_url
+      documentFilename: document_filename
+      Comment: Comment
     reasonMap:
       optionDiedBefore: DiedBefore
       optionDiedAfter: DiedAfter
@@ -91,20 +113,22 @@
       deceasedDob: deceasedDateOfBirth
       deceasedDod: deceasedDateOfDeath
     fieldMap:
-      applicantIsExecutor: primaryApplicantIsApplying
       applicantFirstName: primaryApplicantForenames
       applicantLastName: primaryApplicantSurname
+      applicantSameWillName: primaryApplicantSameWillName
+      applicantAlias: primaryApplicantAlias
+      applicantAliasReason: primaryApplicantAliasReason
+      applicantOtherReason: primaryApplicantOtherReason
       applicantPhone: primaryApplicantPhoneNumber
       applicantEmail: primaryApplicantEmailAddress
       deceasedFirstname: deceasedForenames
       deceasedSurname: deceasedSurname
-      willLeft: willExists
-      willOriginal: willAccessOriginal
       willWithCodicils: willHasCodicils
       deceasedMarriedAfterDateOnWill: deceasedMarriedAfterWillOrCodicilDate
       noOfApplicants: numberOfApplicants
       noOfExecutors: numberOfExecutors
       ihtIdentifier: ihtReferenceNumber
+      ihtFormId: ihtFormId
       copiesUK: extraCopiesOfGrant
       copiesOverseas: outsideUKGrantCopies
       paymentReference: paymentReferenceNumber
@@ -121,11 +145,14 @@
     executorMap:
       executorsNotApplying: executorsNotApplying
       executorsApplying: executorsApplying
-    aliasMap:  
+    aliasMap:
       deceasedOtherNames: deceasedAliasNameList
     addressMap:
       applicantAddress: primaryApplicantAddress
       deceasedAddress: deceasedAddress
+    documentUploadMap:
+      documentUploads: boDocumentsUploaded
+
 
   logging:
     level:

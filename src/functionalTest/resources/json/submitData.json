@@ -2,22 +2,38 @@
   "submitdata":{
     "applicantFirstName":"Lead",
     "applicantLastName":"Applicant",
+    "applicantSameWillName":"No",
+    "applicantAlias":"Lead_Applicant_Alias",
+    "applicantAliasReason":"other",
+    "applicantOtherReason":"nickname",
     "applicantAddress":"fsdfdfdfd",
     "applicantPhone":"07123456789",
     "applicantEmail":"tom@email.com",
-    "applicantIsExecutor":"Yes",
     "deceasedFirstname":"Dee",
     "deceasedSurname":"Ceased",
     "deceasedAliasAssets":"No",
     "deceasedAddress":"fdfsdfsdfd",
     "deceasedDod":"1 January 2018",
     "deceasedDob":"1 January 1930",
-    "deceasedDomicile":"live (domicile) permanently in England or Wales",
     "noOfExecutors":1,
-    "willLeft":"Yes",
-    "willOriginal":"Yes",
     "willWithDate":"No",
     "willWithCodicils":"No",
+    "documentUploads": {
+      "uploads": [{
+        "filename": "document_1",
+        "url": "url_link1"
+      },
+        {
+          "filename": "document_2",
+          "url": "url_link2"
+        },
+        {
+          "filename": "document_3",
+          "url": "url_link3"
+        }
+
+      ]
+    },
     "deceasedMarriedAfterWillOrCodicilDate": "Yes",
     "ihtCompleted":"Yes",
     "ihtForm":"online",

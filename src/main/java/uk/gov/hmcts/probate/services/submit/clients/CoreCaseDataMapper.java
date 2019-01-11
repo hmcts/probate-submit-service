@@ -5,7 +5,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
+
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -14,24 +27,33 @@ import java.time.format.DateTimeParseException;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Calendar;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "ccd")
 public class CoreCaseDataMapper {
-
+    private static final String IHT_FORM_VALUE_205 = "IHT205";
+    private static final String VALUE = "value";
+    private static final String DECEASED = "deceased";
+    private static final String DECEASED_OTHER_NAMES = "deceasedOtherNames";
+    private static final String DECEASED_ESTATE_VALUE = "deceasedEstateValue";
+    private static final String DECEASED_ESTATE_LAND = "deceasedEstateLand";
+    private static final String EXECUTORS_NOT_APPLYING = "executorsNotApplying";
+    private static final String EXECUTORS_APPLYING = "executorsApplying";
+    private static final String INTRO = "intro";
+    private static final String APPLICANT = "applicant";
+    private static final String BINARY_URL_SUFFIX = "binary";
     private final Logger logger = LoggerFactory.getLogger(CoreCaseDataMapper.class);
+    private final DateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
+    private final DateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @Value("${ccd.probate.fullName}")
     private String fullName;
@@ -47,8 +69,16 @@ public class CoreCaseDataMapper {
     private String hasOtherName;
     @Value("${ccd.probate.currentName}")
     private String currentName;
+    @Value("${ccd.probate.currentNameReason}")
+    private String currentNameReason;
+    @Value("${ccd.probate.otherReason}")
+    private String otherReason;
     @Value("${ccd.probate.notApplyingKey}")
     private String notApplyingKey;
+    @Value("${ccd.probate.filename}")
+    private String filename;
+    @Value("${ccd.probate.url}")
+    private String url;
     @Value("${ccd.ccd.notApplyingExecutorName}")
     private String notApplyingExecutorName;
     @Value("${ccd.ccd.notApplyingExecutorReason}")
@@ -63,6 +93,24 @@ public class CoreCaseDataMapper {
     private String applyingExecutorAddress;
     @Value("${ccd.ccd.applyingExecutorOtherNames}")
     private String applyingExecutorOtherNames;
+    @Value("${ccd.ccd.applyingExecutorOtherNamesReason}")
+    private String applyingExecutorOtherNamesReason;
+    @Value("${ccd.ccd.applyingExecutorOtherReason}")
+    private String applyingExecutorOtherReason;
+    @Value("${ccd.ccd.DocumentType}")
+    private String DocumentType;
+    @Value("${ccd.ccd.DocumentLink}")
+    private String DocumentLink;
+    @Value("${ccd.ccd.Comment}")
+    private String Comment;
+
+    @Value("${ccd.ccd.documentUrl}")
+    private String documentUrl;
+    @Value("${ccd.ccd.documentBinaryUrl}")
+    private String documentBinaryUrl;
+    @Value("${ccd.ccd.documentFilename}")
+    private String documentFilename;
+
     @NotNull
     private Map<String, String> reasonMap;
     @NotNull
@@ -81,6 +129,8 @@ public class CoreCaseDataMapper {
     private Map<String, String> legalStatementMap;
     @NotNull
     private Map<String, String> addressMap;
+    @NotNull
+    private Map<String, String> documentUploadMap;
 
     public Map<String, String> getReasonMap() {
         return reasonMap;
@@ -154,8 +204,15 @@ public class CoreCaseDataMapper {
         this.addressMap = addressMap;
     }
 
-    public JsonNode createCcdData(JsonNode probateData, String ccdEventId, JsonNode ccdToken, Calendar submissonTimestamp, JsonNode registryData) {
-        ObjectMapper mapper = new ObjectMapper();
+    public Map<String, String> getDocumentUploadMap() {
+        return documentUploadMap;
+    }
+
+    public void setDocumentUploadMap(Map<String, String> documentUploadMap) {
+        this.documentUploadMap = documentUploadMap;
+    }
+
+    public JsonNode createCcdData(JsonNode probateData, String ccdEventId, JsonNode ccdToken, Calendar submissionTimestamp, JsonNode registryData) {
         ObjectNode event = mapper.createObjectNode();
         event.put("id", ccdEventId);
         event.put("description", "");
@@ -164,19 +221,20 @@ public class CoreCaseDataMapper {
         formattedData.set("event", event);
         formattedData.put("ignore_warning", true);
         formattedData.set("event_token", ccdToken);
-        formattedData.set("data", mapData(probateData, submissonTimestamp, registryData));
+        formattedData.set("data", mapData(probateData, submissionTimestamp, registryData));
         return formattedData;
     }
 
-    public ObjectNode mapData(JsonNode probateData, Calendar submissonTimestamp, JsonNode registryData) {
-        ObjectMapper mapper = new ObjectMapper();
+    public ObjectNode mapData(JsonNode probateData, Calendar submissionTimestamp, JsonNode registryData) {
         ObjectNode ccdData = mapper.createObjectNode();
         JsonNode registry = registryData.get("registry");
         ccdData.set("applicationID", registryData.get("submissionReference"));
-        LocalDate localDate = LocalDateTime.ofInstant(submissonTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate = LocalDateTime.ofInstant(submissionTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
         ccdData.put("applicationSubmittedDate", localDate.toString());
-        ccdData.put("deceasedDomicileInEngWales", "live (domicile) permanently in England or Wales".equalsIgnoreCase(probateData.get("deceasedDomicile").asText()) ? "Yes" : "No");
-        ccdData.put("ihtFormCompletedOnline", "online".equalsIgnoreCase(probateData.get("ihtForm").asText()) ? "Yes" : "No");
+        boolean ihtCompletedOnline = "online".equalsIgnoreCase(probateData.get("ihtForm").asText());
+        String ihtFormId = probateData.get("ihtFormId") == null ? "" : probateData.get("ihtFormId").asText();
+        ccdData.put("ihtFormCompletedOnline", ihtCompletedOnline ? "Yes" : "No");
+        ccdData.put("ihtFormId", ihtCompletedOnline ? IHT_FORM_VALUE_205 : ihtFormId);
         ccdData.put("softStop", "True".equalsIgnoreCase(probateData.get("softStop").asText()) ? "Yes" : "No");
         ccdData.set("registryLocation", registry.get("name"));
         ccdData.put("applicationType", "Personal");
@@ -189,6 +247,7 @@ public class CoreCaseDataMapper {
         ccdData.setAll(map(probateData, declarationMap, this::declarationMapper));
         ccdData.setAll(map(probateData, legalStatementMap, this::legalStatementMapper));
         ccdData.setAll(map(probateData, addressMap, this::addressMapper));
+        ccdData.setAll(map(probateData, documentUploadMap, this::documentUploadMapper));
         return ccdData;
     }
 
@@ -225,7 +284,7 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> executors = Optional.ofNullable(probateData.get(fieldname));
         if (executors.isPresent()) {
-            ArrayNode executorsCcdFormat = new ObjectMapper().createArrayNode();
+            ArrayNode executorsCcdFormat = mapper.createArrayNode();
             executors.get()
                     .elements().forEachRemaining(
                     executor -> mapExecutor(executor).ifPresent(executorsCcdFormat::add)
@@ -236,7 +295,6 @@ public class CoreCaseDataMapper {
     }
 
     public Optional<JsonNode> mapExecutor(JsonNode executor) {
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdFormat = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
         String executorName = executor.get(fullName).asText();
@@ -258,19 +316,23 @@ public class CoreCaseDataMapper {
             value.set(notApplyingExecutorReason, mappedReason);
         }
 
-        if (executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean() == true) {
+        if (executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean()) {
             String executorOtherName = executor.get(currentName).asText();
             value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
+            if (executor.has(currentNameReason)) {
+                String executorOtherNameReason = executor.get(currentNameReason).asText();
+                value.set(applyingExecutorOtherNamesReason, new TextNode(executorOtherNameReason.trim()));
+            }
         }
 
-        ccdFormat.set("value", value);
-        return Optional.of(ccdFormat);
-    }
+        if (executor.has(otherReason) && executor.get(hasOtherName).asBoolean()) {
+            String executorOtherReason = executor.get(otherReason).asText();
+            value.set(applyingExecutorOtherReason, new TextNode(executorOtherReason.trim()));
+        }
 
-    public String getText(JsonNode jsonNode, String fieldname) {
-        return Optional.ofNullable(jsonNode.get(fieldname))
-                .map(JsonNode::asText)
-                .orElse("");
+
+        ccdFormat.set(VALUE, value);
+        return Optional.of(ccdFormat);
     }
 
     public Optional<JsonNode> monetaryValueMapper(JsonNode probateData, String fieldName) {
@@ -282,8 +344,7 @@ public class CoreCaseDataMapper {
             try {
                 ret = field
                         .map(f -> new BigDecimal(f.asText()))
-                        .map(i -> i.multiply(new BigDecimal(100)))
-                        .map(BigDecimal::intValue)
+                        .map(i -> i.multiply(new BigDecimal(100)).setScale(0))
                         .map(String::valueOf)
                         .map(TextNode::new);
 
@@ -298,7 +359,6 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> aliases = Optional.ofNullable(probateData.get(fieldname));
         if (aliases.isPresent()) {
-            ObjectMapper mapper = new ObjectMapper();
             ArrayNode aliasesCcdFormat = mapper.createArrayNode();
 
             probateData.get(fieldname)
@@ -311,12 +371,11 @@ public class CoreCaseDataMapper {
     }
 
     public Optional<JsonNode> mapAlias(JsonNode alias) {
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdFormat = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
         value.set("Forenames", alias.get("firstName"));
         value.set("LastName", alias.get("lastName"));
-        ccdFormat.set("value", value);
+        ccdFormat.set(VALUE, value);
         return Optional.of(ccdFormat);
     }
 
@@ -324,7 +383,6 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> address = Optional.ofNullable(probateData.get(fieldname));
         if (address.isPresent()) {
-            ObjectMapper mapper = new ObjectMapper();
             ObjectNode ccdAddressObject = mapper.createObjectNode();
             ccdAddressObject.set("AddressLine1", address.get());
             return Optional.of(ccdAddressObject);
@@ -337,7 +395,6 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> declaration = Optional.ofNullable(probateData.get(fieldname));
         Optional<JsonNode> ret = Optional.empty();
         if (declaration.isPresent()) {
-            ObjectMapper mapper = new ObjectMapper();
             ObjectNode ccdDeclaration = mapper.createObjectNode();
             ccdDeclaration.set("confirm", declaration.get().get("confirm"));
             ccdDeclaration.set("confirmItem1", declaration.get().get("confirmItem1"));
@@ -362,40 +419,39 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> legalStatement = Optional.ofNullable(probateData.get(fieldname));
         Optional<JsonNode> ret = Optional.empty();
         if (legalStatement.isPresent()) {
-            ObjectMapper mapper = new ObjectMapper();
             ObjectNode ccdLegalStatement = mapper.createObjectNode();
             ObjectNode value = mapper.createObjectNode();
-            ccdLegalStatement.set("applicant", legalStatement.get().get("applicant"));
-            ccdLegalStatement.set("deceased", legalStatement.get().get("deceased"));
+            ccdLegalStatement.set(APPLICANT, legalStatement.get().get(APPLICANT));
+            ccdLegalStatement.set(DECEASED, legalStatement.get().get(DECEASED));
 
-            if (legalStatement.get().has("deceasedOtherNames")) {
-                ccdLegalStatement.set("deceasedOtherNames", legalStatement.get().get("deceasedOtherNames"));
+            if (legalStatement.get().has(DECEASED_OTHER_NAMES)) {
+                ccdLegalStatement.set(DECEASED_OTHER_NAMES, legalStatement.get().get(DECEASED_OTHER_NAMES));
             }
 
-            ccdLegalStatement.set("deceased", legalStatement.get().get("deceased"));
+            ccdLegalStatement.set(DECEASED, legalStatement.get().get(DECEASED));
 
-            if (legalStatement.get().has("deceasedEstateValue")) {
-                ccdLegalStatement.set("deceasedEstateValue", legalStatement.get().get("deceasedEstateValue"));
+            if (legalStatement.get().has(DECEASED_ESTATE_VALUE)) {
+                ccdLegalStatement.set(DECEASED_ESTATE_VALUE, legalStatement.get().get(DECEASED_ESTATE_VALUE));
             }
 
-            if (legalStatement.get().has("deceasedEstateLand")) {
-                ccdLegalStatement.set("deceasedEstateLand", legalStatement.get().get("deceasedEstateLand"));
+            if (legalStatement.get().has(DECEASED_ESTATE_LAND)) {
+                ccdLegalStatement.set(DECEASED_ESTATE_LAND, legalStatement.get().get(DECEASED_ESTATE_LAND));
             }
 
-            if (legalStatement.get().has("executorsNotApplying")) {
+            if (legalStatement.get().has(EXECUTORS_NOT_APPLYING)) {
                 ArrayNode executorsNotApplying = mapper.createArrayNode();
-                legalStatement.get().get("executorsNotApplying").elements().forEachRemaining(executor -> mapExecNotApplying(executor).ifPresent(executorsNotApplying::add));
-                ccdLegalStatement.set("executorsNotApplying", executorsNotApplying);
+                legalStatement.get().get(EXECUTORS_NOT_APPLYING).elements().forEachRemaining(executor -> mapExecNotApplying(executor).ifPresent(executorsNotApplying::add));
+                ccdLegalStatement.set(EXECUTORS_NOT_APPLYING, executorsNotApplying);
             }
 
-            if (legalStatement.get().has("executorsApplying")) {
+            if (legalStatement.get().has(EXECUTORS_APPLYING)) {
                 ArrayNode executorsApplying = mapper.createArrayNode();
-                legalStatement.get().get("executorsApplying").elements().forEachRemaining(executorApplying -> mapExecApplying(executorApplying).ifPresent(executorsApplying::add));
-                ccdLegalStatement.set("executorsApplying", executorsApplying);
+                legalStatement.get().get(EXECUTORS_APPLYING).elements().forEachRemaining(executorApplying -> mapExecApplying(executorApplying).ifPresent(executorsApplying::add));
+                ccdLegalStatement.set(EXECUTORS_APPLYING, executorsApplying);
             }
 
-            ccdLegalStatement.set("intro", legalStatement.get().get("intro"));
-            
+            ccdLegalStatement.set(INTRO, legalStatement.get().get(INTRO));
+
             return Optional.of(ccdLegalStatement);
         }
 
@@ -403,23 +459,112 @@ public class CoreCaseDataMapper {
     }
 
     public Optional<JsonNode> mapExecNotApplying(JsonNode executor) {
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdExecutorsNotApplying = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
         value.set("executor", executor);
-        ccdExecutorsNotApplying.set("value", value);
+        ccdExecutorsNotApplying.set(VALUE, value);
         return Optional.of(ccdExecutorsNotApplying);
     }
 
     public Optional<JsonNode> mapExecApplying(JsonNode executorApplying) {
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdExecutorsApplying = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
         value.set("name", executorApplying.get("name"));
         value.set("sign", executorApplying.get("sign"));
-        ccdExecutorsApplying.set("value", value);
+        ccdExecutorsApplying.set(VALUE, value);
         return Optional.of(ccdExecutorsApplying);
     }
 
+    public JsonNode updatePaymentStatus(PaymentResponse paymentResponse, String ccdEventId, JsonNode ccdToken) {
+        ObjectNode event = mapper.createObjectNode();
+        event.put("id", ccdEventId);
+        event.put("description", "");
+        event.put("summary", "Probate application");
+        ObjectNode formattedData = mapper.createObjectNode();
+        formattedData.set("event", event);
+        formattedData.put("ignore_warning", true);
+        formattedData.set("event_token", ccdToken);
 
+
+        ObjectNode probateData = mapper.createObjectNode();
+        if ("Success".equalsIgnoreCase(paymentResponse.getStatus())) {
+            LocalDate localDate = LocalDateTime.now().toLocalDate();
+            probateData.put("applicationSubmittedDate", localDate.toString());
+        }
+        if (paymentResponse.getAmount() != 0L) {
+            ObjectNode paymentNode = mapper.createObjectNode();
+            ObjectNode paymentValueNode = mapper.createObjectNode();
+            paymentValueNode.put("status", paymentResponse.getStatus());
+            addDate(paymentValueNode, paymentResponse.getDateCreated());
+            paymentValueNode.put("reference", paymentResponse.getReference());
+            paymentValueNode.put("amount", paymentResponse.getAmount().toString());
+            paymentValueNode.put("method", paymentResponse.getChannel());
+            paymentValueNode.put("transactionId", paymentResponse.getTransactionId());
+            paymentValueNode.put("siteId", paymentResponse.getSiteId());
+            paymentNode.set(VALUE, paymentValueNode);
+            ArrayNode paymentArrayNode = mapper.createArrayNode();
+            paymentArrayNode.add(paymentNode);
+            probateData.set("payments", paymentArrayNode);
+        }
+        formattedData.set("data", probateData);
+        return formattedData;
+    }
+
+    private void addDate(ObjectNode paymentValueNode, String date) {
+        String formattedDate = formatDate(date);
+        if (StringUtils.isNotBlank(formattedDate)) {
+            paymentValueNode.put("date", formattedDate);
+        }
+    }
+
+    private String formatDate(String originalDateStr){
+        try {
+            Date originalDate = originalDateFormat.parse(originalDateStr);
+            return newDateFormat.format(originalDate);
+        } catch (ParseException pe) {
+             logger.error("Error parsing payment date", pe);
+        }
+        return "";
+    }
+
+    public Optional<JsonNode> documentUploadMapper(JsonNode probateData, String fieldname) {
+        Optional<JsonNode> ret = Optional.empty();
+        Optional<JsonNode> documentUploads = Optional.ofNullable(probateData.get(fieldname));
+        if (documentUploads.isPresent()) {
+            ArrayNode documentUploadCcdFormat = mapper.createArrayNode();
+            documentUploads.get()
+                    .elements().forEachRemaining(
+                    document -> mapDocument(document).ifPresent(documentUploadCcdFormat::add)
+            );
+            ret = Optional.of(documentUploadCcdFormat);
+        }
+        return ret;
+    }
+
+    private Optional<JsonNode> mapDocument(JsonNode document) {
+        ObjectNode ccdFormat = mapper.createObjectNode();
+        ObjectNode value = mapper.createObjectNode();
+
+        String documentUploadType = "deathCertificate";
+        value.set(DocumentType, new TextNode(documentUploadType.trim()));
+        String documentUploadURL = document.get(url).asText();
+
+        String documentUploadName = document.get(filename).asText();
+
+        ObjectNode docLinkValue = mapper.createObjectNode();
+        docLinkValue.set(documentUrl, new TextNode(documentUploadURL.trim()));
+        docLinkValue.set(documentBinaryUrl, new TextNode(getBinaryDocumentUploadURL(documentUploadURL.trim())));
+        docLinkValue.set(documentFilename, new TextNode(documentUploadName.trim()));
+
+        value.set(DocumentLink, docLinkValue);
+        value.set(Comment, new TextNode(documentUploadName.trim()));
+
+        ccdFormat.set(VALUE, value);
+        return Optional.of(ccdFormat);
+    }
+
+    private String getBinaryDocumentUploadURL(String trim) {
+        return trim + "/" + BINARY_URL_SUFFIX;
+    }
 }
+
