@@ -1,4 +1,4 @@
-s#!/bin/bash
+#!/bin/bash
 ## Usage: ./idam-create-caseworker.sh roles email [password] [surname] [forename]
 ##
 ## Options:
