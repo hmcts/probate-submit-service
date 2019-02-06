@@ -9,7 +9,6 @@ import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGeneratorFactory;
 
 @Configuration
-//@Lazy
 @EnableFeignClients(basePackageClasses = ServiceAuthorisationApi.class)
 public class ServiceTokenGeneratorConfiguration {
 

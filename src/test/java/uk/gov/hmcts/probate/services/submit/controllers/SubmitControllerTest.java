@@ -5,13 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mail.MailSendException;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.HttpClientErrorException;
@@ -20,7 +18,7 @@ import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 import uk.gov.hmcts.probate.services.submit.services.SubmitService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
-import static org.mockito.Mockito.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -29,9 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@ContextConfiguration(classes = ControllerConfiguration.class)
+@WebMvcTest(value = {SubmitController.class}, secure = false)
 public class SubmitControllerTest {
 
     private static final String SUBMIT_SERVICE_URL = "/submit";
@@ -85,6 +81,16 @@ public class SubmitControllerTest {
 
     @Test
     public void shouldReturn400OnSubmitOfInvalidJson() throws Exception {
+        String invalidJson = "invalid json";
+
+        mockMvc.perform(post(SUBMIT_SERVICE_URL)
+                .content(invalidJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturn400OnSubmitOfInvalidForDataJson() throws Exception {
         String invalidJson = "invalid json";
 
         mockMvc.perform(post(SUBMIT_SERVICE_URL)

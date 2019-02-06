@@ -59,14 +59,14 @@ services:
       - SERVER_PORT=8080
       - JAVA_OPTS=-Xms8m -Xmx256m -Djava.security.egd=file:/dev/./urandom -XX:MaxMetaspaceSize=128m
       - JWT_KEY=wThK0f0/lh3FlxFcL4xUWDMI5C1J9KyQBgXV4wseh1e5J1uYJIjvTvArHxQDrYoHJ23xFxjHkOnvNbR5dXRoxA==
-      - MICROSERVICE_KEYS_EM_GW=AAAAAAAAAAAAAAAA
-      - MICROSERVICE_KEYS_CCD_DATA=AAAAAAAAAAAAAAAA
-      - MICROSERVICE_KEYS_CCD_DEFINITION=AAAAAAAAAAAAAAAA
-      - MICROSERVICE_KEYS_CCD_GW=AAAAAAAAAAAAAAAA
-      - MICROSERVICE_KEYS_CCD_PS=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_EM_GW=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_CCD_DATA=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_CCD_DEFINITION=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_CCD_GW=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_CCD_PS=AAAAAAAAAAAAAAAA
       - TESTING_SUPPORT_ENABLED=true
-      - MICROSERVICE_KEYS_PROBATE_BACKEND=AAAAAAAAAAAAAAAA
-      - MICROSERVICE_KEYS_PROBATE_FRONTEND=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_PROBATE_BACKEND=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_PROBATE_FRONTEND=AAAAAAAAAAAAAAAA
     ports:
       - 4502:8080
 
@@ -346,6 +346,60 @@ services:
       - no_proxy=
     ports:
      - 8081:8081
+
+  document-management-store-database:
+      build:
+        context: ../docker/database
+      image: docker.artifactory.reform.hmcts.net/evidence/document-management-store-database:latest
+      ports:
+        - 5433:5432
+
+  document-management-store:
+    image: docker.artifactory.reform.hmcts.net/evidence/document-management-store:latest
+    command: --wait-for-database 30
+    environment:
+      - SERVER_PORT=8080
+      - S2S_NAMES_WHITELIST=ccd_gw,ccd_data,ccd_ps,probate_backend
+      - IDAM_SUPERUSER_EMAIL
+      - IDAM_SECRET_KEY=AAAAAAAAAAAAAAAA
+      - GOV_NOTIFY_API_KEY
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://document-management-store-database:5432/evidence
+      - SPRING_DATASOURCE_USERNAME=evidence
+      - SPRING_DATASOURCE_PASSWORD=evidence
+      - SPRING_PROFILES_ACTIVE=dev
+      - IDAM_TESTING_SUPPORT_ENABLED=true
+      - LOGGING_LEVEL_UK_GOV_HMCTS_IDAM=DEBUG
+      - IDAM_CLIENT_URL=http://idam-api:8080
+      - IDAM_USER_BASE_URI=http://idam-api:8080
+      - IDAM_S2S_BASE_URI=http://service-auth-provider-api:8080
+      - PROVIDER_SERVICE_CLIENT_URL=http://service-auth-provider-api:8080
+      - http_proxy=
+      - https_proxy=
+      - no_proxy=
+       # these environment variables are used by java-logging library
+      - ROOT_APPENDER=JSON_CONSOLE
+      - JSON_CONSOLE_PRETTY_PRINT=false
+      - REFORM_SERVICE_TYPE=java
+      - REFORM_SERVICE_NAME=document-management-store-app
+      - REFORM_TEAM=cc
+      - REFORM_ENVIRONMENT=docker
+#      healthcheck env vars
+      - PACKAGES_ENVIRONMENT=docker
+      - PACKAGES_PROJECT=evidence
+      - PACKAGES_NAME=document-management-store-app
+      - PACKAGES_VERSION=unknown
+#      debug mode
+      - JAVA_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+    links:
+     - document-management-store-database
+     - idam-api
+     - service-auth-provider-api
+    depends_on:
+     - document-management-store-database
+     - idam-api
+     - service-auth-provider-api
+    ports:
+     - 4603:8080
 
 volumes:
   shared-database-data:

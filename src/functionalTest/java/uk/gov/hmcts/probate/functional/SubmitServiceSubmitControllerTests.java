@@ -52,14 +52,14 @@ public class SubmitServiceSubmitControllerTests extends IntegrationTestBase {
 
     private void validateReSubmitSuccess() {
         SerenityRest.given().relaxedHTTPSValidation()
-                .headers(utils.getHeaders(SESSION_ID))
+                .headers(utils.submitHeaders(SESSION_ID))
                 .when().get(submitServiceUrl + "/resubmit/" + submissionId)
                 .then().assertThat().statusCode(200);
     }
 
     private void validateReSubmitFailure(int errorCode) {
         Response response = SerenityRest.given().relaxedHTTPSValidation()
-                .headers(utils.getHeaders(SESSION_ID))
+                .headers(utils.submitHeaders(SESSION_ID))
                 .when().get(submitServiceUrl + "/resubmit/" + INVALID_ID)
                 .thenReturn();
 

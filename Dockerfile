@@ -8,7 +8,7 @@ ENV APPLICATION_SIZE_ON_DISK_IN_MB 66
 COPY docker/entrypoint.sh /
 COPY build/libs/$APP /opt/app/
 
-HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" wget -q --spider http://localhost:8080/health || exit 1
+HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" wget -q --spider http://localhost:8181/health || exit 1
 
 EXPOSE 8181
 

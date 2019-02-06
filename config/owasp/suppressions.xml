@@ -133,4 +133,26 @@
     <gav regex="true">^org\.slf4j:jul-to-slf4j:.*$</gav>
     <cve>CVE-2018-8088</cve>
   </suppress>
+
+  <suppress>
+    <notes><![CDATA[
+   file name: feign-form-spring-3.3.0.jar
+   ]]></notes>
+    <gav regex="true">^io\.github\.openfeign\.form:feign-form-spring:.*$</gav>
+    <cve>CVE-2018-1270</cve>
+  </suppress>
+  <suppress>
+        <notes><![CDATA[
+   file name: feign-form-spring-3.3.0.jar
+   ]]></notes>
+        <gav regex="true">^io\.github\.openfeign\.form:feign-form-spring:.*$</gav>
+        <cve>CVE-2018-1271</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: feign-form-spring-3.3.0.jar
+   ]]></notes>
+    <gav regex="true">^io\.github\.openfeign\.form:feign-form-spring:.*$</gav>
+    <cve>CVE-2018-1272</cve>
+  </suppress>
 </suppressions>
