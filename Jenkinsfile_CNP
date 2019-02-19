@@ -5,7 +5,7 @@
 def type = "java"
 String product = "probate"
 String component = "submit-service"
-  #secret('probatePersistenceUrl', 'TEST_PERSISTENCE_URL'),
+  //#secret('probatePersistenceUrl', 'TEST_PERSISTENCE_URL'),
 List<LinkedHashMap<String, Object>> secrets = [
   
     secret('probateBusinessUrl', 'TEST_BUSINESS_URL'),
