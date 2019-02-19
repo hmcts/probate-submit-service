@@ -35,12 +35,14 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withPipeline("java", product, component) {
+    
   setVaultName('probate')
   loadVaultSecrets(secrets)
   enableSlackNotifications('#probate-jenkins')
   enableDockerBuild()
   enableDeployToAKS()
 
+  env.TEST_PERSISTENCE_URL = 'http://probate-persistence-service-pr-88.service.core-compute-preview.internal'
   after('test') {
     try {
        // sh './gradlew pitest'
