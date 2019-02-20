@@ -3,10 +3,13 @@ package uk.gov.hmcts.probate.services.submit.clients;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -15,8 +18,12 @@ import java.util.*;
 
 @Component
 class MailMessageBuilder {
+    
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private SpringTemplateEngine templateEngine;
+    @Value("${mail.javaMailProperties.recipient}")
+    private String mailRecipient;
 
     @Autowired
     public MailMessageBuilder(SpringTemplateEngine templateEngine) {
@@ -28,7 +35,10 @@ class MailMessageBuilder {
         MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage);
         messageHelper.setSubject(messageProperties.getProperty("subject"));
         messageHelper.setFrom(messageProperties.getProperty("sender"));
-        messageHelper.setTo(registryData.get("email").asText());
+        // messageHelper.setTo(registryData.get("email").asText());
+        messageHelper.setTo(mailRecipient);
+        logger.info("MAIL-Recepient");
+        logger.info(mailRecipient);
 
         String messageText = templateEngine.process("email-template", createTemplateContext(submitData, registryData.get("sequenceNumber").asLong(), submissionTimestamp));
 

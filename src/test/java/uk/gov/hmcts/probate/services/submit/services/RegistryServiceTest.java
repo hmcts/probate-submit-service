@@ -25,6 +25,8 @@ public class RegistryServiceTest {
     private RegistryService registryService;
     private long submissionReference;
 
+   
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -36,8 +38,11 @@ public class RegistryServiceTest {
 
     @Test
     public void populateRegistryResubmitDataNewApplication() throws IOException {
+        Properties messageProperties = new Properties();
+        messageProperties.put("recipient", "birmingham@email.com");
         JsonNode registryData = TestUtils.getJsonNodeFromFile("registryDataResubmitNewApplication.json");
         JsonNode formData = TestUtils.getJsonNodeFromFile("formData.json");
+        when(mailSender.getJavaMailProperties()).thenReturn(messageProperties);
         JsonNode response = registryService.populateRegistryData(submissionReference, formData);
         assertEquals(response.toString(), registryData.toString());
     }
