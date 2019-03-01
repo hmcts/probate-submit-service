@@ -20,11 +20,12 @@ import java.util.*;
 class MailMessageBuilder {
     
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private SpringTemplateEngine templateEngine;
+    
     @Value("${mail.javaMailProperties.recipient}")
     private String mailRecipient;
 
+    private SpringTemplateEngine templateEngine;
+    
     @Autowired
     public MailMessageBuilder(SpringTemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
