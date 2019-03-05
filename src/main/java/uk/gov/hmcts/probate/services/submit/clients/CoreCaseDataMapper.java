@@ -47,6 +47,7 @@ public class CoreCaseDataMapper {
     private static final String INTRO = "intro";
     private static final String APPLICANT = "applicant";
     private static final String BINARY_URL_SUFFIX = "binary";
+    public static final String IHT_FORM_ID = "ihtFormId";
     private final Logger logger = LoggerFactory.getLogger(CoreCaseDataMapper.class);
     private final DateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
     private final DateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -232,9 +233,9 @@ public class CoreCaseDataMapper {
         LocalDate localDate = LocalDateTime.ofInstant(submissionTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
         ccdData.put("applicationSubmittedDate", localDate.toString());
         boolean ihtCompletedOnline = "online".equalsIgnoreCase(probateData.get("ihtForm").asText());
-        String ihtFormId = probateData.get("ihtFormId") == null ? "" : probateData.get("ihtFormId").asText();
+        String ihtFormId = probateData.get(IHT_FORM_ID) == null ? "" : probateData.get(IHT_FORM_ID).asText();
         ccdData.put("ihtFormCompletedOnline", ihtCompletedOnline ? "Yes" : "No");
-        ccdData.put("ihtFormId", ihtCompletedOnline ? IHT_FORM_VALUE_205 : ihtFormId);
+        ccdData.put(IHT_FORM_ID, ihtCompletedOnline ? IHT_FORM_VALUE_205 : ihtFormId);
         ccdData.put("softStop", "True".equalsIgnoreCase(probateData.get("softStop").asText()) ? "Yes" : "No");
         ccdData.set("registryLocation", registry.get("name"));
         ccdData.put("applicationType", "Personal");
@@ -381,10 +382,10 @@ public class CoreCaseDataMapper {
 
     public Optional<JsonNode> addressMapper(JsonNode probateData, String fieldname) {
         Optional<JsonNode> ret = Optional.empty();
-        Optional<JsonNode> address = Optional.ofNullable(probateData.get(fieldname));
-        if (address.isPresent()) {
+        Optional<JsonNode> optionalAddress = Optional.ofNullable(probateData.get(fieldname));
+        if (optionalAddress.isPresent()) {
             ObjectNode ccdAddressObject = mapper.createObjectNode();
-            ccdAddressObject.set("AddressLine1", address.get());
+            ccdAddressObject.set("AddressLine1", optionalAddress.get());
             return Optional.of(ccdAddressObject);
         }
         return ret;
@@ -420,7 +421,6 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> ret = Optional.empty();
         if (legalStatement.isPresent()) {
             ObjectNode ccdLegalStatement = mapper.createObjectNode();
-            ObjectNode value = mapper.createObjectNode();
             ccdLegalStatement.set(APPLICANT, legalStatement.get().get(APPLICANT));
             ccdLegalStatement.set(DECEASED, legalStatement.get().get(DECEASED));
 
@@ -517,12 +517,12 @@ public class CoreCaseDataMapper {
         }
     }
 
-    private String formatDate(String originalDateStr){
+    private String formatDate(String originalDateStr) {
         try {
             Date originalDate = originalDateFormat.parse(originalDateStr);
             return newDateFormat.format(originalDate);
         } catch (ParseException pe) {
-             logger.error("Error parsing payment date", pe);
+            logger.error("Error parsing payment date", pe);
         }
         return "";
     }

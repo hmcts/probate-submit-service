@@ -1,16 +1,10 @@
 package uk.gov.hmcts.probate.services.submit.services;
 
-import static net.logstash.logback.marker.Markers.append;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-
-import java.util.Calendar;
-import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +21,11 @@ import uk.gov.hmcts.probate.services.submit.model.FormData;
 import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 import uk.gov.hmcts.probate.services.submit.model.PersistenceResponse;
 import uk.gov.hmcts.probate.services.submit.model.SubmitData;
+
+import java.util.Calendar;
+import java.util.Optional;
+
+import static net.logstash.logback.marker.Markers.append;
 
 @Service
 public class SubmitService {
@@ -62,7 +61,7 @@ public class SubmitService {
         Optional<CcdCaseResponse> caseResponseOptional = getCCDCase(submitData, userId, authorization);
         FormData formData = persistenceClient.loadFormDataById(submitData.getApplicantEmailAddress());
         if (!caseResponseOptional.isPresent()) {
-            if (formData.getSubmissionReference() != 0 ) {
+            if (formData.getSubmissionReference() != 0) {
                 return new TextNode(DUPLICATE_SUBMISSION);
             }
             PersistenceResponse persistenceResponse = persistenceClient.saveSubmission(submitData);
@@ -104,7 +103,7 @@ public class SubmitService {
     }
 
     private void updateFormData(FormData formData, JsonNode submissionReference, JsonNode registryData) {
-        ((ObjectNode)formData.getJson().get("formdata")).set(REGISTRY_FIELD_NAME, registryData.get(REGISTRY_FIELD_NAME));
+        ((ObjectNode) formData.getJson().get("formdata")).set(REGISTRY_FIELD_NAME, registryData.get(REGISTRY_FIELD_NAME));
         ((ObjectNode) formData.getJson()).set("submissionReference", submissionReference);
         ((ObjectNode) formData.getJson()).set("processState", new TextNode("SUBMIT_SERVICE_SUBMITTED_TO_CCD"));
     }
@@ -132,7 +131,7 @@ public class SubmitService {
                 + ", number of executors: " + submitData.getNoOfExecutors();
     }
 
-    private void addCaseDetailsToFormData(CcdCaseResponse ccdCaseResponse, ObjectNode response){
+    private void addCaseDetailsToFormData(CcdCaseResponse ccdCaseResponse, ObjectNode response) {
         ObjectNode ccdCase = objectMapper.createObjectNode();
         ccdCase.set("id", new LongNode(ccdCaseResponse.getCaseId()));
         ccdCase.set("state", new TextNode(ccdCaseResponse.getState()));

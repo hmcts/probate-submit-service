@@ -17,4 +17,5 @@ public class CaseStatePreconditionException extends RuntimeException {
     public CaseStatePreconditionException(CaseState caseState, EventId eventId) {
         super("Cannot apply event Id: " + eventId + " for case state: " + caseState);
     }
+
 }

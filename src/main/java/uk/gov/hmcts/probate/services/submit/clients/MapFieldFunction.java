@@ -6,10 +6,11 @@
 package uk.gov.hmcts.probate.services.submit.clients;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.Optional;
 
 @FunctionalInterface
 public interface MapFieldFunction {
     public Optional<String> map(JsonNode node, String field);
-    
+
 }

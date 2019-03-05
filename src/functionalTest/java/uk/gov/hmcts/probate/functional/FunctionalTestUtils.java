@@ -16,6 +16,8 @@ import java.nio.file.Files;
 @Component
 public class FunctionalTestUtils {
 
+    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String AUTHORIZATION = "Authorization";
     @Autowired
     protected FunctionalTestTokenGenerator functionalTestTokenGenerator;
 
@@ -32,21 +34,21 @@ public class FunctionalTestUtils {
 
     public Headers getHeaders(String sessionId) {
         return Headers.headers(
-                new Header("Content-Type", ContentType.JSON.toString()),
+                new Header(CONTENT_TYPE, ContentType.JSON.toString()),
                 new Header("Session-ID", sessionId));
     }
 
     public Headers submitHeaders(String sessionId) {
         return Headers.headers(
-                new Header("Content-Type", ContentType.JSON.toString()),
+                new Header(CONTENT_TYPE, ContentType.JSON.toString()),
                 new Header("UserId", sessionId),
-                new Header("Authorization", "DUMMY_KEY"));
+                new Header(AUTHORIZATION, "DUMMY_KEY"));
     }
 
     public Headers getHeaders(String userName, String password) {
         return Headers.headers(
                 new Header("ServiceAuthorization", functionalTestTokenGenerator.generateServiceAuthorisation()),
-                new Header("Content-Type", ContentType.JSON.toString()),
-                new Header("Authorization", functionalTestTokenGenerator.generateAuthorisation(userName, password)));
+                new Header(CONTENT_TYPE, ContentType.JSON.toString()),
+                new Header(AUTHORIZATION, functionalTestTokenGenerator.generateAuthorisation(userName, password)));
     }
 }

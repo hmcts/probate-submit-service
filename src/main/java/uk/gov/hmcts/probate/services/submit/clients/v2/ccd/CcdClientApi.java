@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
+import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
@@ -31,6 +32,8 @@ public class CcdClientApi implements CoreCaseDataService {
     private final CoreCaseDataApi coreCaseDataApi;
 
     private final CaseDetailsToCaseDataMapper caseDetailsToCaseDataMapper;
+
+    private final SearchFieldFactory searchFieldFactory;
 
     @Override
     public ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId,
@@ -103,7 +106,7 @@ public class CcdClientApi implements CoreCaseDataService {
                 securityDTO.getUserId(),
                 JurisdictionId.PROBATE.name(),
                 caseType.getName(),
-                ImmutableMap.of(CASE_QUERY_PARAM + caseType.getSearchField().getName(), searchField));
+                ImmutableMap.of(CASE_QUERY_PARAM + searchFieldFactory.getSearchFieldName(caseType), searchField));
         if (caseDetails == null) {
             return Optional.empty();
         }

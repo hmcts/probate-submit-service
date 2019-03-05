@@ -52,6 +52,8 @@ public class PaymentServiceImpl implements PaymentsService {
 
     private final SecurityUtils securityUtils;
 
+    private final EventFactory eventFactory;
+
     @Override
     public ProbateCaseDetails addPaymentToCase(String searchField, ProbatePaymentDetails paymentUpdateRequest) {
         log.info("Updating payment details for case type: {}", paymentUpdateRequest.getCaseType().getName());
@@ -62,7 +64,8 @@ public class PaymentServiceImpl implements PaymentsService {
         String caseId = caseResponse.getCaseInfo().getCaseId();
         CaseState caseState = CaseState.getState(caseResponse.getCaseInfo().getState());
         CasePayment payment = paymentUpdateRequest.getPayment();
-        EventId eventId = getEventId(caseState, payment).apply(caseType.getCaseEvents());
+        CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
+        EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         CaseData caseData = createCaseData(caseResponse, payment);
         return coreCaseDataService.updateCase(caseId, caseData, eventId, securityDTO);
     }

@@ -36,16 +36,16 @@ services:
     image: docker.artifactory.reform.hmcts.net/auth/authentication-web:latest
     container_name: authentication-web
     environment:
-     - IDAM_API_URL=http://idam-api:8080
-     - IDAM_CONTINUE_URL_VALIDATOR_ENFORCE_TLS=false
-     - IDAM_API_OAUTH2_CLIENT_CLIENT_SECRETS_CMC_LEGAL=123456
-     - IDAM_API_OAUTH2_CLIENT_CLIENT_SECRETS_CCD_GATEWAY=123456
+      - IDAM_API_URL=http://idam-api:8080
+      - IDAM_CONTINUE_URL_VALIDATOR_ENFORCE_TLS=false
+      - IDAM_API_OAUTH2_CLIENT_CLIENT_SECRETS_CMC_LEGAL=123456
+      - IDAM_API_OAUTH2_CLIENT_CLIENT_SECRETS_CCD_GATEWAY=123456
     ports:
-     - 8000:8000
+      - 8000:8000
     links:
-     - idam-api
+      - idam-api
     depends_on:
-     - idam-api
+      - idam-api
 
   service-auth-provider-api:
     image: hmcts/service-auth-provider-app:latest
@@ -54,14 +54,14 @@ services:
       - SERVER_PORT=8080
       - JAVA_OPTS=-Xms8m -Xmx256m -Djava.security.egd=file:/dev/./urandom -XX:MaxMetaspaceSize=128m
       - JWT_KEY=wThK0f0/lh3FlxFcL4xUWDMI5C1J9KyQBgXV4wseh1e5J1uYJIjvTvArHxQDrYoHJ23xFxjHkOnvNbR5dXRoxA==
-      - MICROSERVICE_KEYS_EM_GW=AAAAAAAAAAAAAAAA
-      - MICROSERVICE_KEYS_CCD_DATA=AAAAAAAAAAAAAAAA
-      - MICROSERVICE_KEYS_CCD_DEFINITION=AAAAAAAAAAAAAAAA
-      - MICROSERVICE_KEYS_CCD_GW=AAAAAAAAAAAAAAAA
-      - MICROSERVICE_KEYS_CCD_PS=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_EM_GW=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_CCD_DATA=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_CCD_DEFINITION=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_CCD_GW=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_CCD_PS=AAAAAAAAAAAAAAAA
       - TESTING_SUPPORT_ENABLED=true
-      - MICROSERVICE_KEYS_PROBATE_BACKEND=AAAAAAAAAAAAAAAA
-      - MICROSERVICE_KEYS_PROBATE_FRONTEND=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_PROBATE_BACKEND=AAAAAAAAAAAAAAAA
+      - MICROSERVICEKEYS_PROBATE_FRONTEND=AAAAAAAAAAAAAAAA
     ports:
       - 4502:8080
 
@@ -130,17 +130,17 @@ services:
     image: docker.artifactory.reform.hmcts.net/auth/authentication-web:latest
     container_name: authentication-web
     environment:
-     - IDAM_API_URL=http://idam-api:8080
-     - IDAM_CONTINUE_URL_VALIDATOR_ENFORCE_TLS=false
-     - IDAM_API_OAUTH2_CLIENT_CLIENT_SECRETS_CMC_LEGAL=123456
-     - IDAM_API_OAUTH2_CLIENT_CLIENT_SECRETS_CCD_GATEWAY=123456
-     - IDAM_API_OAUTH2_CLIENT_CLIENT_SECRETS_PROBATE=123456
+      - IDAM_API_URL=http://idam-api:8080
+      - IDAM_CONTINUE_URL_VALIDATOR_ENFORCE_TLS=false
+      - IDAM_API_OAUTH2_CLIENT_CLIENT_SECRETS_CMC_LEGAL=123456
+      - IDAM_API_OAUTH2_CLIENT_CLIENT_SECRETS_CCD_GATEWAY=123456
+      - IDAM_API_OAUTH2_CLIENT_CLIENT_SECRETS_PROBATE=123456
     ports:
-     - 8000:8000
+      - 8000:8000
     links:
-     - idam-api
+      - idam-api
     depends_on:
-     - idam-api
+      - idam-api
 
   document-management-store-database:
     build:
@@ -169,30 +169,30 @@ services:
       - http_proxy=
       - https_proxy=
       - no_proxy=
-       # these environment variables are used by java-logging library
+      # these environment variables are used by java-logging library
       - ROOT_APPENDER=JSON_CONSOLE
       - JSON_CONSOLE_PRETTY_PRINT=false
       - REFORM_SERVICE_TYPE=java
       - REFORM_SERVICE_NAME=document-management-store-app
       - REFORM_TEAM=cc
       - REFORM_ENVIRONMENT=docker
-#      healthcheck env vars
+      #      healthcheck env vars
       - PACKAGES_ENVIRONMENT=docker
       - PACKAGES_PROJECT=evidence
       - PACKAGES_NAME=document-management-store-app
       - PACKAGES_VERSION=unknown
-#      debug mode
+      #      debug mode
       - JAVA_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
     links:
-     - document-management-store-database
-     - idam-api
-     - service-auth-provider-api
+      - document-management-store-database
+      - idam-api
+      - service-auth-provider-api
     depends_on:
-     - document-management-store-database
-     - idam-api
-     - service-auth-provider-api
+      - document-management-store-database
+      - idam-api
+      - service-auth-provider-api
     ports:
-     - 8081:8080
+      - 8081:8080
 
   fees-api:
     image: docker.artifactory.reform.hmcts.net/fees-register/fees-api:${FEES_API_DOCKER_VERSION:-latest}
@@ -361,7 +361,7 @@ services:
     image: docker.artifactory.reform.hmcts.net/common-components/payments-api:latest
     container_name: payments-api
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.16.10.152:5430/payment
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://192.168.1.132:5430/payment
       - SPRING_DATASOURCE_USERNAME=payment
       - SPRING_DATASOURCE_PASSWORD=
       - AUTH_PROVIDER_SERVICE_CLIENT_BASEURL=http://service-auth-provider-api:8080/
@@ -403,15 +403,15 @@ services:
       - https_proxy
       - no_proxy
     ports:
-     - 8383:8080
+      - 8383:8080
     links:
-     - payments-database
-     - service-auth-provider-api
-     - idam-api
+      - payments-database
+      - service-auth-provider-api
+      - idam-api
     depends_on:
-     - payments-database
-     - service-auth-provider-api
-     - idam-api
+      - payments-database
+      - service-auth-provider-api
+      - idam-api
 
   persistence-service:
     image: hmcts/probate-persistence-service
@@ -430,7 +430,7 @@ services:
       - no_proxy=
       - LIQUIBASE_AT_STARTUP=true
     ports:
-     - 8282:8282
+      - 8282:8282
     depends_on:
       - shared-database
 
@@ -443,7 +443,7 @@ services:
       - https_proxy=
       - no_proxy=
     ports:
-     - 8082:8081
+      - 8082:8081
 
   payments-database:
     image: docker.artifactory.reform.hmcts.net/common-components/payments-database

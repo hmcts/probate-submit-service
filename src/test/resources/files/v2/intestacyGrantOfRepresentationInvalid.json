@@ -12,10 +12,10 @@
   "primaryApplicantPhoneNumber": "123455678",
   "primaryApplicantRelationshipToDeceased": "adoptedChild",
   "primaryApplicantAdoptionInEnglandOrWales": "Yes",
-  "deceasedForenames": "Ned",
+  "deceasedForenames": "N",
   "deceasedSurname": "Stark",
-  "deceasedDateOfBirth": "2018-01-01",
-  "deceasedDateOfDeath": "1930-01-01",
+  "deceasedDateOfBirth": "1954-01-01",
+  "deceasedDateOfDeath": "2018-01-01",
   "deceasedAddress": {
     "AddressLine1": "Winterfell, Westeros"
   },

@@ -8,10 +8,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
+import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.probate.model.cases.ApplicationType;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
+import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
@@ -56,14 +57,16 @@ public class CcdClientApiTest {
 
     private static final String EMAIL_QUERY_PARAM = "case.primaryApplicantEmailAddress";
 
-    private static final EventId CREATE_DRAFT = GRANT_OF_REPRESENTATION.getCaseEvents().getCreateDraftEventId();
+    private static final EventId CREATE_DRAFT = EventId.GOP_CREATE_DRAFT;
 
-    private static final EventId UPDATE_DRAFT = GRANT_OF_REPRESENTATION.getCaseEvents().getUpdateDraftEventId();
+    private static final EventId UPDATE_DRAFT = EventId.GOP_UPDATE_DRAFT;
 
     @Mock
     private CoreCaseDataApi mockCoreCaseDataApi;
 
-    @InjectMocks
+    @Mock
+    private SearchFieldFactory searchFieldFactory;
+
     private CcdClientApi ccdClientApi;
 
     @Rule
@@ -81,7 +84,9 @@ public class CcdClientApiTest {
 
     @Before
     public void setUp() {
-        ccdClientApi = new CcdClientApi(mockCoreCaseDataApi, new CaseDetailsToCaseDataMapper(new ObjectMapper()));
+        ccdClientApi = new CcdClientApi(mockCoreCaseDataApi, new CaseDetailsToCaseDataMapper(new ObjectMapper()), searchFieldFactory);
+
+        when(searchFieldFactory.getSearchFieldName(CaseType.GRANT_OF_REPRESENTATION)).thenReturn("primaryApplicantEmailAddress");
 
         securityDTO = SecurityDTO.builder()
                 .authorisation(AUTHORIZATION)

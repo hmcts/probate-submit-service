@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,7 +10,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
@@ -23,6 +26,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_APPLICATION;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_CASE;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_DRAFT;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_AGAIN;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_TO_SUCCESS;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_DRAFT;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DraftServiceImplTest {
@@ -33,15 +43,21 @@ public class DraftServiceImplTest {
 
     private static final String STATE = "STATE";
 
-    private static final EventId CREATE_DRAFT = GRANT_OF_REPRESENTATION.getCaseEvents().getCreateDraftEventId();
+    private static final EventId CREATE_DRAFT = EventId.GOP_CREATE_DRAFT;
 
-    private static final EventId UPDATE_DRAFT = GRANT_OF_REPRESENTATION.getCaseEvents().getUpdateDraftEventId();
+    private static final EventId UPDATE_DRAFT = EventId.GOP_UPDATE_DRAFT;
 
     @Mock
     private SecurityUtils mockSecurityUtils;
 
     @Mock
     private CoreCaseDataService coreCaseDataService;
+
+    @Mock
+    private EventFactory eventFactory;
+
+    @Mock
+    private SearchFieldFactory searchFieldFactory;
 
     @InjectMocks
     private DraftServiceImpl draftService;
@@ -66,11 +82,26 @@ public class DraftServiceImplTest {
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(STATE);
         caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+
+        when(searchFieldFactory.getSearchFieldValuePair(CaseType.GRANT_OF_REPRESENTATION, caseData))
+                .thenReturn(ImmutablePair.of("primaryApplicantEmailAddress", APPLICANT_EMAIL));
+
+        when(eventFactory.getCaseEvents(CaseType.GRANT_OF_REPRESENTATION)).thenReturn(CaseEvents.builder()
+                .createCaseApplicationEventId(GOP_CREATE_APPLICATION)
+                .createCaseEventId(GOP_CREATE_CASE)
+                .createDraftEventId(GOP_CREATE_DRAFT)
+                .paymentFailedAgainEventId(GOP_PAYMENT_FAILED_AGAIN)
+                .paymentFailedEventId(GOP_PAYMENT_FAILED)
+                .paymentFailedToSuccessEventId(GOP_PAYMENT_FAILED_TO_SUCCESS)
+                .updateDraftEventId(GOP_UPDATE_DRAFT)
+                .build());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfEmailsDontMatch() {
         caseData.setPrimaryApplicantEmailAddress("test1234@hello.com");
+        when(searchFieldFactory.getSearchFieldValuePair(CaseType.GRANT_OF_REPRESENTATION, caseData))
+                .thenReturn(ImmutablePair.of("primaryApplicantEmailAddress", "test1234@hello.com"));
 
         draftService.saveDraft(APPLICANT_EMAIL, caseRequest);
     }

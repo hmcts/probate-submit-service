@@ -42,11 +42,6 @@ public class FunctionalTestTokenGenerator {
 
     private String userToken;
 
-
-    private String idamCreateUrl() {
-        return idamUserBaseUrl + "/testing-support/accounts";
-    }
-
     @Autowired
     private ServiceAuthTokenGenerator tokenGenerator;
 

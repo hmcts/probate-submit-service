@@ -7,94 +7,106 @@ String product = "probate"
 String component = "submit-service"
   //#secret('probatePersistenceUrl', 'TEST_PERSISTENCE_URL'),
 List<LinkedHashMap<String, Object>> secrets = [
-  
-    secret('probateBusinessUrl', 'TEST_BUSINESS_URL'),
-    secret('s2sAuthTotpSecret', 'S2S_AUTH_TOTP_SECRET'),
-    secret('probateIdamSecret', 'IDAM_SECRET'),
-    secret('probateIdamUserName', 'IDAM_USERNAME'),
-    secret('probateIdamPassword', 'IDAM_PASSWORD'),
-    secret('probateCcdDataStoreApi', 'CCD_DATA_STORE_API_URL'),
-    secret('serviceAuthProviderBaseUrl', 'SERVICE_AUTH_PROVIDER_BASE_URL'),
-    secret('probateUserAuthUrl', 'USER_AUTH_PROVIDER_OAUTH2_URL'),
-    secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI'),
-    secret('probate-mail-host', 'PROBATE_SUB_MAIL_HOST'),
-    secret('probate-mail-username', 'PROBATE_SUB_MAIL_USERNAME'),
-    secret('probate-mail-password', 'PROBATE_SUB_MAIL_PASSWORD'),
-    secret('probate-mail-port', 'PROBATE_SUB_MAIL_PORT'),
-    secret('probate-mail-sender', 'PROBATE_SUB_MAIL_SENDER'),
-    secret('probate-mail-recipient', 'PROBATE_SUB_MAIL_REC')
+        secret('probatePersistenceUrl', 'TEST_PERSISTENCE_URL'),
+        secret('probateBusinessUrl', 'TEST_BUSINESS_URL'),
+        secret('s2sAuthTotpSecret', 'S2S_AUTH_TOTP_SECRET'),
+        secret('probateIdamSecret', 'IDAM_SECRET'),
+        secret('probateIdamUserName', 'IDAM_USERNAME'),
+        secret('probateIdamPassword', 'IDAM_PASSWORD'),
+        secret('probateCcdDataStoreApi', 'CCD_DATA_STORE_API_URL'),
+        secret('serviceAuthProviderBaseUrl', 'SERVICE_AUTH_PROVIDER_BASE_URL'),
+        secret('probateUserAuthUrl', 'USER_AUTH_PROVIDER_OAUTH2_URL'),
+        secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI'),
+        secret('probate-mail-host', 'PROBATE_SUB_MAIL_HOST'),
+        secret('probate-mail-username', 'PROBATE_SUB_MAIL_USERNAME'),
+        secret('probate-mail-password', 'PROBATE_SUB_MAIL_PASSWORD'),
+        secret('probate-mail-port', 'PROBATE_SUB_MAIL_PORT'),
+        secret('probate-mail-sender', 'PROBATE_SUB_MAIL_SENDER'),
+        secret('probate-mail-recipient', 'PROBATE_SUB_MAIL_REC')
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
-  [ $class: 'AzureKeyVaultSecret',
-    secretType: 'Secret',
-    name: secretName,
-    version: '',
-    envVariable: envVar
-  ]
+    [$class     : 'AzureKeyVaultSecret',
+     secretType : 'Secret',
+     name       : secretName,
+     version    : '',
+     envVariable: envVar
+    ]
 }
 
 withPipeline("java", product, component) {
-    
-  setVaultName('probate')
-  loadVaultSecrets(secrets)
-  enableSlackNotifications('#probate-jenkins')
-  enableDockerBuild()
-  enableDeployToAKS()
+    setVaultName('probate')
+    loadVaultSecrets(secrets)
+    enableSlackNotifications('#probate-jenkins')
+    enableDockerBuild()
+    enableDeployToAKS()
 
-  env.TEST_PERSISTENCE_URL = 'http://probate-persistence-service-pr-88.service.core-compute-preview.internal'
-  after('test') {
-    try {
-       // sh './gradlew pitest'
-    } finally {
-        //steps.archiveArtifacts "build/reports/pitest/**/*.*"
+    after('test') {
+        try {
+            if (env.CHANGE_BRANCH || env.BRANCH_NAME == 'master') {
+                env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
+                env.PACT_BROKER_PORT = "443"
+                env.PACT_BROKER_SCHEME = "https"
+                env.PACT_BROKER_FULL_URL = "https://pact-broker.platform.hmcts.net"
+                env.PACT_BRANCH_NAME = env.CHANGE_BRANCH
+                if (env.BRANCH_NAME == 'master') {
+                    env.PACT_BRANCH_NAME = 'master'
+                }
+                // sh './gradlew pitest'
+                env.PACT_BROKER_VERSION = sh(returnStdout: true, script: 'git rev-parse --verify --short HEAD')
+                sh './gradlew pactTask -Dpact.provider.version=${PACT_BROKER_VERSION}'
+            }
+        } finally {
+            archiveArtifacts "build/reports/tests/**/*.*"
+//        archiveArtifacts "build/reports/pitest/**/*.*"
+        }
+
+        junit 'build/test-results/test/**/*.xml'
+        archiveArtifacts 'build/reports/tests/test/index.html'
+        publishHTML target: [
+                allowMissing         : true,
+                alwaysLinkToLastBuild: true,
+                keepAll              : true,
+                reportDir            : "build/reports/tests/test",
+                reportFiles          : "index.html",
+                reportName           : "probate-submit-service Test Report"
+        ]
+
+        publishHTML target: [
+                allowMissing         : true,
+                alwaysLinkToLastBuild: true,
+                keepAll              : true,
+                reportDir            : "build/reports/jacoco",
+                reportFiles          : "index.html",
+                reportName           : "probate-submit-service Code Coverage Report"
+        ]
+
+        publishHTML target: [
+                allowMissing         : true,
+                alwaysLinkToLastBuild: true,
+                keepAll              : true,
+                reportDir            : "build/reports/findbugs",
+                reportFiles          : "main.html",
+                reportName           : "probate-submit-service find Bugs Report"
+        ]
     }
 
-    junit 'build/test-results/test/**/*.xml'
-    archiveArtifacts 'build/reports/tests/test/index.html'
-    publishHTML target: [
-            allowMissing         : true,
-            alwaysLinkToLastBuild: true,
-            keepAll              : true,
-            reportDir            : "build/reports/tests/test",
-            reportFiles          : "index.html",
-            reportName           : "probate-submit-service Test Report"
-    ]
+    after('functionalTest:aat') {
+        publishHTML target: [
+                reportDir            : "target/site/serenity/",
+                reportFiles          : "index.html",
+                reportName           : "AAT Functional Tests",
+                alwaysLinkToLastBuild: true
+        ]
+    }
 
-    publishHTML target: [
-            allowMissing         : true,
-            alwaysLinkToLastBuild: true,
-            keepAll              : true,
-            reportDir            : "build/reports/jacoco",
-            reportFiles          : "index.html",
-            reportName           : "probate-submit-service Code Coverage Report"
-    ]
-
-    publishHTML target: [
-            allowMissing         : true,
-            alwaysLinkToLastBuild: true,
-            keepAll              : true,
-            reportDir            : "build/reports/findbugs",
-            reportFiles          : "main.html",
-            reportName           : "probate-submit-service find Bugs Report"
-    ]
-  }
-
-  after('functionalTest:aat') {
-      publishHTML target: [
-              reportDir            : "target/site/serenity/",
-              reportFiles          : "index.html",
-              reportName           : "AAT Functional Tests",
-              alwaysLinkToLastBuild: true
-      ]
-  }
-
-  after('functionalTest:spreview') {
-      publishHTML target: [
-              reportDir            : "target/site/serenity/",
-              reportFiles          : "index.html",
-              reportName           : "Preview Functional Tests",
-              alwaysLinkToLastBuild: true
-      ]
-  }
+    after('functionalTest:spreview') {
+        publishHTML target: [
+                reportDir            : "target/site/serenity/",
+                reportFiles          : "index.html",
+                reportName           : "Preview Functional Tests",
+                alwaysLinkToLastBuild: true
+        ]
+    }
 }
+

@@ -1,45 +1,9 @@
-provider "vault" {
-  //  # It is strongly recommended to configure this provider through the
-  //  # environment variables described above, so that each user can have
-  //  # separate credentials set in the environment.
-  //  #
-  //  # This will default to using $VAULT_ADDR
-  //  # But can be set explicitly
-  address = "https://vault.reform.hmcts.net:6200"
+provider "azurerm" {
+  version = "1.22.1"
 }
 
-
-# data "vault_generic_secret" "probate_mail_host" {
-#   path = "secret/${var.vault_section}/probate/probate_mail_host"
-# }
-
-# data "vault_generic_secret" "probate_mail_username" {
-#   path = "secret/${var.vault_section}/probate/probate_mail_username"
-# }
-
-# data "vault_generic_secret" "probate_mail_password" {
-#   path = "secret/${var.vault_section}/probate/probate_mail_password"
-# }
-
-# data "vault_generic_secret" "probate_mail_port" {
-#   path = "secret/${var.vault_section}/probate/probate_mail_port"
-# }
-
-# data "vault_generic_secret" "probate_mail_sender" {
-#   path = "secret/${var.vault_section}/probate/probate_mail_sender"
-# }
-
-# data "vault_generic_secret" "probate_mail_recipient" {
-#   path = "secret/${var.vault_section}/probate/probate_mail_recipient"
-# }
-
-
-# data "vault_generic_secret" "spring_application_json_submit_service" {
-#   path = "secret/${var.vault_section}/probate/spring_application_json_submit_service_azure"
-# }
-
 locals {
-  aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
+  aseName = "core-compute-${var.env}"
   //java_proxy_variables: "-Dhttp.proxyHost=${var.proxy_host} -Dhttp.proxyPort=${var.proxy_port} -Dhttps.proxyHost=${var.proxy_host} -Dhttps.proxyPort=${var.proxy_port}"
 
   //probate_frontend_hostname = "probate-frontend-aat.service.core-compute-aat.internal"
@@ -106,7 +70,8 @@ module "probate-submit-service" {
   capacity     = "${var.capacity}"
   common_tags  = "${var.common_tags}"
   asp_rg       = "${var.asp_rg}"
-  
+  appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
+
   app_settings = {
 
 	  // Logging vars
@@ -116,14 +81,6 @@ module "probate-submit-service" {
   
 
     DEPLOYMENT_ENV= "${var.deployment_env}"
-    //JAVA_OPTS = "${local.java_proxy_variables}"
-
-    # MAIL_USERNAME = "${data.vault_generic_secret.probate_mail_username.data["value"]}"
-    # MAIL_PASSWORD = "${data.vault_generic_secret.probate_mail_password.data["value"]}"
-    # MAIL_HOST = "${data.vault_generic_secret.probate_mail_host.data["value"]}"
-    # MAIL_PORT = "${data.vault_generic_secret.probate_mail_port.data["value"]}"
-    # MAIL_JAVAMAILPROPERTIES_SENDER = "${data.vault_generic_secret.probate_mail_sender.data["value"]}"
-    # MAIL_JAVAMAILPROPERTIES_RECIPIENT = "${data.vault_generic_secret.probate_mail_recipient.data["value"]}"
 
     MAIL_USERNAME = "${data.azurerm_key_vault_secret.probate_mail_username.value}"
     MAIL_PASSWORD = "${data.azurerm_key_vault_secret.probate_mail_password.value}"
@@ -145,7 +102,6 @@ module "probate-submit-service" {
    
     java_app_name = "${var.microservice}"
     LOG_LEVEL = "${var.log_level}"
-    //ROOT_APPENDER = "JSON_CONSOLE" //Remove json logging
 
   }
 }
