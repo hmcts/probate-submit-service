@@ -144,6 +144,7 @@ public class CoreCaseDataClient {
 
     private JsonNode postRequestToUrl(HttpEntity<JsonNode> ccdSaveRequest, String url) {
         try {
+            logger.info("ccd payload>>>", ccdSaveRequest.toString());
             ResponseEntity<JsonNode> response = restTemplate
                     .exchange(url, HttpMethod.POST, ccdSaveRequest, JsonNode.class);
             logResponse(response);
