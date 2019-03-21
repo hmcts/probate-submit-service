@@ -1,22 +1,27 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import uk.gov.hmcts.reform.probate.model.client.CcdClientApiError;
+import uk.gov.hmcts.reform.probate.model.client.ApiClientErrorResponse;
+import uk.gov.hmcts.reform.probate.model.client.ApiClientException;
 
 @Slf4j
 @ControllerAdvice
 public class CcdClientApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(CcdClientApiException.class)
-    public ResponseEntity<CcdClientApiError> handleCcdClientApiException(final CcdClientApiException exception){
-        return new ResponseEntity<>(
-                exception.getCcdClientApiError(),
-                exception.getStatus()
-        );
+    @ExceptionHandler(ApiClientException.class)
+    public ResponseEntity<ApiClientErrorResponse> handleApiClientException(final ApiClientException exception){
+        HttpStatus status = HttpStatus.resolve(exception.getStatus());
+
+        if (status == null) {
+            log.debug("CcdClient responded with unprocessable HttpStatus");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(exception.getErrorReponse(), status);
     }
 }
 

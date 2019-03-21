@@ -2,52 +2,48 @@ package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
+import feign.Util;
 import feign.codec.ErrorDecoder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import uk.gov.hmcts.reform.probate.model.client.CcdClientApiError;
+import uk.gov.hmcts.reform.probate.model.client.ApiClientErrorResponse;
+import uk.gov.hmcts.reform.probate.model.client.ApiClientException;
 
-import static feign.FeignException.errorStatus;
+import java.io.IOException;
 
 @Slf4j
 public class CcdClientApiErrorDecoder implements ErrorDecoder {
 
     @Override
     public Exception decode(String methodKey, Response response) {
-
         log.error("Response status: {} - {}", response.status(), response.reason());
 
-        HttpStatus responseStatus = getHttpStatusFromResponse(response);
-        CcdClientApiError ccdClientApiError = mapBodyToCcdApiError(response.body());
+        String responseBody = responseBodyToString(response);
+        ApiClientErrorResponse errorResponse = mapApiClientErrorResponse(responseBody);
 
-        if(responseStatus.is5xxServerError() || responseStatus.is4xxClientError()){
-            throw new CcdClientApiException(ccdClientApiError, responseStatus);
-        }
-
-        return errorStatus(methodKey, response);
+        throw new ApiClientException(response.status(), errorResponse);
     }
 
-    CcdClientApiError mapBodyToCcdApiError(Response.Body body){
+    ApiClientErrorResponse mapApiClientErrorResponse(String body) {
+
         ObjectMapper mapper = new ObjectMapper();
-        CcdClientApiError clientApiError;
+        ApiClientErrorResponse errorResponse = new ApiClientErrorResponse();
         try {
-            clientApiError = mapper.readValue(body.toString(),CcdClientApiError.class);
-        } catch (Exception e) {
-            log.debug("CcdClientApi response contained empty body");
-            clientApiError = new CcdClientApiError();
+            errorResponse = mapper.readValue(body, ApiClientErrorResponse.class);
+        } catch (IOException e) {
+            log.debug("Response contained empty body");
         }
-        return clientApiError;
+        return errorResponse;
     }
 
-    HttpStatus getHttpStatusFromResponse(Response response){
-        HttpStatus responseStatus;
-        try{
-            responseStatus = HttpStatus.valueOf(response.status());
-        } catch (IllegalArgumentException ex) {
-            log.debug("CcdClientApi responded with unprocessable HttpStatus");
-            responseStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    String responseBodyToString(Response response) {
+        String apiError = "";
+        try {
+            if (response.body() != null) {
+                apiError = Util.toString(response.body().asReader());
+            }
+        } catch (IOException ignored) {
+            log.debug("Unable to read response body");
         }
-        return responseStatus;
+        return apiError;
     }
-
 }
