@@ -192,6 +192,14 @@
         Line 2 man
         Line 3 man
         PostCode Manchester
+    - name: ctsc
+      id: 3
+      email: probatefeedback@justice.gov.uk
+      address: |
+        Principal Registry of the Family Division (PRFD)
+        HMCTS Probate
+        PO Box 12625
+        CM20 9QE Harlow
 
   authorised.services: probate_backend,probate_frontend
 
