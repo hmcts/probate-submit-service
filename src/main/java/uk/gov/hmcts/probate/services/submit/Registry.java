@@ -4,7 +4,6 @@ public class Registry {
 
     private String name;
     private int id;
-    private String email;
     private String address;
 
     public void setName(String name) {
@@ -13,10 +12,6 @@ public class Registry {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public void setAddress(String address) {
@@ -29,10 +24,6 @@ public class Registry {
 
     public int getId() {
         return id;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public String getAddress() {

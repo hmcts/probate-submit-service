@@ -13,7 +13,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import uk.gov.hmcts.probate.services.submit.clients.CoreCaseDataClient;
-import uk.gov.hmcts.probate.services.submit.clients.MailClient;
 import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
 import uk.gov.hmcts.probate.services.submit.model.CcdCaseResponse;
 import uk.gov.hmcts.probate.services.submit.model.FormData;
@@ -55,9 +54,6 @@ public class SubmitServiceTest {
     private SubmitService submitService;
 
     @Mock
-    private MailClient mockMailClient;
-
-    @Mock
     private PersistenceClient persistenceClient;
 
     @Mock
@@ -91,7 +87,8 @@ public class SubmitServiceTest {
     public void setUp() throws Exception {
         objectMapper = new ObjectMapper();
         registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
-        submitService = new SubmitService(mockMailClient, persistenceClient, coreCaseDataClient,
+        resubmissionReference = TestUtils.getJsonNodeFromFile("resubmissionReference.json");
+        submitService = new SubmitService(persistenceClient, coreCaseDataClient,
                 sequenceService, objectMapper);
         ReflectionTestUtils.setField(submitService, "coreCaseDataEnabled", true);
 
@@ -163,8 +160,7 @@ public class SubmitServiceTest {
         verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, times(1)).createCase(any());
         verify(coreCaseDataClient, times(1)).saveCase(any(), any());
-        verify(mockMailClient, never()).execute(any(), any(), any());
-        verify(sequenceService, times(1)).nextRegistry();
+        verify(sequenceService, times(1)).nextRegistry(ID);
     }
 
     @Test
@@ -178,8 +174,7 @@ public class SubmitServiceTest {
         verify(coreCaseDataClient, never()).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, never()).createCase(any());
         verify(coreCaseDataClient, never()).saveCase(any(), any());
-        verify(mockMailClient, never()).execute(any(), any(), any());
-        verify(sequenceService, times(1)).nextRegistry();
+        verify(sequenceService, times(1)).nextRegistry(ID);
     }
 
     @Test
@@ -191,8 +186,7 @@ public class SubmitServiceTest {
         verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, times(1)).createCase(any());
         verify(coreCaseDataClient, times(1)).saveCase(any(), any());
-        verify(mockMailClient, never()).execute(any(), any(), any());
-        verify(sequenceService, times(1)).nextRegistry();
+        verify(sequenceService, times(1)).nextRegistry(ID);
     }
 
 
@@ -208,7 +202,6 @@ public class SubmitServiceTest {
         assertThat(submitResponse, is(notNullValue()));
         verify(coreCaseDataClient, times(1)).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID);
         verify(coreCaseDataClient, times(1)).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID);
-        verify(mockMailClient, times(1)).execute(any(), any(), any());
     }
 
     @Test
@@ -226,7 +219,6 @@ public class SubmitServiceTest {
         assertThat(submitResponse, is(notNullValue()));
         verify(coreCaseDataClient, times(1)).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID);
         verify(coreCaseDataClient, times(1)).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID);
-        verify(mockMailClient, times(1)).execute(any(), any(), any());
     }
 
     @Test
@@ -244,7 +236,6 @@ public class SubmitServiceTest {
         assertThat(submitResponse, is(notNullValue()));
         verify(coreCaseDataClient, times(1)).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_PAYMENT_FAILED_CCD_EVENT_ID);
         verify(coreCaseDataClient, times(1)).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_PAYMENT_FAILED_CCD_EVENT_ID);
-        verify(mockMailClient, times(1)).execute(any(), any(), any());
     }
 
     @Test
@@ -262,7 +253,6 @@ public class SubmitServiceTest {
         assertThat(submitResponse, is(notNullValue()));
         verify(coreCaseDataClient, times(1)).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_PAYMENT_FAILED_MULTIPLE_CCD_EVENT_ID);
         verify(coreCaseDataClient, times(1)).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_PAYMENT_FAILED_MULTIPLE_CCD_EVENT_ID);
-        verify(mockMailClient, times(1)).execute(any(), any(), any());
     }
 
     @Test
@@ -279,7 +269,6 @@ public class SubmitServiceTest {
         assertThat(submitResponse, is(notNullValue()));
         verify(coreCaseDataClient, times(1)).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_PAYMENT_SUCCESS_CCD_EVENT_ID);
         verify(coreCaseDataClient, times(1)).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_PAYMENT_SUCCESS_CCD_EVENT_ID);
-        verify(mockMailClient, times(1)).execute(any(), any(), any());
     }
 
     @Test
@@ -292,7 +281,6 @@ public class SubmitServiceTest {
         assertThat(submitResponse, is(equalTo(objectMapper.createObjectNode())));
         verify(coreCaseDataClient, never()).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID);
         verify(coreCaseDataClient,  never()).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID);
-        verify(mockMailClient,  never()).execute(any(), any(), any());
     }
 
 
@@ -308,7 +296,6 @@ public class SubmitServiceTest {
         assertThat(submitResponse, is(equalTo(objectMapper.createObjectNode())));
         verify(coreCaseDataClient, never()).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID);
         verify(coreCaseDataClient,  never()).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID);
-        verify(mockMailClient,  never()).execute(any(), any(), any());
     }
 
     @Test
@@ -325,6 +312,5 @@ public class SubmitServiceTest {
         assertThat(submitResponse, is(notNullValue()));
         verify(coreCaseDataClient, times(1)).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID);
         verify(coreCaseDataClient,  times(1)).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID);
-        verify(mockMailClient,  times(1)).execute(any(), any(), any());
     }
 }

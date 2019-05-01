@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.probate.services.submit.clients.CcdCreateCaseParams;
 import uk.gov.hmcts.probate.services.submit.clients.CcdCreateCaseParams.Builder;
 import uk.gov.hmcts.probate.services.submit.clients.CoreCaseDataClient;
-import uk.gov.hmcts.probate.services.submit.clients.MailClient;
 import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
 import uk.gov.hmcts.probate.services.submit.model.CcdCaseResponse;
 import uk.gov.hmcts.probate.services.submit.model.FormData;
@@ -36,7 +35,7 @@ public class SubmitService {
     private static final String CREATE_CASE_PAYMENT_FAILED_MULTIPLE_CCD_EVENT_ID = "createCasePaymentFailedMultiple";
     private static final String CREATE_CASE_PAYMENT_SUCCESS_CCD_EVENT_ID = "createCasePaymentSuccess";
     private static final String CASE_PAYMENT_FAILED_STATE = "CasePaymentFailed";
-    private MailClient mailClient;
+    private static final String DUPLICATE_SUBMISSION = "DUPLICATE_SUBMISSION";
     private PersistenceClient persistenceClient;
     private CoreCaseDataClient coreCaseDataClient;
     private SequenceService sequenceService;
@@ -45,9 +44,8 @@ public class SubmitService {
     private ObjectMapper objectMapper;
 
     @Autowired
-    public SubmitService(MailClient mailClient, PersistenceClient persistenceClient,
+    public SubmitService(PersistenceClient persistenceClient,
                          CoreCaseDataClient coreCaseDataClient, SequenceService sequenceService, ObjectMapper objectMapper) {
-        this.mailClient = mailClient;
         this.persistenceClient = persistenceClient;
         this.coreCaseDataClient = coreCaseDataClient;
         this.sequenceService = sequenceService;
@@ -141,9 +139,6 @@ public class SubmitService {
             CcdCaseResponse updatePaymentStatusResponse = coreCaseDataClient
                     .updatePaymentStatus(submitData, userId, authorization, tokenJson,
                             paymentResponse, eventId);
-            Calendar submissionTimestamp = Calendar.getInstance();
-            mailClient.execute(submitData.getJson(), submitData.getRegistry(), submissionTimestamp);
-
             response.set("caseState", new TextNode(updatePaymentStatusResponse.getState()));
             logger.info("Updated payment status - caseId: {}, caseState: {}", updatePaymentStatusResponse.getCaseId(),
                     updatePaymentStatusResponse.getState());

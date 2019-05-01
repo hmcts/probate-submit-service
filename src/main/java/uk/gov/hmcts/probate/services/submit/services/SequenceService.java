@@ -15,7 +15,6 @@ import java.util.Map;
 public class SequenceService {
     private static final String REGISTRY = "registry";
     private static final String SEQUENCE_NUMBER = "sequenceNumber";
-    private static final String EMAIL = "email";
 
     private final Map<Integer, Registry> registryMap;
     private final PersistenceClient persistenceClient;
@@ -43,7 +42,6 @@ public class SequenceService {
 
         registryMapper.put("name", registry.getName());
         registryMapper.put(SEQUENCE_NUMBER, getRegistrySequenceNumber(registry));
-        registryMapper.put(EMAIL, registry.getEmail());
         registryMapper.put("address", registry.getAddress());
         registryDataObject.set(REGISTRY, registryMapper);
 
