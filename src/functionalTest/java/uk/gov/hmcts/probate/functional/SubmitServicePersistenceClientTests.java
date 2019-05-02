@@ -44,16 +44,6 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
         validateUpdateFormDataFailure(400);
     }
 
-    @Test
-    public void getNextSequenceNumberSuccess() {
-        validateSequenceNumberSuccess();
-    }
-
-    @Test
-    public void getNextSequenceNumberFailure() {
-        String errorMessage = "Registry not configured: dundee";
-        validateSequenceNumberFailure("dundee", 404, errorMessage);
-    }
 
     private void validateLoadFormDataIdSuccess() {
         SerenityRest.given().relaxedHTTPSValidation()
@@ -86,23 +76,5 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
                 .thenReturn();
 
         response.then().assertThat().statusCode(errorCode);
-    }
-
-    private void validateSequenceNumberSuccess() {
-        SerenityRest.given().relaxedHTTPSValidation()
-                .headers(utils.getHeaders(SESSION_ID))
-                .when().get(persistenceServiceUrl + "/sequence-number/ctsc")
-                .then().assertThat().statusCode(200);
-    }
-
-    private void validateSequenceNumberFailure(String registryName, int errorCode, String errorMsg) {
-        Response response = SerenityRest.given().relaxedHTTPSValidation()
-                .headers(utils.getHeaders(SESSION_ID))
-                .when().get(persistenceServiceUrl + "/sequence-number/" + registryName)
-                .thenReturn();
-
-        response.then().assertThat().statusCode(errorCode)
-                .and().body("error", equalTo("Not Found"))
-                .and().body("message", equalTo(errorMsg));
     }
 }

@@ -78,9 +78,7 @@
     },
     "registry": {
       "name": "Birmingham",
-      "email": "test.probate.inbox@gmail.com",
-      "address": "Digital Application\nBirmingham Probate Registry\nThe Priory Courts\n33 Bull Street\nBirmingham\nWest Midlands\nB4 6DU\n",
-      "sequenceNumber": 20222
+      "address": "Digital Application\nBirmingham Probate Registry\nThe Priory Courts\n33 Bull Street\nBirmingham\nWest Midlands\nB4 6DU\n"
     },
     "applicant": {
       "alias": "Robert Stark",

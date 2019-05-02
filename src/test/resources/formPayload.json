@@ -183,8 +183,6 @@
     "softStop": "True"
   },
   "registry": {
-    "sequenceNumber": 12345,
-    "email": "test@email.com",
     "address": "test address"
   }
 }

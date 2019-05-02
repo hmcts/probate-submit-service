@@ -1,7 +1,6 @@
 {
   "registry": {
     "name":"Oxford",
-    "sequenceNumber":20013,
     "address":"Test Address Line 1\nTest Address Line 2\nTest Address Postcode"
   }
 }
