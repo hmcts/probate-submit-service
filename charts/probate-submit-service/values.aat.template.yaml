@@ -2,7 +2,7 @@ java:
   environment:
     SERVICES_PERSISTENCE_BASEURL: http://probate-persistence-service-aat.service.core-compute-aat.internal
     AUTH_PROVIDER_SERVICE_CLIENT_BASEURL : http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
-    SERVICES_CORECASEDATA_BASEURL : http://ccd-data-store-api-aat.service.core-compute-aat
+    SERVICES_CORECASEDATA_BASEURL : http://ccd-data-store-api-aat.service.core-compute-aat.internal
   configmap:
     SPRING_APPLICATION_JSON : '{"registries":[{"address":"Principal Registry of the Family Division (PRFD)\nHMCTS Probate\nPO Box 12625\nHarlow\nCM20 9QE","email":"test.probate.inbox@gmail.com","id":0,"name":"ctsc"}]}'
     AUTH_IDAM_CLIENT_BASEURL: https://idam-api.aat.platform.hmcts.net
