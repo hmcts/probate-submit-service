@@ -6,4 +6,10 @@ java:
   configmap:
     SPRING_APPLICATION_JSON : '{"registries":[{"address":"Principal Registry of the Family Division (PRFD)\nHMCTS Probate\nPO Box 12625\nHarlow\nCM20 9QE","email":"test.probate.inbox@gmail.com","id":0,"name":"ctsc"}]}'
     AUTH_IDAM_CLIENT_BASEURL: https://idam-api.aat.platform.hmcts.net
-
+    AUTH_PROVIDER_SERVICE_CLIENT_KEY: ${S2S_AUTH_TOTP_SECRET}
+    MAIL_USERNAME: ${PROBATE_SUB_MAIL_USERNAME}
+    MAIL_PASSWORD: ${PROBATE_SUB_MAIL_PASSWORD}
+    MAIL_HOST: ${PROBATE_SUB_MAIL_HOST}
+    MAIL_PORT: ${PROBATE_SUB_MAIL_PORT}
+    MAIL_JAVAMAILPROPERTIES_SENDER: ${PROBATE_SUB_MAIL_SENDER}
+    MAIL_JAVAMAILPROPERTIES_RECIPIENT: ${PROBATE_SUB_MAIL_REC}
