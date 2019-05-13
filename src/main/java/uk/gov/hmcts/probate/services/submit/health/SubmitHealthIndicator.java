@@ -19,10 +19,10 @@ public class SubmitHealthIndicator implements HealthIndicator {
     private final String url;
     private RestTemplate restTemplate;
 
-    public SubmitHealthIndicator(String servicesCcdBaseUrl, RestTemplate restTemplate) {
-        this.url = servicesCcdBaseUrl;
-        this.restTemplate = restTemplate;
-    }
+//    public SubmitHealthIndicator(String servicesCcdBaseUrl, RestTemplate restTemplate) {
+//        this.url = servicesCcdBaseUrl;
+//        this.restTemplate = restTemplate;
+//    }
 
     @Override
     public Health health() {
