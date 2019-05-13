@@ -214,6 +214,7 @@ dependencies {
   compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
   compile group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: versions.ccdClient
   compile group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: versions.ccdClient
+  compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: '0.0.3'
   compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
   compile group: 'uk.gov.hmcts.reform.probate', name: 'probate-commons', version: '0.0.27'
 
