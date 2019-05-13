@@ -22,11 +22,11 @@ public class SubmitHealthConfiguration
     @Value("${idam.s2s-auth.url}")
     private String idamS2sAuthUrl;
 
-    @Bean
-    @ConditionalOnProperty(prefix = "services.coreCaseData", name = "enabled", matchIfMissing = true)
-    public SubmitHealthIndicator ccdServiceHealthIndicator() {
-    	return new SubmitHealthIndicator(servicesCcdBaseUrl, restTemplate);
-    }
+//    @Bean
+//    @ConditionalOnProperty(prefix = "services.coreCaseData", name = "enabled", matchIfMissing = true)
+//    public SubmitHealthIndicator ccdServiceHealthIndicator() {
+//    	return new SubmitHealthIndicator(servicesCcdBaseUrl, restTemplate);
+//    }
 
     @Bean
     public SubmitHealthIndicator persistenceServiceHealthIndicator() {
