@@ -74,7 +74,7 @@ public class SubmitDataTest {
         JsonNode jsonNode = objectMapper.readTree("{\n" +
                 "    \"registry\": {\n" +
                 "      \"name\": \"Birmingham\",\n" +
-                "      \"address\": \"Line 1 Bham\\nLine 2 Bham\\nLine 3 Bham\\nPostCode Bham\",\n" +
+                "      \"address\": \"Line 1 Bham\\nLine 2 Bham\\nLine 3 Bham\\nPostCode Bham\"\n" +
                 "    }\n" +
                 "  }");
         assertThat(submitData.getRegistry(), is(equalTo(jsonNode)));

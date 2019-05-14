@@ -87,7 +87,6 @@ public class SubmitServiceTest {
     public void setUp() throws Exception {
         objectMapper = new ObjectMapper();
         registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
-        resubmissionReference = TestUtils.getJsonNodeFromFile("resubmissionReference.json");
         submitService = new SubmitService(persistenceClient, coreCaseDataClient,
                 sequenceService, objectMapper);
         ReflectionTestUtils.setField(submitService, "coreCaseDataEnabled", true);
@@ -160,7 +159,7 @@ public class SubmitServiceTest {
         verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, times(1)).createCase(any());
         verify(coreCaseDataClient, times(1)).saveCase(any(), any());
-        verify(sequenceService, times(1)).nextRegistry(ID);
+        verify(sequenceService, times(1)).nextRegistry();
     }
 
     @Test
@@ -174,7 +173,7 @@ public class SubmitServiceTest {
         verify(coreCaseDataClient, never()).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, never()).createCase(any());
         verify(coreCaseDataClient, never()).saveCase(any(), any());
-        verify(sequenceService, times(1)).nextRegistry(ID);
+        verify(sequenceService, times(1)).nextRegistry();
     }
 
     @Test
@@ -186,7 +185,7 @@ public class SubmitServiceTest {
         verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, times(1)).createCase(any());
         verify(coreCaseDataClient, times(1)).saveCase(any(), any());
-        verify(sequenceService, times(1)).nextRegistry(ID);
+        verify(sequenceService, times(1)).nextRegistry();
     }
 
 

@@ -48,7 +48,4 @@ public class PersistenceClientTest {
         verify(restTemplate, times(1)).getForEntity(endsWith("/emailId"), eq(JsonNode.class));
         assertEquals(actualResponse.getJson(), mockResponse.getBody());
     }
-
-    @Test
-
 }
