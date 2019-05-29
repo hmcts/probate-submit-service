@@ -238,6 +238,7 @@ public class CoreCaseDataMapper {
         ccdData.put("softStop", "True".equalsIgnoreCase(probateData.get("softStop").asText()) ? "Yes" : "No");
         ccdData.set("registryLocation", registry.get("name"));
         ccdData.put("applicationType", "Personal");
+        ccdData.put("paperForm", "No");
 
         ccdData.setAll(map(probateData, fieldMap, this::fieldMapper));
         ccdData.setAll(map(probateData, dateMap, this::dateMapper));
