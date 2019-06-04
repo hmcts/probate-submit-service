@@ -2,7 +2,7 @@ java:
   environment:
     SERVICES_PERSISTENCE_BASEURL: http://probate-persistence-service-aat.service.core-compute-aat.internal
     AUTH_PROVIDER_SERVICE_CLIENT_BASEURL : http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
-    SERVICES_CORECASEDATA_BASEURL : http://ccd-data-store-api-pr-480.service.core-compute-preview.internal
+    SERVICES_CORECASEDATA_BASEURL : http://ccd-data-store-api-aat.service.core-compute-aat.internal
     AUTH_PROVIDER_SERVICE_CLIENT_KEY: ${S2S_AUTH_TOTP_SECRET}
     MAIL_USERNAME: ${PROBATE_SUB_MAIL_USERNAME}
     MAIL_PASSWORD: ${PROBATE_SUB_MAIL_PASSWORD}
