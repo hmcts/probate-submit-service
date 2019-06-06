@@ -12,7 +12,7 @@ java:
     MAIL_JAVAMAILPROPERTIES_RECIPIENT: ${PROBATE_SUB_MAIL_REC}
     AUTH_IDAM_CLIENT_BASEURL: https://idam-api.aat.platform.hmcts.net
   configmap:
-    SPRING_APPLICATION_JSON : '{"registries":[{"address":"Principal Registry of the Family Division (PRFD)\nHMCTS Probate\nPO Box 12625\nHarlow\nCM20 9QE","email":"test.probate.inbox@gmail.com","id":0,"name":"ctsc"}]}'
+    SPRING_APPLICATION_JSON : '{"registries":[{"address":"Principal Registry of the Family Division (PRFD)\nHMCTS Probate\nPO Box 12625\nHarlow\nCM20 9QE","name":"ctsc"}]}'
 
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
