@@ -80,6 +80,7 @@ public class CoreCaseDataMapperTest {
         assertNotNull(mappedData.get("deceasedDateOfDeath"));
         assertNotNull(mappedData.get("declaration"));
         assertNotNull(mappedData.get("applicationType"));
+        assertNotNull(mappedData.get("paperForm"));
     }
 
     @Test
