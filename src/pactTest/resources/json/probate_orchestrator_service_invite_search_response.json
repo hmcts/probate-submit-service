@@ -2,19 +2,33 @@
   "caseData": {
     "type": "GrantOfRepresentation",
     "applicationType": "Personal",
-    "primaryApplicantEmailAddress": "someemailaddress@host.com",
-    "applicationSubmittedDate": "2019-04-02",
-    "extraCopiesOfGrant": 0,
-    "deceasedAddress": {
-      "AddressLine1": "12 Nowhere Road\r\nNotown"
+    "primaryApplicantEmailAddress": "jsnow@bbc.co.uk",
+    "primaryApplicantForenames": "Jon",
+    "primaryApplicantSurname": "Snow",
+    "primaryApplicantAddress": {
+      "AddressLine1": "Pret a Manger",
+      "AddressLine2": "St. Georges Hospital",
+      "PostTown": "London",
+      "PostCode": "SW17 0QT"
     },
-    "deceasedAddressFound": "No",
-    "deceasedMarriedAfterWillOrCodicilDate": "Yes",
-    "deceasedForenames": "Bob",
-    "deceasedSurname": "Smith",
-    "deceasedDateOfDeath": "2018-02-12",
-    "deceasedDateOfBirth": "1939-02-12",
-    "deceasedAnyOtherNames": "Yes",
+    "primaryApplicantFreeTextAddress": "Pret a Manger St. Georges Hospital Blackshaw Road",
+    "primaryApplicantAddressFound": "Yes",
+    "primaryApplicantPhoneNumber": "123455678",
+    "primaryApplicantRelationshipToDeceased": "adoptedChild",
+    "primaryApplicantAdoptionInEnglandOrWales": "Yes",
+    "deceasedForenames": "Ned",
+    "deceasedSurname": "Stark",
+    "deceasedDateOfBirth": "1930-01-01",
+    "deceasedDateOfDeath": "2018-01-01",
+    "deceasedAddress": {
+      "AddressLine1": "Winterfell",
+      "AddressLine2": " Westeros",
+      "PostTown": "London",
+      "PostCode": "SW17 0QT"
+    },
+    "deceasedFreeTextAddress": "Winterfell, Westeros",
+    "deceasedAddressFound": "Yes",
+    "deceasedAnyOtherNames": "No",
     "deceasedAliasNameList": [
       {
         "value": {
@@ -23,18 +37,22 @@
         }
       }
     ],
+    "deceasedMartialStatus": "marriedCivilPartnership",
+    "deceasedDivorcedInEnglandOrWales": "No",
+    "deceasedSpouseNotApplyingReason": "mentallyIncapable",
+    "deceasedOtherChildren": "Yes",
+    "childrenOverEighteenSurvived": "Yes",
+    "childrenDied": "No",
+    "grandChildrenSurvivedUnderEighteen": "No",
+    "deceasedAnyChildren": "No",
+    "registryLocation": "Birmingham",
+    "assetsOverseasNetValue": "10050",
+    "deceasedHasAssetsOutsideUK": "Yes",
     "ihtFormId": "IHT205",
     "ihtFormCompletedOnline": "No",
     "ihtNetValue": "900001",
     "ihtGrossValue": "1000001",
     "ihtReferenceNumber": "Not applicable",
-    "primaryApplicantAddress": {
-      "AddressLine1": "12 Nowhere Avenue\r\nLondon"
-    },
-    "primaryApplicantForenames": "Jackie",
-    "primaryApplicantSurname": "Smith",
-    "primaryApplicantSameWillName": "Yes",
-    "primaryApplicantPhoneNumber": "07951058088",
     "willHasCodicils": "No",
     "willNumberOfCodicils": 1,
     "executorsHaveAlias": "Yes",
@@ -51,7 +69,10 @@
           "applyingExecutorInvitationId": "54321",
           "applyingExecutorLeadName":"Graham Garderner",
           "applyingExecutorAddress": {
-            "AddressLine1": "12 West End Avenue"
+            "AddressLine1": "12 West End Avenue",
+            "AddressLine2": "St. Georges Hospital",
+            "PostTown": "London",
+            "PostCode": "SW17 0QT"
           },
           "applyingExecutorOtherNames": "Graham Poll",
           "applyingExecutorOtherNamesReason": "Divorce"
@@ -60,16 +81,28 @@
       {
         "value": {
           "applyingExecutorName": "Jackie Smith",
+          "applyingExecutorPhoneNumber": "07981898999",
           "applyingExecutorAgreed": "Yes",
-          "applyingExecutorAddress": {}
+          "applyingExecutorEmail": "address@email.com",
+          "applyingExecutorInvitationId": "54321",
+          "applyingExecutorLeadName":"Graham Garderner",
+          "applyingExecutorAddress": {
+            "AddressLine1": "12 West End Avenue",
+            "AddressLine2": "St. Georges Hospital",
+            "PostTown": "London",
+            "PostCode": "SW17 0QT"
+          },
+          "applyingExecutorOtherNames": "Graham Poll",
+          "applyingExecutorOtherNamesReason": "Divorce"
         }
       }
     ],
     "executorsNotApplying": [
     ],
     "declarationCheckbox": "Yes",
-    "numberOfApplicants": 2,
-    "caseType": "gop"
+    "extraCopiesOfGrant": 5,
+    "outsideUKGrantCopies": 6,
+    "uploadDocumentUrl": "http://document-management/document/12345"
   },
   "caseInfo": {
     "caseId": "12323213323",
