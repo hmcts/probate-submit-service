@@ -2,6 +2,7 @@ package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
@@ -17,6 +18,7 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.JurisdictionId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.client.ApiClientException;
 
 import java.util.List;
 import java.util.Optional;
@@ -156,11 +158,20 @@ public class CcdClientApi implements CoreCaseDataService {
     public Optional<ProbateCaseDetails> findCase(String searchValue, CaseType caseType, SecurityDTO securityDTO) {
         log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
         String searchString =  elasticSearchQueryBuilder.buildQuery(searchValue, searchFieldFactory.getSearchFieldName(caseType));
-        List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
-                securityDTO.getAuthorisation(),
-                securityDTO.getServiceAuthorisation(),
-                caseType.getName(),
-                searchString).getCases();
+        List<CaseDetails> caseDetails = null;
+        try {
+            caseDetails = coreCaseDataApi.searchCases(
+                    securityDTO.getAuthorisation(),
+                    securityDTO.getServiceAuthorisation(),
+                    caseType.getName(),
+                    searchString).getCases();
+        }
+        catch (ApiClientException apiClientException){
+            if(apiClientException.getStatus() == HttpStatus.NOT_FOUND.value()) {
+                return Optional.empty();
+            }
+            throw apiClientException;
+        }
         if (caseDetails == null) {
             return Optional.empty();
         }

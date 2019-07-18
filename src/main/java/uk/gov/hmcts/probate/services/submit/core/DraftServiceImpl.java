@@ -36,7 +36,7 @@ public class DraftServiceImpl implements DraftService {
         CaseType caseType = CaseType.getCaseType(caseData);
         Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
         String searchValue = searchFieldValuePair.getRight();
-        Assert.isTrue(searchValue.equals(searchField), "Applicant email on path must match case data");
+        Assert.isTrue(searchValue.equalsIgnoreCase(searchField), "Applicant email on path must match case data");
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         Optional<ProbateCaseDetails> caseInfoOptional = coreCaseDataService.findCase(searchField, caseType, securityDTO);
         return saveDraft(securityDTO, caseType, caseData, caseInfoOptional);
