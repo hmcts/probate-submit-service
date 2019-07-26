@@ -37,10 +37,10 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: tomcat-embed-websocket-9.0.12.jar
+   file name: tomcat-embed-websocket-9.0.19.jar
    ]]></notes>
         <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-websocket:.*$</gav>
-        <cve>CVE-2019-0221</cve>
+        <cve>CVE-2019-10072</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
