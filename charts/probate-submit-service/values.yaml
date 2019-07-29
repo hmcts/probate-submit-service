@@ -12,3 +12,26 @@ java:
   image: 'https://hmcts.azurecr.io/hmcts/probate-submit-service:latest'
 
 ccd-elasticsearch:
+  ccd:
+    ingressHost: default
+    ingressIP: loopback
+    consulIP: loopback
+
+    definitionStoreApi:
+      s2sKey: DUMMY
+
+    apiGateway:
+      s2sKey: DUMMY
+      idamClientSecret: DUMMY
+
+    dataStoreApi:
+      s2sKey: DUMMY
+      image: "hmcts.azurecr.io/hmcts/ccd-data-store-api:tim-debug"
+
+    caseManagementWeb:
+      enabled: true
+
+    printApi:
+      enabled: true # if you need access to the case print service then enable this
+      s2sKey: DUMMY
+      probateTemplateUrl: http://print-api-DUMMY
