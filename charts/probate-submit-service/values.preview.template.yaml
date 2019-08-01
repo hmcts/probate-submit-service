@@ -1,6 +1,6 @@
 tags:
-  ccd-enabled: false
-  ccd-idam-pr: false
+  ccd-enabled: true
+  ccd-idam-pr: true
 
 java:
   environment:
