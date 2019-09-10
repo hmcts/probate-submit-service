@@ -18,8 +18,8 @@ spring:
         probateUserAuthUrl: USER_AUTH_PROVIDER_OAUTH2_URL
         probateIdamOauthRedirectUrl: IDAM_OAUTH2_REDIRECT_URI
         probate-mail-host: PROBATE_SUB_MAIL_HOST
-        probate-mail-username: PROBATE_SUB_MAIL_USERNAME
-        probate-mail-password: PROBATE_SUB_MAIL_PASSWORD
-        probate-mail-port: PROBATE_SUB_MAIL_PORT
-        probate-mail-sender: PROBATE_SUB_MAIL_SENDER
-        probate-mail-recipient: PROBATE_SUB_MAIL_REC
+        probate-mail-username: MAIL_USERNAME
+        probate-mail-password: MAIL_PASSWORD
+        probate-mail-port: MAIL_PORT
+        probate-mail-sender: MAIL_SENDER
+        probate-mail-recipient: MAIL_REC
