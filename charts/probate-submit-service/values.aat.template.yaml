@@ -31,9 +31,3 @@ java:
         - serviceAuthProviderBaseUrl
         - probateUserAuthUrl
         - probateIdamOauthRedirectUrl
-        - probate-mail-host
-        - probate-mail-username
-        - probate-mail-password
-        - probate-mail-port
-        - probate-mail-sender
-        - probate-mail-recipient
