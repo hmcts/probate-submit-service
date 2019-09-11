@@ -17,19 +17,6 @@ management:
     health:
       show-details: always
 
-mail:
-  username: localhost
-  password: dummyKey
-
-  host: localhost
-  port: 1026
-
-  javaMailProperties.subject: Online Probate Application
-  javaMailProperties.sender: dummySender@email.hmcts
-  javaMailProperties.recipient: dummyTest@gmail.com
-
-  javaMailProperties.mail.smtp.auth: false
-  javaMailProperties.mail.smtp.ssl.enable: false
 
 # THYMELEAF (ThymeleafAutoConfiguration)
 spring:
