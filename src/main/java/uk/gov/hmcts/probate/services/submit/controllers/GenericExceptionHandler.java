@@ -4,10 +4,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.MailAuthenticationException;
-import org.springframework.mail.MailParseException;
-import org.springframework.mail.MailPreparationException;
-import org.springframework.mail.MailSendException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -28,18 +24,6 @@ public class GenericExceptionHandler {
         logException(ex);
     }
 
-    @ExceptionHandler({MailSendException.class, MailAuthenticationException.class})
-    @ResponseStatus(value = HttpStatus.BAD_GATEWAY, reason = "Could not send the probate email")
-    public void mailDeliveryFailure(Exception ex) {
-        logException(ex);
-    }
-
-
-    @ExceptionHandler({MailParseException.class, MailPreparationException.class, ParsingSubmitException.class})
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY, reason = "Error creating email payload")
-    public void mailCreationFailure(Exception ex) {
-        logException(ex);
-    }
 
     @ExceptionHandler({JsonParseException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Error while processing the received payload")
