@@ -21,7 +21,7 @@ def secrets = [
                 secret('probate-mail-host', 'PROBATE_SUB_MAIL_HOST'),
                 secret('probate-mail-username', 'PROBATE_SUB_MAIL_USERNAME'),
                 secret('probate-mail-password', 'PROBATE_SUB_MAIL_PASSWORD'),
-                secret('probate-mail-port', 'PROBATE_SUB_MAIL_PORT'),
+                secret('probate-mail-port2', 'PROBATE_SUB_MAIL_PORT'),
                 secret('probate-mail-sender', 'PROBATE_SUB_MAIL_SENDER'),
                 secret('probate-mail-recipient', 'PROBATE_SUB_MAIL_REC')
         ],
