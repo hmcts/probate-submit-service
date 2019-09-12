@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mail.MailSendException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.HttpClientErrorException;
@@ -85,19 +84,6 @@ public class SubmitControllerTest {
                 .content(invalidJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void shouldReturn502WhenMailExceptionThrownOnSubmit() throws Exception {
-        SubmitData validApplication = new SubmitData(TestUtils.getJsonNodeFromFile("formPayload.json"));
-        doThrow(MailSendException.class).when(mockSubmitService).submit(eq(validApplication), eq(userId), eq(authorizationToken));
-
-        mockMvc.perform(post(SUBMIT_SERVICE_URL)
-                .headers(httpHeaders)
-                .content(validApplication.getJson().toString())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadGateway())
-                .andExpect(status().reason("Could not send the probate email"));
     }
 
     @Test
