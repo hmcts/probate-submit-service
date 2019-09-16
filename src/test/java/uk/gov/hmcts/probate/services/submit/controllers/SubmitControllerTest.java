@@ -96,7 +96,7 @@ public class SubmitControllerTest {
                 .content(validApplication.getJson().toString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(status().reason("Error creating email payload"));
+                .andExpect(status().reason("Error parsing form submit payload"));
     }
 
     @Test

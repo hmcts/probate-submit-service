@@ -24,6 +24,11 @@ public class GenericExceptionHandler {
         logException(ex);
     }
 
+    @ExceptionHandler({ParsingSubmitException.class})
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY, reason = "Error parsing form submit payload")
+    public void mailCreationFailure(Exception ex) {
+        logException(ex);
+    }
 
     @ExceptionHandler({JsonParseException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Error while processing the received payload")
