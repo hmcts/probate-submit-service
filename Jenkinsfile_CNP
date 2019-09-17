@@ -17,13 +17,7 @@ def secrets = [
                 secret('probateCcdDataStoreApi', 'CCD_DATA_STORE_API_URL'),
                 secret('serviceAuthProviderBaseUrl', 'SERVICE_AUTH_PROVIDER_BASE_URL'),
                 secret('probateUserAuthUrl', 'USER_AUTH_PROVIDER_OAUTH2_URL'),
-                secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI'),
-                secret('probate-mail-host', 'PROBATE_SUB_MAIL_HOST'),
-                secret('probate-mail-username', 'PROBATE_SUB_MAIL_USERNAME'),
-                secret('probate-mail-password', 'PROBATE_SUB_MAIL_PASSWORD'),
-                secret('probate-mail-port2', 'PROBATE_SUB_MAIL_PORT'),
-                secret('probate-mail-sender', 'PROBATE_SUB_MAIL_SENDER'),
-                secret('probate-mail-recipient', 'PROBATE_SUB_MAIL_REC')
+                secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI')
         ],
         's2s-${env}'      : [
                 secret('microservicekey-ccd-data', 'DATA_STORE_S2S_KEY'),
