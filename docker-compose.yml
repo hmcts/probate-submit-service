@@ -9,26 +9,10 @@ services:
     container_name: submit-service
     environment:
       - SERVER_PORT=8181
-      - PROBATE_MAIL_HOST=probate-postfix
-      - PROBATE_MAIL_PORT=25
-      - PROBATE_MAIL_USERNAME=localhost
-      - PROBATE_MAIL_PASSWORD=Pr0bate!23
-      - PROBATE_MAIL_SENDER=probate-application@hmcts.net
-      - PROBATE_MAIL_RECIPIENT=test.probate.inbox@gmail.com
       - PROBATE_PERSISTENCE_HOSTNAME=localhost:8282
       - http_proxy=
       - https_proxy=
       - no_proxy=
     ports:
      - 8181:8181
-    depends_on:
-      - probate-postfix
 
-  probate-postfix:
-    image: catatnight/postfix
-    container_name: probate-postfix
-    environment:
-        - maildomain=localhost
-        - smtp_user=localhost:Pr0bate
-    ports:
-      - 25:25
