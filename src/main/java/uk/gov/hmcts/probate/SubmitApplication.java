@@ -18,12 +18,12 @@ public class SubmitApplication {
         SpringApplication.run(SubmitApplication.class, args);
     }
 
-    @Bean
+ /*   @Bean
     @ConfigurationProperties(prefix = "mail")
     public JavaMailSenderImpl javaMailSender() {
         return new JavaMailSenderImpl();
     }
-
+*/
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
