@@ -10,7 +10,7 @@ services:
     environment:
       - SERVER_PORT=8181
       - PROBATE_MAIL_HOST=probate-postfix
-      - PROBATE_MAIL_PORT=33
+      - PROBATE_MAIL_PORT=25
       - PROBATE_MAIL_USERNAME=localhost
       - PROBATE_MAIL_PASSWORD=Pr0bate!23
       - PROBATE_MAIL_SENDER=probate-application@hmcts.net
@@ -31,4 +31,4 @@ services:
         - maildomain=localhost
         - smtp_user=localhost:Pr0bate
     ports:
-      - 44:44
+      - 25:25
