@@ -8,6 +8,7 @@ import au.com.dius.pact.provider.junit.target.TestTarget;
 import au.com.dius.pact.provider.spring.SpringRestPactRunner;
 import org.json.JSONException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,6 +41,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESEN
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {
         "server.port=8125", "spring.application.name=PACT_TEST"
 })
+@Ignore
 public class SubmissionsControllerProviderTest extends ControllerProviderTest {
 
     private static final String APPLICANT_EMAIL = "jsnow@bbc.co.uk";
