@@ -1,6 +1,6 @@
 dependencies:
   - name: java
-    version: ~2.3.1
+    version: ~2.7.1
     repository: '@hmctspublic'
   - name: ccd-elasticsearch
     version: ~0.5.0
