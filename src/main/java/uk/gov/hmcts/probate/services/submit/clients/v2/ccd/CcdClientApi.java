@@ -133,8 +133,8 @@ public class CcdClientApi implements CoreCaseDataService {
     @Override
     public Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) {
         log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
-        log.info("securityDTO.getUserId(): {}", securityDTO.getUserId());
-        log.info("JurisdictionId.PROBATE.name(): {}", securityDTO.getUserId());
+        log.info("securityDTO.getUserId: {}", securityDTO.getUserId());
+        log.info("JurisdictionId.PROBATE.name: {}", JurisdictionId.PROBATE.name());
 
         List<CaseDetails> caseDetails = coreCaseDataApi.searchForCitizen(
                 securityDTO.getAuthorisation(),
