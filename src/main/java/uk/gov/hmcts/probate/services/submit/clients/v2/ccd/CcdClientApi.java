@@ -67,7 +67,7 @@ public class CcdClientApi implements CoreCaseDataService {
         );
         return createCaseResponse(caseDetails);
     }
-    
+
     @Override
     public ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
                                          SecurityDTO securityDTO) {
@@ -133,6 +133,9 @@ public class CcdClientApi implements CoreCaseDataService {
     @Override
     public Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) {
         log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+        log.info("securityDTO.getUserId(): {}", securityDTO.getUserId());
+        log.info("JurisdictionId.PROBATE.name(): {}", securityDTO.getUserId());
+
         List<CaseDetails> caseDetails = coreCaseDataApi.searchForCitizen(
                 securityDTO.getAuthorisation(),
                 securityDTO.getServiceAuthorisation(),
