@@ -194,7 +194,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
-    compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
+    compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.4.RELEASE'
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     compile("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
         force = true
