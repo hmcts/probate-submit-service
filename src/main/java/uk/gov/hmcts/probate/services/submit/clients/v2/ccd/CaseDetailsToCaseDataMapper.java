@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -16,10 +17,9 @@ public class CaseDetailsToCaseDataMapper {
     private final ObjectMapper objectMapper;
 
     public CaseData map(CaseDetails caseDetails) {
-        Map<String, Object> caseData = ImmutableMap.<String, Object>builder()
-                .putAll(caseDetails.getData())
-                .put("type", caseDetails.getCaseTypeId())
-                .build();
+        Map<String, Object> caseData = new HashMap<String, Object>();
+        caseData.put("type", caseDetails.getCaseTypeId());
+        caseData.putAll(caseDetails.getData());
         return objectMapper.convertValue(caseData, CaseData.class);
     }
 }
