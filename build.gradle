@@ -45,13 +45,13 @@ jacoco {
     toolVersion = '0.8.0'
 }
 
-//jacocoTestReport {
-//    group = "Reporting"
-//    reports {
-//        xml.enabled false
-//        html.destination "${buildDir}/reports/jacoco"
-//    }
-//}
+jacocoTestReport {
+    group = "Reporting"
+    reports {
+        xml.enabled false
+        html.destination "${buildDir}/reports/jacoco"
+    }
+}
 
 tasks.withType(FindBugs) {
     reports {
@@ -139,6 +139,8 @@ task testComponent(type: Test) {
     description = "Runs Component Tests"
     testClassesDirs = sourceSets.testComponent.output.classesDirs
     classpath = sourceSets.testComponent.runtimeClasspath
+    reports.junitXml.destination = file("$buildDir/xml")
+    reports.html.destination = file("$buildDir/html")
 }
 
 task testUnit(type: Test) {

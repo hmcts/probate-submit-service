@@ -50,7 +50,7 @@ withPipeline("java", product, component) {
   enableSlackNotifications('#probate-jenkins')
   enableDockerBuild()
   installCharts()
-        
+
   //disableLegacyDeployment()
 
 //    before('buildinfra:prod') {
@@ -78,8 +78,8 @@ withPipeline("java", product, component) {
 ////        archiveArtifacts "build/reports/pitest/**/*.*"
 //        }
 
-    junit 'build/test-results/test/**/*.xml'
-    archiveArtifacts 'build/reports/tests/test/index.html'
+//    junit 'build/test-results/test/**/*.xml'
+//    archiveArtifacts 'build/reports/tests/test/index.html'
     publishHTML target: [
             allowMissing         : true,
             alwaysLinkToLastBuild: true,
