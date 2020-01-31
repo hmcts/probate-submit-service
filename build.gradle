@@ -101,6 +101,14 @@ sourceSets {
         }
         resources.srcDir file('src/componentTest/resources')
     }
+    testUnit {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/unitTest/java')
+        }
+        resources.srcDir file('src/unitTest/resources')
+    }
     testSmoke {
         java {
             compileClasspath += main.output
@@ -131,6 +139,12 @@ task testComponent(type: Test) {
     description = "Runs Component Tests"
     testClassesDirs = sourceSets.testComponent.output.classesDirs
     classpath = sourceSets.testComponent.runtimeClasspath
+}
+
+task testUnit(type: Test) {
+    description = "Runs Unit Tests"
+    testClassesDirs = sourceSets.testUnit.output.classesDirs
+    classpath = sourceSets.testUnit.runtimeClasspath
 }
 
 task functionalTask(type: Test) {
@@ -257,7 +271,7 @@ dependencies {
 
     testComponentCompile sourceSets.main.runtimeClasspath
     testComponentCompile sourceSets.test.runtimeClasspath
-
+    testComponentCompile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
     testComponentCompile("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "com.vaadin.external.google", module: "android-json"
     }
@@ -267,16 +281,26 @@ dependencies {
     testComponentCompile("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
         force = true
     }
-    //testComponentCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
-    //testComponentRuntime group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
     testComponentRuntime group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
-
-
-
-
-
     testComponentCompile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
     ///
+
+    testUnitCompile sourceSets.main.runtimeClasspath
+    testUnitCompile sourceSets.test.runtimeClasspath
+    testUnitCompile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
+    testUnitCompile("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "com.vaadin.external.google", module: "android-json"
+    }
+    testUnitCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+    testUnitCompile group: 'org.springframework.security', name: 'spring-security-test'
+    testUnitCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
+    testUnitCompile("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+        force = true
+    }
+    testUnitRuntime group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
+    testUnitCompile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
+    ///
+
 
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity

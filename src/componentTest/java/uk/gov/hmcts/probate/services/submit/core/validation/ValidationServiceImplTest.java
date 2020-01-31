@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.unit;
+package uk.gov.hmcts.probate.services.submit.core.validation;
 
 import org.assertj.core.util.Sets;
 import org.junit.Before;

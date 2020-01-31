@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.unit;
+package uk.gov.hmcts.probate.services.submit.core;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
