@@ -245,6 +245,46 @@ public class CaveatExpiryServiceImplTest {
             probateCaseDetails.getCaseData(), eventId, securityDTO, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
     }
 
+    @Test
+    public void shouldFailExpireCaveatsWarningValidation() {
+        CaseState caseState = CAVEAT_WARNING_VALIDATION;
+        EventId eventId = CAVEAT_APPLY_FOR_WARNNG_VALIDATION;
+
+        CaseInfo caseInfo = CaseInfo.builder().state(caseState)
+            .caseId(CAVEAT_ID)
+            .build();
+        CaveatData caseData = CaveatData.builder().build();
+        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
+            .caseInfo(caseInfo)
+            .caseData(caseData)
+            .build();
+        CaseDetails caseDetails = CaseDetails.builder().state(caseState.name())
+            .build();
+        SearchResult searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
+
+        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
+        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
+        when(coreCaseDataApi.searchCases(
+            securityDTO.getAuthorisation(),
+            securityDTO.getServiceAuthorisation(),
+            CaseType.CAVEAT.getName(),
+            SEARCH_QUERY)).thenReturn(searchResult);
+        RuntimeException e = new RuntimeException("Problem updating caveat");
+        when(coreCaseDataService.updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
+            probateCaseDetails.getCaseData(), eventId, securityDTO, EVENT_DESCRIPTOR_CAVEAT_EXPIRED)).thenThrow(e);
+        
+        List<ProbateCaseDetails> expiredCaveats = caveatExpiryService.expireCaveats(EXPIRY_DATE);
+
+        assertThat(expiredCaveats, is(notNullValue()));
+        assertThat(expiredCaveats.size(), is(1));
+        assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName(), containsString("CaveatData"));
+        assertThat(((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry(), is(true));
+        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
+    }
+
     @Test(expected = IllegalStateException.class)
     public void shouldThrowExceptionWhenExpiringCaveatInInvalidState() {
         CaseState caseState = CAVEAT_RAISED;

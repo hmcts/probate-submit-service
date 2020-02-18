@@ -11,6 +11,7 @@ import uk.gov.hmcts.probate.services.submit.services.CaveatExpiryService;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
@@ -60,12 +61,21 @@ public class CaveatExpiryServiceImpl implements CaveatExpiryService {
         for (ProbateCaseDetails probateCaseDetails : expiredCaveats) {
             EventId eventIdToStart = getEventIdForCaveatToExpireGivenPreconditionState(probateCaseDetails.getCaseInfo().getState());
             updateAutoExpiredCaveat(((CaveatData)probateCaseDetails.getCaseData()));
-            coreCaseDataService.updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(), probateCaseDetails.getCaseData(), eventIdToStart,
+            updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(), probateCaseDetails.getCaseData(), eventIdToStart,
                 securityDTO, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
             log.info("Caveat autoExpired: {}", probateCaseDetails.getCaseInfo().getCaseId());
         }
 
         return expiredCaveats;
+    }
+
+    private void updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventIdToStart, SecurityDTO securityDTO, 
+                                        String eventDescriptorCaveatExpired) {
+        try {
+            coreCaseDataService.updateCaseAsCaseworker(caseId, caseData, eventIdToStart, securityDTO, eventDescriptorCaveatExpired);
+        } catch (RuntimeException e) {
+            log.info("Caveat autoExpire failure for case: {}, due to {}", caseId, e.getMessage());
+        }
     }
 
     private ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {
