@@ -49,7 +49,7 @@ withPipeline("java", product, component) {
   enableSlackNotifications('#probate-jenkins')
   installCharts()
 
-  //disableLegacyDeployment()
+  disableLegacyDeploymentOnAAT()
 
     after('test') {
 //        try {
