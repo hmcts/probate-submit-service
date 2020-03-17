@@ -176,7 +176,7 @@ repositories {
 }
 
 def versions = [
-        logging                         : '5.1.0',
+        logging                         : '5.1.1',
         serviceAuthProviderClient       : '3.0.0',
         authCheckerLib                  : '2.1.2',
         ccdClient                       : '4.6.4',

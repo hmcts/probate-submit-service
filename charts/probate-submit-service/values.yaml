@@ -6,12 +6,12 @@ tags:
 java:
   applicationPort: 8181
   ingressHost: probate-submit-service-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+  aadIdentityName: probate
   environment:
     REFORM_TEAM: probate
     REFORM_SERVICE_NAME: submit-service
     MAIL_JAVAMAILPROPERTIES_MAIL_SMTP_SSL_ENABLE: false
     MAIL_JAVAMAILPROPERTIES_MAIL_SMTP_AUTH: false
-    SERVICES_CORECASEDATA_ENABLED: true
     MAIL_JAVAMAILPROPERTIES_SUBJECT: "Probate Application"
     PACT_BROKER_URL: pact-broker.platform.hmcts.net
     PACT_BROKER_PORT: 80
@@ -24,8 +24,7 @@ java:
     SERVICES_CORECASEDATA_ENABLED : true
     SPRING_APPLICATION_JSON : '{"registries":[{"address":"Principal Registry of the Family Division (PRFD)\nHMCTS Probate\nPO Box 12625\nHarlow\nCM20 9QE","name":"ctsc"}]}'
   keyVaults:
-    "probate":
-      resourceGroup: probate
+    probate:
       secrets:
         - s2s-probate-backend
         - AppInsightsInstrumentationKey
