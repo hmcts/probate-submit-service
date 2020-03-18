@@ -3,5 +3,5 @@ provider "azurerm" {
 }
 
 locals {
-  vaultName = "${var.raw_product}-${var.env}"
+  vaultName = "${var.product}-${var.env}"
 }
