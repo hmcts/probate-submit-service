@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate.functional;
 
+import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import net.thucydides.junit.spring.SpringIntegration;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
+@RunWith(SpringIntegrationSerenityRunner.class)
 @ContextConfiguration(classes = FunctionalTestContextConfiguration.class)
 @Ignore
 public class IntegrationTestBase {
