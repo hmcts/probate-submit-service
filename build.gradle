@@ -121,7 +121,7 @@ sourceSets {
     }
 }
 
-task functionalTask(type: Test) {
+task functional(type: Test) {
     description = "Runs functional Tests"
     testClassesDirs = sourceSets.testFunctional.output.classesDirs
     testClassesDirs += sourceSets.testFunctional.output.classesDirs
