@@ -7,11 +7,9 @@ import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.parsing.Parser;
-import net.serenitybdd.junit.runners.SerenityRunner;
-import net.serenitybdd.rest.SerenityRest;
+import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -24,8 +22,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-@RunWith(SerenityRunner.class)
-@Ignore //NOSONAR
+@RunWith(SpringIntegrationSerenityRunner.class)
 public class IntestacyGrantOfRepresentationTests extends IntegrationTestBase {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -57,7 +54,7 @@ public class IntestacyGrantOfRepresentationTests extends IntegrationTestBase {
                 .roles(Arrays.asList(Role.builder().code("citizen").build()))
                 .build();
 
-        SerenityRest.given()
+        RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(Headers.headers(new Header("Content-Type", ContentType.JSON.toString())))
                 .baseUri(idamUrl)
@@ -81,7 +78,7 @@ public class IntestacyGrantOfRepresentationTests extends IntegrationTestBase {
         String draftJsonStr = utils.getJsonFromFile("intestacyGrantOfRepresentation_partial_draft.json");
         draftJsonStr = draftJsonStr.replace(EMAIL_PLACEHOLDER, email);
 
-        String responseJsonStr = SerenityRest.given()
+        String responseJsonStr = RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders(email, PASSWORD))
                 .body(draftJsonStr)
@@ -103,7 +100,7 @@ public class IntestacyGrantOfRepresentationTests extends IntegrationTestBase {
         String draftJsonStr = utils.getJsonFromFile("intestacyGrantOfRepresentation_full.json");
         draftJsonStr = draftJsonStr.replace(EMAIL_PLACEHOLDER, email);
 
-        SerenityRest.given()
+        RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders(email, PASSWORD))
                 .body(draftJsonStr)
@@ -121,7 +118,7 @@ public class IntestacyGrantOfRepresentationTests extends IntegrationTestBase {
         String submitJsonStr = utils.getJsonFromFile("intestacyGrantOfRepresentation_full.json");
         submitJsonStr = submitJsonStr.replace(EMAIL_PLACEHOLDER, email);
 
-        SerenityRest.given()
+        RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders(email, PASSWORD))
                 .body(submitJsonStr)
@@ -138,7 +135,7 @@ public class IntestacyGrantOfRepresentationTests extends IntegrationTestBase {
     private void shouldUpdatePaymentSuccessfully() {
         String paymentJsonStr = utils.getJsonFromFile("intestacyGrantOfRepresentation_payment.json");
 
-        SerenityRest.given()
+        RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders(email, PASSWORD))
                 .body(paymentJsonStr)
