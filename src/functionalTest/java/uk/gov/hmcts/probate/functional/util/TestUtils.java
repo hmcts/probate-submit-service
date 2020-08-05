@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.functional;
+package uk.gov.hmcts.probate.functional.util;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
@@ -7,19 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.ResourceUtils;
+import uk.gov.hmcts.probate.functional.TestContextConfiguration;
+import uk.gov.hmcts.probate.functional.TestTokenGenerator;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-@ContextConfiguration(classes = FunctionalTestContextConfiguration.class)
+@ContextConfiguration(classes = TestContextConfiguration.class)
 @Component
-public class FunctionalTestUtils {
+public class TestUtils {
 
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String AUTHORIZATION = "Authorization";
     @Autowired
-    protected FunctionalTestTokenGenerator functionalTestTokenGenerator;
+    protected TestTokenGenerator testTokenGenerator;
 
 
     public String getJsonFromFile(String fileName) {
@@ -47,8 +49,8 @@ public class FunctionalTestUtils {
 
     public Headers getHeaders(String userName, String password) {
         return Headers.headers(
-                new Header("ServiceAuthorization", functionalTestTokenGenerator.generateServiceAuthorisation()),
+                new Header("ServiceAuthorization", testTokenGenerator.generateServiceAuthorisation()),
                 new Header(CONTENT_TYPE, ContentType.JSON.toString()),
-                new Header(AUTHORIZATION, functionalTestTokenGenerator.generateAuthorisation(userName, password)));
+                new Header(AUTHORIZATION, testTokenGenerator.generateAuthorisation(userName, password)));
     }
 }
