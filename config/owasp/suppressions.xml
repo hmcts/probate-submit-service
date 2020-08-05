@@ -50,6 +50,8 @@
         <cve>CVE-2019-17563</cve>
         <cve>CVE-2020-1935</cve>
         <cve>CVE-2020-1938</cve>
+        <cve>CVE-2020-13934</cve>
+        <cve>CVE-2020-13935</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -956,6 +958,6 @@
    file name: bcprov-jdk15on-1.60.jar
    ]]></notes>
         <gav regex="true">^org\.bouncycastle:bcprov-jdk15on:.*$</gav>
-        <cpe>cpe:/a:oracle:jdk</cpe>
+        <cpe>cpe:/Sa:oracle:jdk</cpe>
     </suppress>
 </suppressions>
