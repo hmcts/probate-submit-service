@@ -14,7 +14,7 @@ import uk.gov.hmcts.reform.authorisation.generators.ServiceAuthTokenGenerator;
 @Configuration
 @ComponentScan("uk.gov.hmcts.probate.functional")
 @PropertySource("file:src/functionalTest/resources/application.properties")
-public class FunctionalTestContextConfiguration {
+public class TestContextConfiguration {
 
     @Bean
     public ServiceAuthTokenGenerator serviceAuthTokenGenerator(@Value("${service.auth.provider.base.url}") String s2sUrl,
