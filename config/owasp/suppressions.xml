@@ -958,6 +958,6 @@
    file name: bcprov-jdk15on-1.60.jar
    ]]></notes>
         <gav regex="true">^org\.bouncycastle:bcprov-jdk15on:.*$</gav>
-        <cpe>cpe:/a:oracle:jdk</cpe>
+        <cpe>cpe:/Sa:oracle:jdk</cpe>
     </suppress>
 </suppressions>
