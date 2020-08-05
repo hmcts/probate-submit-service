@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.functional;
+package uk.gov.hmcts.probate.functional.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

@@ -10,7 +10,7 @@ import uk.gov.hmcts.reform.authorisation.generators.ServiceAuthTokenGenerator;
 import java.util.Base64;
 
 @Component
-public class FunctionalTestTokenGenerator {
+public class TestTokenGenerator {
 
     @Value("${idam.oauth2.client.id}")
     private String clientId;
@@ -63,9 +63,9 @@ public class FunctionalTestTokenGenerator {
 
     private String generateClientToken(String userName, String password) {
         String code = generateClientCode(userName, password);
-        String token = RestAssured.given().post(idamUserBaseUrl + "/oauth2/token?code=" + code +
+        String token = RestAssured.given().post(idamUserBaseUrl + "/oauth2/token?" + "code=" + code +
                 "&client_secret=" + secret +
-                "&client_id=probate" +
+                "&client_id=" + clientId +
                 "&redirect_uri=" + redirectUri +
                 "&grant_type=authorization_code")
                 .body().path("access_token");
@@ -76,7 +76,7 @@ public class FunctionalTestTokenGenerator {
         final String encoded = Base64.getEncoder().encodeToString((userName + ":" + password).getBytes());
         return RestAssured.given().baseUri(idamUserBaseUrl)
                 .header("Authorization", "Basic " + encoded)
-                .post("/oauth2/authorize?response_type=code&client_id=probate&redirect_uri=" + redirectUri)
+                .post("/oauth2/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri)
                 .body().path("code");
 
     }

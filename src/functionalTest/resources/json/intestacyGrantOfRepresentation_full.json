@@ -48,9 +48,6 @@
     "ihtGrossValue": "100000",
     "ihtNetValue": "100000",
     "ihtReferenceNumber": "GOT123456",
-    "declaration": {
-      "declarationCheckbox": "Yes"
-    },
     "extraCopiesOfGrant": 5,
     "outsideUKGrantCopies": 6,
     "payments": [
