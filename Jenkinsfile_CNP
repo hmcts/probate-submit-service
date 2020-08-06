@@ -19,7 +19,7 @@ def secrets = [
                 secret('probateUserAuthUrl', 'USER_AUTH_PROVIDER_OAUTH2_URL'),
                 secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI'),
                 secret('idamRedirectUrl', 'IDAM_REDIRECT_URL'),
-                secret('userAuthProviderOauth2Url', 'USER_AUTH_PROVIDER_OAUTH2_URL')
+                secret('userAuthProviderOauth2Url', 'IDAM_USER_AUTH_PROVIDER_OAUTH2_URL')
         ],
         's2s-${env}'      : [
                 secret('microservicekey-ccd-data', 'DATA_STORE_S2S_KEY'),
