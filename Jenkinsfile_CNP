@@ -8,7 +8,6 @@ String component = "submit-service"
 
 def secrets = [
         'probate-${env}'      : [
-                secret('probatePersistenceUrl', 'TEST_PERSISTENCE_URL'),
                 secret('probateBusinessUrl', 'TEST_BUSINESS_URL'),
                 secret('s2sAuthTotpSecret', 'S2S_AUTH_TOTP_SECRET'),
                 secret('probateIdamSecret', 'IDAM_SECRET'),
@@ -17,9 +16,7 @@ def secrets = [
                 secret('probateCcdDataStoreApi', 'CCD_DATA_STORE_API_URL'),
                 secret('serviceAuthProviderBaseUrl', 'SERVICE_AUTH_PROVIDER_BASE_URL'),
                 secret('probateUserAuthUrl', 'USER_AUTH_PROVIDER_OAUTH2_URL'),
-                secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI'),
-                secret('idamRedirectUrl', 'IDAM_REDIRECT_URL'),
-                secret('userAuthProviderOauth2Url', 'IDAM_USER_AUTH_PROVIDER_OAUTH2_URL')
+                secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI')
         ],
         's2s-${env}'      : [
                 secret('microservicekey-ccd-data', 'DATA_STORE_S2S_KEY'),
