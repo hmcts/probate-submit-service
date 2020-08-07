@@ -15,9 +15,6 @@ public class TestTokenGenerator {
     @Value("${idam.oauth2.client.id}")
     private String clientId;
 
-    @Value("${idam.oauth2.client.secret}")
-    private String clientSecret;
-
     @Value("${idam.oauth2.redirect_uri}")
     private String redirectUri;
 
