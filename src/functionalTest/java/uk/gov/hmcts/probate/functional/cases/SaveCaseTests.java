@@ -53,10 +53,9 @@ public class SaveCaseTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(Headers.headers(new Header("Content-Type", ContentType.JSON.toString())))
-                .baseUri(idamUrl)
                 .body(objectMapper.writeValueAsString(idamData))
                 .when()
-                .post("/testing-support/accounts")
+                .post(idamUrl + "/testing-support/accounts")
                 .then()
                 .statusCode(201);
     }
