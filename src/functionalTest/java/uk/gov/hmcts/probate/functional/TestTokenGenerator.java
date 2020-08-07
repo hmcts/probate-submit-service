@@ -1,13 +1,19 @@
 package uk.gov.hmcts.probate.functional;
 
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.probate.functional.model.IdamData;
+import uk.gov.hmcts.probate.functional.model.Role;
 import uk.gov.hmcts.reform.authorisation.generators.ServiceAuthTokenGenerator;
 
+import java.util.Arrays;
 import java.util.Base64;
+
+import static io.restassured.RestAssured.given;
 
 @Component
 public class TestTokenGenerator {
@@ -18,48 +24,41 @@ public class TestTokenGenerator {
     @Value("${idam.oauth2.redirect_uri}")
     private String redirectUri;
 
-    @Value("${service.name}")
-    private String serviceName;
-
-    @Value("${service.auth.provider.base.url}")
-    private String baseServiceAuthUrl;
-
-    @Value("${user.auth.provider.oauth2.url}")
-    private String baseServiceOauth2Url;
-    String clientToken;
-
-    @Value("${env}")
-    private String environment;
-
     @Value("${idam.secret}")
     private String secret;
 
     @Value("${user.auth.provider.oauth2.url}")
     private String idamUserBaseUrl;
 
-    private String userToken;
-
     @Autowired
     private ServiceAuthTokenGenerator tokenGenerator;
+
+    private String EMAIL = "megan@test.com";
+    private String PASSWORD = "Password123";
 
     public String generateServiceAuthorisation() {
         return tokenGenerator.generate();
     }
 
-    public String getUserId() {
-        return "" + RestAssured.given()
-                .header("Authorization", userToken)
-                .get(idamUserBaseUrl + "/details")
-                .body()
-                .path("id");
+    public void createNewUser() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        IdamData idamData = IdamData.builder().email(EMAIL).forename("forename").surname("surname")
+                .password(PASSWORD).roles(Arrays.asList(Role.builder().code("citizen").build()))
+                .build();
+
+        given().headers("Content-type", "application/json")
+                .relaxedHTTPSValidation()
+                .body(objectMapper.writeValueAsString(idamData))
+                .post(idamUserBaseUrl + "/testing-support/accounts");
     }
 
-    public String generateAuthorisation(String userName, String password) {
-        return generateClientToken(userName, password);
+    public String generateAuthorisation() {
+        return generateClientToken();
     }
 
-    private String generateClientToken(String userName, String password) {
-        String code = generateClientCode(userName, password);
+    private String generateClientToken() {
+        String code = generateClientCode();
         String token = RestAssured.given().post(idamUserBaseUrl + "/oauth2/token?" + "code=" + code +
                 "&client_secret=" + secret +
                 "&client_id=" + clientId +
@@ -69,8 +68,8 @@ public class TestTokenGenerator {
         return token;
     }
 
-    private String generateClientCode(String userName, String password) {
-        final String encoded = Base64.getEncoder().encodeToString((userName + ":" + password).getBytes());
+    private String generateClientCode() {
+        final String encoded = Base64.getEncoder().encodeToString((EMAIL + ":" + PASSWORD).getBytes());
         return RestAssured.given().baseUri(idamUserBaseUrl)
                 .header("Authorization", "Basic " + encoded)
                 .post("/oauth2/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri)
