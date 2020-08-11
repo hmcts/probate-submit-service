@@ -27,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = PaymentsController.class)
-@AutoConfigureMockMvc(addFilters = false)
 public class PaymentsControllerTest {
 
     private static final String PAYMENTS_URL = "/payments";
