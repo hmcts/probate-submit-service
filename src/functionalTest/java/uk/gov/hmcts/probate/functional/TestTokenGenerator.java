@@ -30,11 +30,14 @@ public class TestTokenGenerator {
     @Value("${user.auth.provider.oauth2.url}")
     private String idamUserBaseUrl;
 
+    @Value("${idam.username}")
+    private String email;
+
+    @Value("${idam.password}")
+    private String password;
+
     @Autowired
     private ServiceAuthTokenGenerator tokenGenerator;
-
-    private String EMAIL = "megan@test.com";
-    private String PASSWORD = "Password123";
 
     public String generateServiceAuthorisation() {
         return tokenGenerator.generate();
@@ -43,8 +46,8 @@ public class TestTokenGenerator {
     public void createNewUser() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        IdamData idamData = IdamData.builder().email(EMAIL).forename("forename").surname("surname")
-                .password(PASSWORD).roles(Arrays.asList(Role.builder().code("citizen").build()))
+        IdamData idamData = IdamData.builder().email(email).forename("forename").surname("surname")
+                .password(password).roles(Arrays.asList(Role.builder().code("citizen").build()))
                 .build();
 
         given().headers("Content-type", "application/json")
@@ -69,7 +72,7 @@ public class TestTokenGenerator {
     }
 
     private String generateClientCode() {
-        final String encoded = Base64.getEncoder().encodeToString((EMAIL + ":" + PASSWORD).getBytes());
+        final String encoded = Base64.getEncoder().encodeToString((email + ":" + password).getBytes());
         return RestAssured.given().baseUri(idamUserBaseUrl)
                 .header("Authorization", "Basic " + encoded)
                 .post("/oauth2/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri)
