@@ -172,6 +172,20 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
+    file name: spring-security-core-5.2.1.RELEASE.jar
+    ]]></notes>
+        <gav regex="true">^org\.springframework\.security:spring-security-core:.*$</gav>
+        <cve>CVE-2020-5407</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+    file name: spring-core-5.2.1.RELEASE.jar
+    ]]></notes>
+        <gav regex="true">^org\.springframework:spring-core:.*$</gav>
+        <cve>CVE-2020-5397</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
    file name: tomcat-embed-websocket-9.0.12.jar
    ]]></notes>
         <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-websocket:.*$</gav>
