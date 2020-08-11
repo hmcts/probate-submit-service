@@ -166,6 +166,7 @@ def versions = [
         pact_version                    : '3.5.24',
         probateCommons                  : '1.0.6.1_PRO-7229',
         lombok                          : '1.18.12',
+        jackson                         : '2.10.2',
         feignHttpClient                 : '10.2.3'
 ]
 
@@ -177,9 +178,11 @@ dependencies {
     compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    compile("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
-        force = true
-    }
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
+
     compile group: 'io.github.openfeign', name: 'feign-httpclient', version: versions.feignHttpClient
 
 
@@ -215,9 +218,7 @@ dependencies {
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
     testCompile group: 'org.springframework.security', name: 'spring-security-test'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
-    testCompile("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
-        force = true
-    }
+    testCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
     testCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
     testRuntime group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
     testRuntime group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
@@ -230,9 +231,8 @@ dependencies {
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
     testFunctionalCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
     testFunctionalCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.1'
-    testFunctionalCompile("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
-        force = true
-    }
+    testFunctionalCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
+
     testFunctionalCompile sourceSets.main.runtimeClasspath
     testFunctionalCompile sourceSets.test.runtimeClasspath
 
@@ -242,9 +242,7 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
     testSmokeCompile sourceSets.main.runtimeClasspath
     testSmokeCompile sourceSets.test.runtimeClasspath
-    testSmokeCompile("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
-        force = true
-    }
+    testSmokeCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
 
     testContractCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
     testContractCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
@@ -252,9 +250,8 @@ dependencies {
     testContractCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
     testContractCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
     testContractCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.1'
-    testContractCompile("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
-        force = true
-    }
+    testContractCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
+
     testContractCompile sourceSets.main.runtimeClasspath
     testContractCompile sourceSets.test.runtimeClasspath
 
