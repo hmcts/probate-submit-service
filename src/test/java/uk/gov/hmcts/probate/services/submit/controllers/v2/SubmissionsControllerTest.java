@@ -38,7 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = {SubmissionsController.class}, secure = false)
+@WebMvcTest(value = SubmissionsController.class)
+@AutoConfigureMockMvc(secure = false)
 public class SubmissionsControllerTest {
 
     private static final String SUBMISSIONS_URL = "/submissions";

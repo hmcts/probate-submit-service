@@ -46,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = {CasesController.class}, secure = false)
+@WebMvcTest(excludeAutoConfiguration = SecurityAutoConfiguration.class)
 public class
 CasesControllerTest {
 
