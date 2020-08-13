@@ -250,7 +250,7 @@ dependencies {
 
     testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
     testCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.6.2")
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
     testSmokeCompile sourceSets.main.runtimeClasspath
     testSmokeCompile sourceSets.test.runtimeClasspath
