@@ -17,11 +17,11 @@ plugins {
     id 'info.solidsoft.pitest' version '1.3.0'
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id 'au.com.dius.pact' version '3.5.24'
+    id 'jacoco'
 }
 
 apply plugin: 'java'
 apply plugin: 'org.sonarqube'
-apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 apply plugin: 'net.serenity-bdd.aggregator'
 
@@ -36,23 +36,11 @@ group = 'uk.gov.hmcts.probate'
 version = "4.1.0"
 mainClassName = 'uk.gov.hmcts.probate.SubmitApplication'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 jacoco {
-    toolVersion = '0.8.0'
-}
-
-tasks.withType(FindBugs) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
-
-findbugs {
-    ignoreFailures = true
-    reportLevel = "low"
+    toolVersion = '0.8.2'
 }
 
 sonarqube {
@@ -216,6 +204,8 @@ dependencies {
     compile group: 'org.pitest', name: 'pitest', version: '1.3.2'
     compile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.3.0'
     compile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.1'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0'
 
     compileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group:'org.projectlombok', name:'lombok', version: versions.lombok
@@ -293,7 +283,7 @@ dependencies {
     testContractAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
 }
 
-compileJava {
+tasks.withType(JavaCompile) {
     options.compilerArgs << '-parameters'
 }
 
