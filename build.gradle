@@ -186,7 +186,8 @@ def versions = [
         serentity                       : '2.0.17',
         pact_version                    : '3.5.24',
         probateCommons                  : '1.0.6.1_PRO-7229',
-        feignHttpClient                 : '10.2.3'
+        feignHttpClient                 : '10.2.3',
+        lombok                          : '1.18.8'
 ]
 
 
@@ -226,8 +227,8 @@ dependencies {
     compile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.3.0'
     compile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
 
-    compileOnly 'org.projectlombok:lombok:1.18.8'
-    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+    compileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
+    annotationProcessor group:'org.projectlombok', name:'lombok', version: versions.lombok
 
     testCompile("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "com.vaadin.external.google", module: "android-json"
@@ -243,8 +244,6 @@ dependencies {
     testRuntime group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
     testCompile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
 
-
-
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serentity
@@ -254,8 +253,8 @@ dependencies {
     testFunctionalCompile("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
         force = true
     }
-    testFunctionalCompileOnly 'org.projectlombok:lombok:1.18.8'
-    testFunctionalAnnotationProcessor 'org.projectlombok:lombok:1.18.8'
+    testFunctionalCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
+    testFunctionalAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testFunctionalCompile sourceSets.main.runtimeClasspath
     testFunctionalCompile sourceSets.test.runtimeClasspath
 
@@ -300,8 +299,8 @@ dependencies {
     testContractCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
     testContractRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
     testContractImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
-    testContractCompileOnly 'org.projectlombok:lombok:1.18.8'
-    testContractAnnotationProcessor 'org.projectlombok:lombok:1.18.8'
+    testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
+    testContractAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
 }
 
 compileJava {
