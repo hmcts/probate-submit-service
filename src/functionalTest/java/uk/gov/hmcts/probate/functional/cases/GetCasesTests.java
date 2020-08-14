@@ -18,23 +18,27 @@ public class GetCasesTests extends IntegrationTestBase {
     private String email;
 
     private static final String EMAIL_PLACEHOLDER = "XXXXXXXXXX";
+    private Boolean setUp = false;
 
     private String caseId;
 
     @Before
-    public void setUpCases() {
-        String caseData = utils.getJsonFromFile("intestacyGrantOfRepresentation_partial_draft.json");
+    public void init() {
+        if (!setUp) {
+            String caseData = utils.getJsonFromFile("intestacyGrantOfRepresentation_partial_draft.json");
 
-        caseData = caseData.replace(EMAIL_PLACEHOLDER, email);
-        Response response = RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
-                .body(caseData)
-                .when()
-                .post("/cases/initiate");
+            caseData = caseData.replace(EMAIL_PLACEHOLDER, email);
+            Response response = RestAssured.given()
+                    .relaxedHTTPSValidation()
+                    .headers(utils.getHeaders())
+                    .body(caseData)
+                    .when()
+                    .post("/cases/initiate");
 
-        JsonPath jsonPath = JsonPath.from(response.getBody().asString());
-        caseId = jsonPath.get("caseInfo.caseId");
+            JsonPath jsonPath = JsonPath.from(response.getBody().asString());
+            caseId = jsonPath.get("caseInfo.caseId");
+            setUp = true;
+        }
     }
 
     @Test
