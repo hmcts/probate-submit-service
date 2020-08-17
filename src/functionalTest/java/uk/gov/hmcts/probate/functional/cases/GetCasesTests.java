@@ -147,17 +147,21 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByCaseIdAsRequestParamReturns200() {
-//        RestAssured.given()
-//                .relaxedHTTPSValidation()
-//                .headers(utils.getHeaders())
-//                .queryParam("caseId", caseId)
-//                .when()
-//                .get("/cases")
-//                .then()
-//                .assertThat()
-//                .statusCode(200)
-//                .extract().jsonPath().prettify();
+    public void getCaseByCaseIdAsRequestParamReturns200() throws InterruptedException {
+        int statusCode = 0;
+
+        for (int i = 5; i > 0 && statusCode != 200; i--) {
+            Response response = RestAssured.given()
+                    .relaxedHTTPSValidation()
+                    .headers(utils.getHeaders())
+                    .queryParam("caseId", caseId)
+                    .when()
+                    .get("/cases");
+            statusCode = response.getStatusCode();
+            Thread.sleep(1000);
+        }
+
+        assertEquals(200, statusCode);
     }
 
     @Test
