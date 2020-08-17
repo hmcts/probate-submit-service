@@ -18,14 +18,13 @@ public class GetCasesTests extends IntegrationTestBase {
     @Value("${idam.username}")
     private String email;
 
-    private Boolean setUp = false;
-    private static final String EMAIL_PLACEHOLDER = "XXXXXXXXXX";
+    private String caseId = "";
 
-    private String caseId;
+    private static final String EMAIL_PLACEHOLDER = "XXXXXXXXXX";
 
     @Before
     public void init() {
-        if (!setUp) {
+        if (caseId == "") {
             String caseData = utils.getJsonFromFile("intestacyGrantOfRepresentation_partial_draft.json");
 
             caseData = caseData.replace(EMAIL_PLACEHOLDER, email);
@@ -37,8 +36,6 @@ public class GetCasesTests extends IntegrationTestBase {
                     .post("/cases/initiate");
             JsonPath jsonPath = JsonPath.from(response.getBody().asString());
             caseId = jsonPath.get("caseInfo.caseId");
-
-            setUp = true;
         }
     }
 
