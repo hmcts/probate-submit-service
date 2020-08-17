@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
+
 import static junit.framework.TestCase.assertEquals;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
