@@ -1,7 +1,6 @@
 package uk.gov.hmcts.probate.functional.cases;
 
 import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.apache.commons.lang.RandomStringUtils;
@@ -20,24 +19,17 @@ public class GetCasesTests extends IntegrationTestBase {
     @Value("${idam.username}")
     private String email;
 
-    private String caseId = "";
+    private String caseId;
 
-    private static final String EMAIL_PLACEHOLDER = "XXXXXXXXXX";
+    private Boolean setUp = false;
 
     @Before
     public void init() {
-        if (caseId == "") {
+        if (!setUp) {
             String caseData = utils.getJsonFromFile("intestacyGrantOfRepresentation_partial_draft.json");
+            caseId = utils.createTestCase(caseData);
 
-            caseData = caseData.replace(EMAIL_PLACEHOLDER, email);
-            Response response = RestAssured.given()
-                    .relaxedHTTPSValidation()
-                    .headers(utils.getHeaders())
-                    .body(caseData)
-                    .when()
-                    .post("/cases/initiate");
-            JsonPath jsonPath = JsonPath.from(response.getBody().asString());
-            caseId = jsonPath.get("caseInfo.caseId");
+            setUp = true;
         }
     }
 

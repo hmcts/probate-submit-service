@@ -1,10 +1,14 @@
 package uk.gov.hmcts.probate.functional.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.ResourceUtils;
@@ -20,6 +24,10 @@ import java.nio.file.Files;
 @Component
 public class TestUtils {
 
+    @Value("${idam.username}")
+    public String email;
+
+    public static final String EMAIL_PLACEHOLDER = "XXXXXXXXXX";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String AUTHORIZATION = "Authorization";
 
@@ -42,6 +50,20 @@ public class TestUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public String createTestCase(String caseData) {
+        caseData = caseData.replace(EMAIL_PLACEHOLDER, email);
+
+        Response response = RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(getHeaders())
+                .body(caseData)
+                .when()
+                .post("/cases/initiate");
+
+        JsonPath jsonPath = JsonPath.from(response.getBody().asString());
+        return jsonPath.get("caseInfo.caseId");
     }
 
     public Headers getHeaders() {

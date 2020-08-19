@@ -19,7 +19,7 @@ public class SaveCaseTests extends IntegrationTestBase {
                 .headers(utils.getHeaders())
                 .body(utils.getJsonFromFile("intestacyGrantOfRepresentation_full.json"))
                 .when()
-                .post("/cases/" + "1234-1234-1234-1234")
+                .post("/cases/" + "1234123412341234")
                 .then()
                 .assertThat()
                 .statusCode(200)

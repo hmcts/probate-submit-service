@@ -1,13 +1,11 @@
 package uk.gov.hmcts.probate.functional.cases;
 
 import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 
@@ -16,23 +14,19 @@ import static junit.framework.TestCase.assertEquals;
 @RunWith(SpringIntegrationSerenityRunner.class)
 public class ValidateCasesTests extends IntegrationTestBase {
 
-    @Value("${idam.username}")
-    private String email;
+    private Boolean setUp = false;
 
-    private static final String EMAIL_PLACEHOLDER = "XXXXXXXXXX";
-    Boolean setUp = false;
-
-    String validCaseId;
-    String invalidCaseId;
+    private String validCaseId;
+    private String invalidCaseId;
 
     @Before
     public void init() {
         if (!setUp) {
             String validCaseData = utils.getJsonFromFile("success.validateCaseData.json");
-            validCaseId = createTestCase(validCaseData);
+            validCaseId = utils.createTestCase(validCaseData);
 
             String invalidCaseData = utils.getJsonFromFile("failure.validateCaseData.json");
-            invalidCaseId = createTestCase(invalidCaseData);
+            invalidCaseId = utils.createTestCase(invalidCaseData);
 
             setUp = true;
         }
@@ -72,19 +66,5 @@ public class ValidateCasesTests extends IntegrationTestBase {
         }
 
         assertEquals(400, statusCode);
-    }
-
-    public String createTestCase(String caseData) {
-        caseData = caseData.replace(EMAIL_PLACEHOLDER, email);
-
-        Response response = RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
-                .body(caseData)
-                .when()
-                .post("/cases/initiate");
-
-        JsonPath jsonPath = JsonPath.from(response.getBody().asString());
-        return jsonPath.get("caseInfo.caseId");
     }
 }
