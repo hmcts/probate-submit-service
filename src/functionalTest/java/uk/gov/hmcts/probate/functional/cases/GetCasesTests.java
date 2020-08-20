@@ -26,7 +26,7 @@ public class GetCasesTests extends IntegrationTestBase {
     @Before
     public void init() {
         if (!setUp) {
-            String caseData = utils.getJsonFromFile("intestacyGrantOfRepresentation_partial_draft.json");
+            String caseData = utils.getJsonFromFile("success.saveCaseData.json");
             caseId = utils.createTestCase(caseData);
 
             setUp = true;

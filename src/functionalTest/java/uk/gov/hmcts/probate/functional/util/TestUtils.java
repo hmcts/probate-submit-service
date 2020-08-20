@@ -27,7 +27,7 @@ public class TestUtils {
     @Value("${idam.username}")
     public String email;
 
-    public static final String EMAIL_PLACEHOLDER = "XXXXXXXXXX";
+    public static final String EMAIL_PLACEHOLDER = "testusername@test.com";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String AUTHORIZATION = "Authorization";
 

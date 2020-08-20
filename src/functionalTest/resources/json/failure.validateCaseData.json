@@ -3,7 +3,7 @@
     "type": "GrantOfRepresentation",
     "caseType": "intestacy",
     "applicationType": "Personal",
-    "primaryApplicantEmailAddress": "XXXXXXXXXX",
+    "primaryApplicantEmailAddress": "testusername@test.com",
     "primaryApplicantForenames": "Jon",
     "primaryApplicantSurname": "Snow",
     "primaryApplicantAddress": {
