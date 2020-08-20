@@ -62,25 +62,4 @@ public class SaveCaseTests extends IntegrationTestBase {
                 .body("caseInfo.state", equalTo("Pending"))
                 .extract().jsonPath().prettify();
     }
-
-    @Test
-    public void initiateAsCaseWorkerReturns200() {
-//        RestAssured.given()
-//                .relaxedHTTPSValidation()
-//                .headers(utils.getHeaders())
-//                .body(utils.getJsonFromFile("intestacyGrantOfRepresentation_full.json"))
-//                .when()
-//                .post("/cases/initiate/caseworker")
-//                .then()
-//                .assertThat()
-//                .statusCode(200)
-//                .body("caseData", notNullValue())
-//                .body("caseInfo.caseId", notNullValue())
-//                .body("caseInfo.state", equalTo("Pending"))
-//                .extract().jsonPath().prettify();
-    }
-
-    @Test
-    public void saveCaseAsCaseWorkerReturns200() {
-    }
 }
