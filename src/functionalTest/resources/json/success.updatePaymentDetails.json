@@ -1,0 +1,133 @@
+{
+  "caseData": {
+    "type": "GrantOfRepresentation",
+    "caseType": "gop",
+    "payments": [
+      {
+        "id": "40da7b26-c4a4-4250-bfd6-9ce95e41c497",
+        "value": {
+          "date": "2020-08-19",
+          "status": "Initiated",
+          "reference": "RC-1597-8259-5048-6628"
+        }
+      }
+    ],
+    "softStop": "No",
+    "ihtFormId": "NA",
+    "declaration": {
+      "accept": "I confirm that I will administer the estate of the person who died according to law, and that my application is truthful.",
+      "confirm": "I confirm that I will administer the estate of Deceased fn Deceased ln, according to law. I will:",
+      "requests": "If the probate registry (court) asks me to do so, I will:",
+      "understand": "I understand that:",
+      "confirmItem1": "collect the whole estate",
+      "confirmItem2": "keep full details (an inventory) of the estate",
+      "confirmItem3": "keep a full account of how the estate has been administered",
+      "requestsItem1": "provide the full details of the estate and how it has been administered",
+      "requestsItem2": "return the grant of probate to the court",
+      "submitWarning": "Once you click &lsquo;Save and continue&rsquo;, you cannot change your answers.",
+      "understandItem1": "my application will be rejected if I do not answer any questions about the information I have given",
+      "understandItem2": "proceedings for contempt of court may be brought against the undersigned if it is found that the evidence provided is deliberately untruthful or dishonest, as well as revocation of the grant"
+    },
+    "ihtNetValue": "100000000",
+    "ihtGrossValue": "200000000",
+    "legalStatement": {
+      "intro": "This statement is based on the information you&rsquo;ve given in your application. It will be stored as a public record.",
+      "deceased": "Deceased fn Deceased ln was born on 1 January 1950 and died on 1 January 2020, domiciled in England and Wales.",
+      "applicant": "I, Applicant fn Applicant ln of Wells Cathedral Wells BA5 2PA United Kingdom, make the following statement:",
+      "executorsApplying": [
+        {
+          "id": "2a65de0a-3309-4b8a-b2f0-b68ee0404d53",
+          "value": {
+            "name": "I am an executor named in the will as Applicant fn Applicant ln, and I am applying for probate.",
+            "sign": "I will send to the probate registry what I believe to be the true and original last will and testament of Deceased fn Deceased ln."
+          }
+        }
+      ],
+      "deceasedEstateLand": "To the best of my knowledge, information and belief, there was no land vested in Deceased fn Deceased ln which was settled previously to the death (and not by the will) of Deceased fn Deceased ln and which remained settled land notwithstanding such death.",
+      "deceasedOtherNames": "",
+      "deceasedEstateValue": "The gross value for the estate amounts to &pound;2000000.00 and the net value for the estate amounts to &pound;1000000.00."
+    },
+    "applicationType": "Personal",
+    "deceasedAddress": {
+      "Country": "United Kingdom",
+      "PostCode": "BA5 2PA",
+      "PostTown": "Wells",
+      "AddressLine1": "Wells Cathedral"
+    },
+    "deceasedSurname": "Deceased ln",
+    "registryAddress": "Line 1 Ox\nLine 2 Ox\nLine 3 Ox\nPostCode Ox\n",
+    "willHasCodicils": "No",
+    "ihtNetValueField": "1000000",
+    "registryLocation": "ctsc",
+    "welshDeclaration": {
+      "accept": "Rwy&rsquo;n cadarnhau y byddaf yn gweinyddu ystad yr unigolyn sydd wedi marw yn unol &acirc;&rsquo;r gyfraith, a bod fy  nghais yn gywir.",
+      "confirm": "Rwy&rsquo;n cadarnhau y byddaf yn gweinyddu ystad Deceased fn Deceased ln, yn unol &acirc;&rsquo;r gyfraith. Byddaf yn:",
+      "requests": "Os bydd y gofrestrfa brofiant (y llys) yn gofyn i mi, byddaf yn:",
+      "understand": "Rwy&rsquo;n deall:",
+      "confirmItem1": "casglu&rsquo;r ystad i gyd",
+      "confirmItem2": "cadw manylion llawn (rhestr) yr ystad",
+      "confirmItem3": "cadw cofnod llawn o&rsquo;r ffordd y mae&rsquo;r ystad wedi cael ei gweinyddu",
+      "requestsItem1": "darparu manylion llawn yr ystad a&rsquo;r ffordd y cafodd ei gweinyddu",
+      "requestsItem2": "dychwelyd y grant profiant i&rsquo;r llys",
+      "submitWarning": "Unwaith y byddwch wedi clicio &lsquo;Arbed a pharhau&rsquo;, ni allwch newid eich atebion.",
+      "understandItem1": "y bydd fy nghais yn cael ei wrthod os na fyddaf yn ateb unrhyw gwestiynau am yr wybodaeth rwyf wedi&rsquo;i rhoi",
+      "understandItem2": "y gellir dwyn achos troseddol yn fy erbyn am dwyll os penderfynir fy mod heb ddweud y gwir neu wedi bod yn anonest yn fwriadol"
+    },
+    "deceasedForenames": "Deceased fn",
+    "executorsApplying": [],
+    "numberOfExecutors": 1,
+    "extraCopiesOfGrant": 2,
+    "ihtGrossValueField": "2000000",
+    "ihtReferenceNumber": "IHT123412341234",
+    "numberOfApplicants": 1,
+    "boDocumentsUploaded": [],
+    "deceasedDateOfBirth": "1950-01-01",
+    "deceasedDateOfDeath": "2020-01-01",
+    "declarationCheckbox": "Yes",
+    "welshLegalStatement": {
+      "intro": "Mae&rsquo;r datganiad hwn wedi&rsquo;i seilio ar yr wybodaeth rydych wedi&rsquo;i rhoi yn eich cais. Bydd yn cael ei storio fel cofnod cyhoeddus.",
+      "deceased": "Deceased fn Deceased ln ar undefined a bu farw ar undefined, ac roedd fel arfer yn preswylio yng Nghymru a Lloegr.",
+      "applicant": "Rwyf i, Applicant fn Applicant ln o Wells Cathedral Wells BA5 2PA United Kingdom, yn gwneud y datganiad canlynol:",
+      "executorsApplying": [
+        {
+          "id": "2484051b-edcd-4659-b2d5-9ceb7dbf125d",
+          "value": {
+            "name": "Rwy&rsquo;n ysgutor a enwir yn yr ewyllys fel Applicant fn Applicant ln, ac rwy&rsquo;n gwneud cais am brofiant.",
+            "sign": "Byddaf yn anfon i&rsquo;r Gofrestrfa Brofiant yr hyn a gredaf i fod yn ewyllys a thestament gwir a gwreiddiol olaf Deceased fn Deceased ln."
+          }
+        }
+      ],
+      "deceasedEstateLand": "Hyd eithaf fy ngwybodaeth a&rsquo;m cred, nid oedd unrhyw dir wedi&rsquo;i freinio yn Deceased fn Deceased ln a setlwyd cyn marwolaeth (ac nid drwy ewyllys) Deceased fn Deceased ln ac a oedd dal yn dir a setlwyd er gwaethaf y farwolaeth honno.",
+      "deceasedOtherNames": "",
+      "deceasedEstateValue": "Mae gwerth gros yr ystad yn &pound;2000000.00 ac mae gwerth net yr ystad yn &pound;1000000.00."
+    },
+    "executorsNotApplying": [],
+    "legalDeclarationJson": "{\"declarations\":[{\"headers\":[\"In the High Court of Justice\",\"Family Division\",\"(Probate)\"],\"sections\":[{\"headingType\":\"large\",\"title\":\"Legal statement\",\"declarationItems\":[{\"title\":\"I, Applicant fn Applicant ln of Wells Cathedral Wells BA5 2PA United Kingdom, make the following statement:\"}]},{\"headingType\":\"small\",\"title\":\"The person who died\",\"declarationItems\":[{\"title\":\"Deceased fn Deceased ln was born on 1 January 1950 and died on 1 January 2020, domiciled in England and Wales. \"}]},{\"headingType\":\"small\",\"title\":\"The estate of the person who died\",\"declarationItems\":[{\"title\":\"The gross value for the estate amounts to £2000000.00 and the net value for the estate amounts to £1000000.00.\"},{\"title\":\"To the best of my knowledge, information and belief, there was no land vested in Deceased fn Deceased ln which was settled previously to the death (and not by the will) of Deceased fn Deceased ln and which remained settled land notwithstanding such death.\"}]},{\"headingType\":\"small\",\"title\":\"Executors applying for probate\",\"declarationItems\":[{\"title\":\"I am an executor named in the will as Applicant fn Applicant ln, and I am applying for probate.\"},{\"title\":\"I will send to the probate registry what I believe to be the true and original last will and testament of Deceased fn Deceased ln.\"}]},{\"headingType\":\"large\",\"title\":\"Declaration\",\"declarationItems\":[{\"title\":\"I confirm that I will administer the estate of Deceased fn Deceased ln, according to law. I will:\",\"values\":[\"collect the whole estate\",\"keep full details (an inventory) of the estate\",\"keep a full account of how the estate has been administered\"]},{\"title\":\"If the probate registry (court) asks me to do so, I will:\",\"values\":[\"provide the full details of the estate and how it has been administered\",\"return the grant of probate to the court\"]},{\"title\":\"I understand that:\",\"values\":[\"my application will be rejected if I do not answer any questions about the information I have given\",\"proceedings for contempt of court may be brought against the undersigned if it is found that the evidence provided is deliberately untruthful or dishonest, as well as revocation of the grant\"]}]}]}],\"dateCreated\":\"8/19/2020, 9:28:56 AM\",\"deceased\":\"Deceased fn Deceased ln\"}",
+    "outsideUKGrantCopies": 0,
+    "registryEmailAddress": "ctsc@email.com",
+    "deceasedAliasNameList": [],
+    "deceasedAnyOtherNames": "No",
+    "ihtFormCompletedOnline": "Yes",
+    "registrySequenceNumber": 4,
+    "checkAnswersSummaryJson": "{\"sections\":[{\"title\":\"About the person who died\",\"type\":\"govuk-heading-m\",\"questionAndAnswers\":[{\"question\":\"Do you require a bilingual grant in English and Welsh?\",\"answers\":[\"No\"]},{\"question\":\"First name and any middle names\",\"answers\":[\"Deceased fn\"]},{\"question\":\"Last name\",\"answers\":[\"Deceased ln\"]},{\"question\":\"Did Deceased fn Deceased ln have assets in another name?\",\"answers\":[\"No\"]},{\"question\":\"Did Deceased fn Deceased ln get married or enter into a civil partnership after the will was signed?\",\"answers\":[\"No\"]},{\"question\":\"What was their date of birth?\",\"answers\":[\"1 January 1950\"]},{\"question\":\"What was the date that they died?\",\"answers\":[\"1 January 2020\"]},{\"question\":\"What was the permanent address at the time of their death?\",\"answers\":[\"Wells Cathedral Wells BA5 2PA United Kingdom\"]},{\"question\":\"Were any updates (‘codicils’) made to the will?\",\"answers\":[\"No\"]}]},{\"title\":\"Uploaded documents\",\"type\":\"govuk-heading-m\",\"questionAndAnswers\":[{\"question\":\"Death Certificate\",\"answers\":[\"No documents have been uploaded\"]}]},{\"title\":\"Inheritance tax\",\"type\":\"govuk-heading-m\",\"questionAndAnswers\":[{\"question\":\"How was the Inheritance Tax (IHT) form submitted?\",\"answers\":[\"Through the HMRC online service\"]},{\"question\":\"Inheritance Tax identifier (IHT)\",\"answers\":[\"IHT123412341234\"]},{\"question\":\"Gross value of the estate in £\",\"answers\":[\"2000000\"]},{\"question\":\"Net value of the estate in £\",\"answers\":[\"1000000\"]}]},{\"title\":\"The executors\",\"type\":\"govuk-heading-m\",\"questionAndAnswers\":[{\"question\":\"How many past and present executors are named on the will and any updates (‘codicils’)?\",\"answers\":[\"1\"]}]},{\"title\":\"About you\",\"type\":\"govuk-heading-s\",\"questionAndAnswers\":[{\"question\":\"First name and any middle names\",\"answers\":[\"Applicant fn\"]},{\"question\":\"Last name\",\"answers\":[\"Applicant ln\"]},{\"question\":\"Is your name ‘Applicant fn Applicant ln’ exactly what appears on the will?\",\"answers\":[\"Yes\"]},{\"question\":\"Phone number\",\"answers\":[\"0712341234\"]},{\"question\":\"What is your address?\",\"answers\":[\"Wells Cathedral Wells BA5 2PA United Kingdom\"]}]}],\"mainParagraph\":\"Check the information below carefully. This will form a record of your application for probate. It will also be stored as a public record, and will be able to be viewed online.\",\"pageTitle\":\"Check your answers\"}",
+    "languagePreferenceWelsh": "No",
+    "primaryApplicantAddress": {
+      "Country": "United Kingdom",
+      "PostCode": "BA5 2PA",
+      "PostTown": "Wells",
+      "AddressLine1": "Wells Cathedral"
+    },
+    "primaryApplicantSurname": "Applicant ln",
+    "applicationSubmittedDate": "2020-08-19",
+    "primaryApplicantForenames": "Applicant fn",
+    "primaryApplicantPhoneNumber": "0712341234",
+    "primaryApplicantEmailAddress": "testusername@test.com",
+    "primaryApplicantSameWillName": "Yes",
+    "deceasedMarriedAfterWillOrCodicilDate": "No"
+  },
+  "caseInfo": {
+    "caseId": "1234123412341234",
+    "state": "Pending",
+    "caseCreatedDate": "2020-08-20"
+  }
+}
