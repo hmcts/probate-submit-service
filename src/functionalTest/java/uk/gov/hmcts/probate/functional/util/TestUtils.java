@@ -27,6 +27,9 @@ public class TestUtils {
     @Value("${idam.username}")
     public String email;
 
+    @Value("${probate.submit.url}")
+    public String submitServiceUrl;
+
     public static final String EMAIL_PLACEHOLDER = "testusername@test.com";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String AUTHORIZATION = "Authorization";
@@ -35,11 +38,21 @@ public class TestUtils {
     protected TestTokenGenerator testTokenGenerator;
 
     private String serviceToken;
+    public String testCaseId;
 
     @PostConstruct
-    public void init() throws JsonProcessingException {
+    public void init() throws JsonProcessingException, InterruptedException {
         serviceToken = testTokenGenerator.generateServiceAuthorisation();
         testTokenGenerator.createNewUser();
+
+        RestAssured.baseURI = submitServiceUrl;
+        testCaseId = createTestCase(getJsonFromFile("success.saveCaseData.json"));
+
+        Thread.sleep(2000); // ensure CCD has time to update fully
+    }
+
+    public String getTestCaseId() {
+        return testCaseId;
     }
 
     public String getJsonFromFile(String fileName) {

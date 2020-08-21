@@ -19,10 +19,6 @@ public class IntegrationTestBase {
     @Autowired
     protected TestUtils utils;
 
-    protected String submitServiceUrl;
-
-    protected String idamUrl;
-
     @Rule
     public SpringIntegrationMethodRule springIntegration;
 
@@ -31,11 +27,7 @@ public class IntegrationTestBase {
     }
 
     @Autowired
-    public void submitServiceConfiguration(@Value("${probate.submit.url}") String submitServiceUrl,
-                                           @Value("${user.auth.provider.oauth2.url}") String idamUrl) {
-        this.submitServiceUrl = submitServiceUrl;
-        this.idamUrl = idamUrl;
-
+    public void submitServiceConfiguration(@Value("${probate.submit.url}") String submitServiceUrl) {
         RestAssured.baseURI = submitServiceUrl;
     }
 }

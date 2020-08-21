@@ -4,7 +4,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.apache.commons.lang.RandomStringUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,20 +18,6 @@ public class GetCasesTests extends IntegrationTestBase {
     @Value("${idam.username}")
     private String email;
 
-    private String caseId;
-
-    private Boolean setUp = false;
-
-    @Before
-    public void init() {
-        if (!setUp) {
-            String caseData = utils.getJsonFromFile("success.saveCaseData.json");
-            caseId = utils.createTestCase(caseData);
-
-            setUp = true;
-        }
-    }
-
     @Test
     public void getCaseByIdAsPathVariableReturns200() throws InterruptedException {
         int statusCode = 0;
@@ -43,7 +28,7 @@ public class GetCasesTests extends IntegrationTestBase {
                     .headers(utils.getHeaders())
                     .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                     .when()
-                    .get("/cases/" + caseId);
+                    .get("/cases/" + utils.getTestCaseId());
             statusCode = response.getStatusCode();
             Thread.sleep(1000);
         }
@@ -58,7 +43,7 @@ public class GetCasesTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders())
-                .queryParam("caseType",CaseType.GRANT_OF_REPRESENTATION)
+                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/" + randomCaseId)
                 .then()
@@ -147,7 +132,7 @@ public class GetCasesTests extends IntegrationTestBase {
             Response response = RestAssured.given()
                     .relaxedHTTPSValidation()
                     .headers(utils.getHeaders())
-                    .queryParam("caseId", caseId)
+                    .queryParam("caseId", utils.getTestCaseId())
                     .when()
                     .get("/cases");
             statusCode = response.getStatusCode();
