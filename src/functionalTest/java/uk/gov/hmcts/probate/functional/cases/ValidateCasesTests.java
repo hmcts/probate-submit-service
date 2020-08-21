@@ -16,6 +16,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
     @Test
     public void validateCaseReturns200() throws InterruptedException {
         int statusCode = 0;
+        String caseId = utils.getTestCaseId();
 
         for (int i = 5; i > 0 && statusCode != 200; i--) {
             Response response = RestAssured.given()
@@ -23,7 +24,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
                     .headers(utils.getHeaders())
                     .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                     .when()
-                    .put("/cases/" + utils.getTestCaseId() + "/validations");
+                    .put("/cases/" + caseId + "/validations");
             statusCode = response.getStatusCode();
             Thread.sleep(1000);
         }
