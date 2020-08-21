@@ -20,12 +20,14 @@ public class GetCasesTests extends IntegrationTestBase {
 
     @Test
     public void getCaseByIdAsPathVariableReturns200() {
+        String caseId =  utils.getTestCaseId();
+
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
-                .get("/cases/" + utils.getTestCaseId())
+                .get("/cases/" + caseId)
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -33,6 +35,20 @@ public class GetCasesTests extends IntegrationTestBase {
                 .body("caseInfo.caseId", notNullValue())
                 .body("caseInfo.state", equalTo("Pending"))
                 .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void getCaseMissingCaseTypeReturns400() {
+        String caseId =  utils.getTestCaseId();
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getHeaders())
+                .when()
+                .get("/cases/" + caseId)
+                .then()
+                .assertThat()
+                .statusCode(400);
     }
 
     @Test
@@ -62,7 +78,22 @@ public class GetCasesTests extends IntegrationTestBase {
                 .then()
                 .assertThat()
                 .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
                 .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void getCaseByApplicantEmailMissingReturn400() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getHeaders())
+                .when()
+                .get("/cases/applicantEmail/" + email)
+                .then()
+                .assertThat()
+                .statusCode(400);
     }
 
     @Test
@@ -96,31 +127,23 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
+    public void getAllGOPCasesMissingCaseTypeReturns400() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getHeaders())
+                .when()
+                .get("/cases/all")
+                .then()
+                .assertThat()
+                .statusCode(400);
+    }
+
+    @Test
     public void getCaseByInviteIdReturns200() {
-//        RestAssured.given()
-//                .relaxedHTTPSValidation()
-//                .headers(utils.getHeaders())
-//                .queryParam("caseType",CaseType.GRANT_OF_REPRESENTATION)
-//                .when()
-//                .get("/cases/invitation/" + inviteId)
-//                .then()
-//                .assertThat()
-//                .statusCode(200)
-//                .extract().jsonPath().prettify();
     }
 
     @Test
     public void getCaseByIncorrectInviteIdReturns404() {
-//        RestAssured.given()
-//                .relaxedHTTPSValidation()
-//                .headers(utils.getHeaders())
-//                .queryParam("caseType",CaseType.GRANT_OF_REPRESENTATION)
-//                .when()
-//                .get("/cases/invitation/" + inviteId)
-//                .then()
-//                .assertThat()
-//                .statusCode(404)
-//                .extract().jsonPath().prettify();
     }
 
     @Test
