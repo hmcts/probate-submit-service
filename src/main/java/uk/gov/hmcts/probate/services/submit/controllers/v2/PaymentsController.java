@@ -44,6 +44,8 @@ public class PaymentsController {
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> addPaymentToCase(@PathVariable("applicationId") String applicationId,
                                                                @Valid @RequestBody ProbatePaymentDetails probatePaymentDetails) {
+        log.info("PRO-7946: ENDPOINT USED");
+
         log.info("Updating payment details for case type: {}", probatePaymentDetails.getCaseType().getName());
         return new ResponseEntity(paymentsService.addPaymentToCase(applicationId.toLowerCase(), probatePaymentDetails), OK);
     }
