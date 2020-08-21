@@ -9,27 +9,29 @@ import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
 public class ValidateCasesTests extends IntegrationTestBase {
 
     @Test
-    public void validateCaseReturns200() throws InterruptedException {
-        int statusCode = 0;
+    public void validateCaseReturns200() {
         String caseId = utils.getTestCaseId();
 
-        for (int i = 5; i > 0 && statusCode != 200; i--) {
-            Response response = RestAssured.given()
-                    .relaxedHTTPSValidation()
-                    .headers(utils.getHeaders())
-                    .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
-                    .when()
-                    .put("/cases/" + caseId + "/validations");
-            statusCode = response.getStatusCode();
-            Thread.sleep(1000);
-        }
-
-        assertEquals(200, statusCode);
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getHeaders())
+                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .when()
+                .put("/cases/" + caseId + "/validations")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
     }
 
     @Test
@@ -37,18 +39,15 @@ public class ValidateCasesTests extends IntegrationTestBase {
         String invalidCaseData = utils.getJsonFromFile("failure.validateCaseData.json");
         String invalidCaseId = utils.createTestCase(invalidCaseData);
 
-        int statusCode = 0;
-        for (int i = 5; i > 0 && statusCode != 400; i--) {
-            Response response = RestAssured.given()
-                    .relaxedHTTPSValidation()
-                    .headers(utils.getHeaders())
-                    .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
-                    .when()
-                    .put("/cases/" + invalidCaseId + "/validations");
-            statusCode = response.getStatusCode();
-            Thread.sleep(1000);
-        }
-
-        assertEquals(400, statusCode);
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getHeaders())
+                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .when()
+                .put("/cases/" + invalidCaseId + "/validations")
+                .then()
+                .assertThat()
+                .statusCode(400)
+                .extract().jsonPath().prettify();
     }
 }

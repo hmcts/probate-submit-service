@@ -47,8 +47,6 @@ public class TestUtils {
 
         RestAssured.baseURI = submitServiceUrl;
         testCaseId = createTestCase(getJsonFromFile("success.saveCaseData.json"));
-
-        Thread.sleep(2000); // ensure CCD has time to update fully
     }
 
     public String getTestCaseId() {
@@ -65,7 +63,7 @@ public class TestUtils {
         }
     }
 
-    public String createTestCase(String caseData) {
+    public String createTestCase(String caseData) throws InterruptedException {
         caseData = caseData.replace(EMAIL_PLACEHOLDER, email);
 
         Response response = RestAssured.given()
@@ -74,6 +72,7 @@ public class TestUtils {
                 .body(caseData)
                 .when()
                 .post("/cases/initiate");
+        Thread.sleep(2000); // ensure CCD has time to update fully
 
         JsonPath jsonPath = JsonPath.from(response.getBody().asString());
         return jsonPath.get("caseInfo.caseId");

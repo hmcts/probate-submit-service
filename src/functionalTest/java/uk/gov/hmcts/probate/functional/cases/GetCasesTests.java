@@ -1,7 +1,6 @@
 package uk.gov.hmcts.probate.functional.cases;
 
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
@@ -10,7 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
 public class GetCasesTests extends IntegrationTestBase {
@@ -19,21 +19,20 @@ public class GetCasesTests extends IntegrationTestBase {
     private String email;
 
     @Test
-    public void getCaseByIdAsPathVariableReturns200() throws InterruptedException {
-        int statusCode = 0;
-
-        for (int i = 5; i > 0 && statusCode != 200; i--) {
-            Response response = RestAssured.given()
-                    .relaxedHTTPSValidation()
-                    .headers(utils.getHeaders())
-                    .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
-                    .when()
-                    .get("/cases/" + utils.getTestCaseId());
-            statusCode = response.getStatusCode();
-            Thread.sleep(1000);
-        }
-
-        assertEquals(200, statusCode);
+    public void getCaseByIdAsPathVariableReturns200() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getHeaders())
+                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/" + utils.getTestCaseId())
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
     }
 
     @Test
@@ -57,7 +56,7 @@ public class GetCasesTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders())
-                .queryParam("caseType",CaseType.GRANT_OF_REPRESENTATION)
+                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/applicantEmail/" + email)
                 .then()
@@ -73,7 +72,7 @@ public class GetCasesTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders())
-                .queryParam("caseType",CaseType.GRANT_OF_REPRESENTATION)
+                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/applicantEmail/" + randomEmail)
                 .then()
@@ -87,7 +86,7 @@ public class GetCasesTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders())
-                .queryParam("caseType",CaseType.GRANT_OF_REPRESENTATION)
+                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/all")
                 .then()
@@ -97,7 +96,7 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByInviteIdReturns200 () {
+    public void getCaseByInviteIdReturns200() {
 //        RestAssured.given()
 //                .relaxedHTTPSValidation()
 //                .headers(utils.getHeaders())
@@ -111,7 +110,7 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByIncorrectInviteIdReturns404 () {
+    public void getCaseByIncorrectInviteIdReturns404() {
 //        RestAssured.given()
 //                .relaxedHTTPSValidation()
 //                .headers(utils.getHeaders())
@@ -125,21 +124,21 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByCaseIdAsRequestParamReturns200() throws InterruptedException {
-        int statusCode = 0;
+    public void getCaseByCaseIdAsRequestParamReturns200() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getHeaders())
+                .queryParam("caseId", utils.getTestCaseId())
+                .when()
+                .get("/cases")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
 
-        for (int i = 5; i > 0 && statusCode != 200; i--) {
-            Response response = RestAssured.given()
-                    .relaxedHTTPSValidation()
-                    .headers(utils.getHeaders())
-                    .queryParam("caseId", utils.getTestCaseId())
-                    .when()
-                    .get("/cases");
-            statusCode = response.getStatusCode();
-            Thread.sleep(1000);
-        }
-
-        assertEquals(200, statusCode);
     }
 
     @Test
