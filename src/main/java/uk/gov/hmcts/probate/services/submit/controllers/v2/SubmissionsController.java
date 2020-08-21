@@ -40,7 +40,7 @@ public class SubmissionsController {
     @ResponseBody
     public ResponseEntity<SubmitResult> createCase(@PathVariable(APPLICATION_ID) String applicationId,
                                                    @RequestBody ProbateCaseDetails caseRequest) {
-        log.info("PRO-7946: ENDPOINT USED");
+        log.info("PRO-7946: ENDPOINT USED /submissions/{applicationId}");
 
         CaseData caseData = caseRequest.getCaseData();
         log.info("Submitting for case type: {}", caseData.getClass().getSimpleName());
