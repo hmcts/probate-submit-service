@@ -3,7 +3,6 @@ package uk.gov.hmcts.probate.functional;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationMethodRule;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import io.restassured.RestAssured;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,7 @@ import uk.gov.hmcts.probate.functional.util.TestUtils;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
 @ContextConfiguration(classes = TestContextConfiguration.class)
-@Ignore
-public class IntegrationTestBase {
+public abstract class IntegrationTestBase {
 
     @Autowired
     protected TestUtils utils;

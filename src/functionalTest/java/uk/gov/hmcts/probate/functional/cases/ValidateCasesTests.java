@@ -3,6 +3,7 @@ package uk.gov.hmcts.probate.functional.cases;
 import io.restassured.RestAssured;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.apache.commons.lang.RandomStringUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
@@ -14,16 +15,28 @@ import static org.hamcrest.Matchers.notNullValue;
 @RunWith(SpringIntegrationSerenityRunner.class)
 public class ValidateCasesTests extends IntegrationTestBase {
 
+    private Boolean setUp = false;
+
+    String testCaseId;
+
+    @Before
+    public void init() throws InterruptedException {
+        if (!setUp) {
+            String caseData = utils.getJsonFromFile("success.saveCaseData.json");
+            testCaseId = utils.createTestCase(caseData);
+
+            setUp = true;
+        }
+    }
+
     @Test
     public void validateCaseReturns200() {
-        String caseId = utils.getTestCaseId();
-
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
-                .put("/cases/" + caseId + "/validations")
+                .put("/cases/" + testCaseId + "/validations")
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -67,13 +80,11 @@ public class ValidateCasesTests extends IntegrationTestBase {
 
     @Test
     public void validateCaseWithMissingCaseTypeReturns400() throws InterruptedException {
-        String caseId = utils.getTestCaseId();
-
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders())
                 .when()
-                .put("/cases/" + caseId + "/validations")
+                .put("/cases/" + testCaseId + "/validations")
                 .then()
                 .assertThat()
                 .statusCode(400);

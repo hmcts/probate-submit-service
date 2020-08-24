@@ -3,6 +3,7 @@ package uk.gov.hmcts.probate.functional.cases;
 import io.restassured.RestAssured;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.apache.commons.lang.RandomStringUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,16 +19,28 @@ public class GetCasesTests extends IntegrationTestBase {
     @Value("${idam.username}")
     private String email;
 
+    private Boolean setUp = false;
+
+    String testCaseId;
+
+    @Before
+    public void init() throws InterruptedException {
+        if (!setUp) {
+            String caseData = utils.getJsonFromFile("success.saveCaseData.json");
+            testCaseId = utils.createTestCase(caseData);
+
+            setUp = true;
+        }
+    }
+
     @Test
     public void getCaseByIdAsPathVariableReturns200() {
-        String caseId =  utils.getTestCaseId();
-
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
-                .get("/cases/" + caseId)
+                .get("/cases/" + testCaseId)
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -39,13 +52,11 @@ public class GetCasesTests extends IntegrationTestBase {
 
     @Test
     public void getCaseMissingCaseTypeReturns400() {
-        String caseId =  utils.getTestCaseId();
-
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders())
                 .when()
-                .get("/cases/" + caseId)
+                .get("/cases/" + testCaseId)
                 .then()
                 .assertThat()
                 .statusCode(400);
@@ -151,7 +162,7 @@ public class GetCasesTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders())
-                .queryParam("caseId", utils.getTestCaseId())
+                .queryParam("caseId", testCaseId)
                 .when()
                 .get("/cases")
                 .then()

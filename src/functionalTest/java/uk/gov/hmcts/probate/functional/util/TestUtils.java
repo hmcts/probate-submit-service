@@ -38,7 +38,6 @@ public class TestUtils {
     protected TestTokenGenerator testTokenGenerator;
 
     private String serviceToken;
-    public String testCaseId;
 
     @PostConstruct
     public void init() throws JsonProcessingException, InterruptedException {
@@ -46,11 +45,6 @@ public class TestUtils {
         testTokenGenerator.createNewUser();
 
         RestAssured.baseURI = submitServiceUrl;
-        testCaseId = createTestCase(getJsonFromFile("success.saveCaseData.json"));
-    }
-
-    public String getTestCaseId() {
-        return testCaseId;
     }
 
     public String getJsonFromFile(String fileName) {

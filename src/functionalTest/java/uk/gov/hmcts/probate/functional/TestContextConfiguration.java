@@ -2,6 +2,7 @@ package uk.gov.hmcts.probate.functional;
 
 import feign.Feign;
 import feign.jackson.JacksonEncoder;
+import org.junit.runners.Suite;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
