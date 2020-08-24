@@ -72,7 +72,7 @@ public class TestUtils {
                 .body(caseData)
                 .when()
                 .post("/cases/initiate");
-        Thread.sleep(2000); // ensure CCD has time to update fully
+        Thread.sleep(3000); // ensure CCD has time to update fully
 
         JsonPath jsonPath = JsonPath.from(response.getBody().asString());
         return jsonPath.get("caseInfo.caseId");
