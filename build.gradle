@@ -10,7 +10,7 @@ buildscript {
 plugins {
     id 'application'
     id 'pmd'
-    id 'org.springframework.boot' version '2.1.5.RELEASE'
+    id 'org.springframework.boot' version '2.3.3.RELEASE'
     id 'org.owasp.dependencycheck' version '5.0.0'
     id 'com.github.ben-manes.versions' version '0.15.0'
     id 'com.gorylenko.gradle-git-properties' version '1.4.21'
