@@ -20,7 +20,7 @@ public class SaveCaseTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .body(caseData)
                 .when()
                 .post("/cases/" + caseId)
@@ -39,7 +39,7 @@ public class SaveCaseTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .body("")
                 .when()
                 .post("/cases/" + caseId)
@@ -54,7 +54,7 @@ public class SaveCaseTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .body(caseData)
                 .when()
                 .post("/cases/initiate")
@@ -71,7 +71,7 @@ public class SaveCaseTests extends IntegrationTestBase {
     public void initiateCaseAsCitizenWithInvalidDataReturns400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .body("")
                 .when()
                 .post("/cases/initiate")

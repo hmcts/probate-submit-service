@@ -16,7 +16,7 @@ public class PaymentDetailsTests extends IntegrationTestBase {
 
     private Boolean setUp = false;
 
-    String testCaseId;
+    private String testCaseId;
 
     @Before
     public void init() throws InterruptedException {
@@ -35,7 +35,7 @@ public class PaymentDetailsTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .body(paymentCaseData)
                 .when()
                 .post("/payments/" + testCaseId + "/cases")
@@ -55,7 +55,7 @@ public class PaymentDetailsTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .body(caseDataWithoutPaymentInfo)
                 .when()
                 .post("/payments/" + testCaseId + "/cases")
@@ -73,12 +73,32 @@ public class PaymentDetailsTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .body(paymentCaseData)
                 .when()
                 .post("/payments/" + randomCaseId + "/cases")
                 .then()
                 .assertThat()
                 .statusCode(404);
+    }
+
+    @Test
+    public void updateCaseByCaseIdReturns200() {
+        String paymentCaseData = utils.getJsonFromFile("success.updatePaymentDetails.json");
+        paymentCaseData = paymentCaseData.replace("1234123412341234", testCaseId);
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCaseworkerHeaders())
+                .body(paymentCaseData)
+                .when()
+                .post("/ccd-case-update/" + testCaseId)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("PAAppCreated"))
+                .extract().jsonPath().prettify();
     }
 }

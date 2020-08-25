@@ -30,9 +30,6 @@ public class TestTokenGenerator {
     @Value("${user.auth.provider.oauth2.url}")
     private String idamUserBaseUrl;
 
-    @Value("${idam.username}")
-    private String email;
-
     @Value("${idam.password}")
     private String password;
 
@@ -43,11 +40,11 @@ public class TestTokenGenerator {
         return tokenGenerator.generate();
     }
 
-    public void createNewUser() throws JsonProcessingException {
+    public void createNewUser(String email, String role) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
 
         IdamData idamData = IdamData.builder().email(email).forename("forename").surname("surname")
-                .password(password).roles(Arrays.asList(Role.builder().code("citizen").build()))
+                .password(password).roles(Arrays.asList(Role.builder().code(role).build()))
                 .build();
 
         given().headers("Content-type", "application/json")
@@ -56,12 +53,12 @@ public class TestTokenGenerator {
                 .post(idamUserBaseUrl + "/testing-support/accounts");
     }
 
-    public String generateAuthorisation() {
-        return generateClientToken();
+    public String generateAuthorisation(String email) {
+        return generateClientToken(email);
     }
 
-    private String generateClientToken() {
-        String code = generateClientCode();
+    private String generateClientToken(String email) {
+        String code = generateClientCode(email);
         String token = RestAssured.given().post(idamUserBaseUrl + "/oauth2/token?" + "code=" + code +
                 "&client_secret=" + secret +
                 "&client_id=" + clientId +
@@ -71,7 +68,7 @@ public class TestTokenGenerator {
         return token;
     }
 
-    private String generateClientCode() {
+    private String generateClientCode(String email) {
         final String encoded = Base64.getEncoder().encodeToString((email + ":" + password).getBytes());
         return RestAssured.given().baseUri(idamUserBaseUrl)
                 .header("Authorization", "Basic " + encoded)

@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.notNullValue;
 @RunWith(SpringIntegrationSerenityRunner.class)
 public class GetCasesTests extends IntegrationTestBase {
 
-    @Value("${idam.username}")
+    @Value("${idam.citizen.username}")
     private String email;
 
     private Boolean setUp = false;
@@ -37,7 +37,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getCaseByIdAsPathVariableReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/" + testCaseId)
@@ -54,7 +54,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getCaseMissingCaseTypeReturns400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .when()
                 .get("/cases/" + testCaseId)
                 .then()
@@ -68,7 +68,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/" + randomCaseId)
@@ -82,7 +82,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getCaseByApplicantEmailReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/applicantEmail/" + email)
@@ -99,7 +99,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getCaseByApplicantEmailMissingCaseTypeReturn400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .when()
                 .get("/cases/applicantEmail/" + email)
                 .then()
@@ -113,7 +113,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/applicantEmail/" + randomEmail)
@@ -127,7 +127,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getAllGOPCasesReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/all")
@@ -141,7 +141,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getAllGOPCasesMissingCaseTypeReturns400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .when()
                 .get("/cases/all")
                 .then()
@@ -161,7 +161,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getCaseByCaseIdAsRequestParamReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseId", testCaseId)
                 .when()
                 .get("/cases")
@@ -181,7 +181,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseId", randomCaseId)
                 .when()
                 .get("/cases")

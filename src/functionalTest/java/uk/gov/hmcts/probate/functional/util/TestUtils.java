@@ -24,8 +24,11 @@ import java.nio.file.Files;
 @Component
 public class TestUtils {
 
-    @Value("${idam.username}")
-    public String email;
+    @Value("${idam.citizen.username}")
+    public String citizenEmail;
+
+    @Value("${idam.caseworker.username}")
+    private String caseworkerEmail;
 
     @Value("${probate.submit.url}")
     public String submitServiceUrl;
@@ -33,6 +36,8 @@ public class TestUtils {
     public static final String EMAIL_PLACEHOLDER = "testusername@test.com";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String AUTHORIZATION = "Authorization";
+    public static final String CITIZEN = "citizen";
+    public static final String CASEWORKER = "caseworker-probate";
 
     @Autowired
     protected TestTokenGenerator testTokenGenerator;
@@ -40,9 +45,11 @@ public class TestUtils {
     private String serviceToken;
 
     @PostConstruct
-    public void init() throws JsonProcessingException, InterruptedException {
+    public void init() throws JsonProcessingException {
         serviceToken = testTokenGenerator.generateServiceAuthorisation();
-        testTokenGenerator.createNewUser();
+
+        testTokenGenerator.createNewUser(citizenEmail, CITIZEN);
+        testTokenGenerator.createNewUser(caseworkerEmail, CASEWORKER);
 
         RestAssured.baseURI = submitServiceUrl;
     }
@@ -58,24 +65,28 @@ public class TestUtils {
     }
 
     public String createTestCase(String caseData) throws InterruptedException {
-        caseData = caseData.replace(EMAIL_PLACEHOLDER, email);
+        caseData = caseData.replace(EMAIL_PLACEHOLDER, citizenEmail);
 
         Response response = RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(getHeaders())
+                .headers(getCitizenHeaders())
                 .body(caseData)
                 .when()
                 .post("/cases/initiate");
-        Thread.sleep(3000); // ensure CCD has time to update fully
+        Thread.sleep(5000); // ensure CCD has time to update fully
 
         JsonPath jsonPath = JsonPath.from(response.getBody().asString());
         return jsonPath.get("caseInfo.caseId");
     }
 
-    public Headers getHeaders() {
+    public Headers getCitizenHeaders() { return getHeaders(citizenEmail); }
+
+    public Headers getCaseworkerHeaders() { return getHeaders(caseworkerEmail); }
+
+    public Headers getHeaders(String email) {
         return Headers.headers(
                 new Header("ServiceAuthorization", serviceToken),
                 new Header(CONTENT_TYPE, ContentType.JSON.toString()),
-                new Header(AUTHORIZATION, testTokenGenerator.generateAuthorisation()));
+                new Header(AUTHORIZATION, testTokenGenerator.generateAuthorisation(email)));
     }
 }

@@ -33,7 +33,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
     public void validateCaseReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .put("/cases/" + testCaseId + "/validations")
@@ -52,7 +52,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .put("/cases/" + randomCaseId + "/validations")
@@ -68,7 +68,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .put("/cases/" + invalidCaseId + "/validations")
@@ -82,7 +82,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
     public void validateCaseWithMissingCaseTypeReturns400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .when()
                 .put("/cases/" + testCaseId + "/validations")
                 .then()
