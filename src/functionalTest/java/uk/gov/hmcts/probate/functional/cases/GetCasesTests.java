@@ -96,7 +96,7 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByApplicantEmailMissingReturn400() {
+    public void getCaseByApplicantEmailMissingCaseTypeReturn400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders())

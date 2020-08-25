@@ -79,7 +79,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void validateCaseWithMissingCaseTypeReturns400() throws InterruptedException {
+    public void validateCaseWithMissingCaseTypeReturns400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getHeaders())
