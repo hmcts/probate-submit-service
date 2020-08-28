@@ -16,13 +16,19 @@ public class PaymentDetailsTests extends IntegrationTestBase {
 
     private Boolean setUp = false;
 
-    private String testCaseId;
+    private String gopCaseData;
+    private String gopCaseId;
+    private String caveatCaseData;
+    private String caveatCaseId;
 
     @Before
     public void init() throws InterruptedException {
         if (!setUp) {
-            String caseData = utils.getJsonFromFile("success.saveCaseData.json");
-            testCaseId = utils.createTestCase(caseData);
+            gopCaseData = utils.getJsonFromFile("success.saveCaseData.json");
+            gopCaseId = utils.createTestCase(gopCaseData);
+
+            caveatCaseData = utils.getJsonFromFile("success.caveatPaymentDetails.json");
+            caveatCaseId = utils.createCaveatTestCase(caveatCaseData);
 
             setUp = true;
         }
@@ -31,14 +37,14 @@ public class PaymentDetailsTests extends IntegrationTestBase {
     @Test
     public void updatePaymentDetailsReturns200() {
         String paymentCaseData = utils.getJsonFromFile("success.updatePaymentDetails.json");
-        paymentCaseData = paymentCaseData.replace("1234123412341234", testCaseId);
+        paymentCaseData = paymentCaseData.replace("1234123412341234", gopCaseId);
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
                 .body(paymentCaseData)
                 .when()
-                .post("/payments/" + testCaseId + "/cases")
+                .post("/payments/" + gopCaseId + "/cases")
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -50,15 +56,14 @@ public class PaymentDetailsTests extends IntegrationTestBase {
 
     @Test
     public void updatePaymentDetailsWithIncorrectDataReturns400() {
-        String caseDataWithoutPaymentInfo = utils.getJsonFromFile("success.saveCaseData.json");
-        caseDataWithoutPaymentInfo = caseDataWithoutPaymentInfo.replace("1234123412341234", testCaseId);
+        gopCaseData = gopCaseData.replace("1234123412341234", gopCaseId);
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
-                .body(caseDataWithoutPaymentInfo)
+                .body(gopCaseData)
                 .when()
-                .post("/payments/" + testCaseId + "/cases")
+                .post("/payments/" + gopCaseId + "/cases")
                 .then()
                 .assertThat()
                 .statusCode(400);
@@ -83,22 +88,45 @@ public class PaymentDetailsTests extends IntegrationTestBase {
     }
 
     @Test
-    public void updateCaseByCaseIdReturns200() {
-        String paymentCaseData = utils.getJsonFromFile("success.updatePaymentDetails.json");
-        paymentCaseData = paymentCaseData.replace("1234123412341234", testCaseId);
-
+    public void updateCaveatPaymentDetailsAsCaseworkerReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCaseworkerHeaders())
-                .body(paymentCaseData)
+                .body(caveatCaseData)
                 .when()
-                .post("/ccd-case-update/" + testCaseId)
+                .post("/ccd-case-update/" + caveatCaseId)
                 .then()
                 .assertThat()
                 .statusCode(200)
                 .body("caseData", notNullValue())
                 .body("caseInfo.caseId", notNullValue())
-                .body("caseInfo.state", equalTo("PAAppCreated"))
+                .body("caseInfo.state", equalTo("CaveatRaised"))
                 .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void updateCaveatPaymentDetailsAsCitizenReturns403() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .body(caveatCaseData)
+                .when()
+                .post("/ccd-case-update/" + caveatCaseId)
+                .then()
+                .assertThat()
+                .statusCode(403);
+    }
+
+    @Test
+    public void updateCaveatPaymentDetailsWithMissingDataReturns400() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCaseworkerHeaders())
+                .body("")
+                .when()
+                .post("/ccd-case-update/" + caveatCaseId)
+                .then()
+                .assertThat()
+                .statusCode(400);
     }
 }

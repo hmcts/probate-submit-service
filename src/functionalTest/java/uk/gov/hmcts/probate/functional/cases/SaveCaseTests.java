@@ -49,6 +49,41 @@ public class SaveCaseTests extends IntegrationTestBase {
     }
 
     @Test
+    public void saveCaseAsCaseworkerReturns200() {
+        String caseData = utils.getJsonFromFile("success.saveCaseData.json");
+        String caseId = RandomStringUtils.randomNumeric(16).toLowerCase();
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .body(caseData)
+                .when()
+                .post("/cases/caseworker/" + caseId)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void saveCaseAsCaseworkerWithInvalidDataReturns400() {
+        String caseId = RandomStringUtils.randomNumeric(16).toLowerCase();
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .body("")
+                .when()
+                .post("/cases/caseworker/" + caseId)
+                .then()
+                .assertThat()
+                .statusCode(400);
+    }
+
+    @Test
     public void initiateCaseAsCitizenReturns200() {
         String caseData = utils.getJsonFromFile("success.saveCaseData.json");
 

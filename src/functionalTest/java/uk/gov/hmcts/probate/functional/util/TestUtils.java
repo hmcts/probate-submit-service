@@ -7,6 +7,7 @@ import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -33,11 +34,12 @@ public class TestUtils {
     @Value("${probate.submit.url}")
     public String submitServiceUrl;
 
+    public static final String APPLICATION_ID = "appId";
     public static final String EMAIL_PLACEHOLDER = "testusername@test.com";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String AUTHORIZATION = "Authorization";
     public static final String CITIZEN = "citizen";
-    public static final String CASEWORKER = "caseworker-probate";
+    public static final String CASEWORKER = "caseworker,caseworker-probate,caseworker-probate-issuer";
 
     @Autowired
     protected TestTokenGenerator testTokenGenerator;
@@ -49,7 +51,6 @@ public class TestUtils {
         serviceToken = testTokenGenerator.generateServiceAuthorisation();
 
         testTokenGenerator.createNewUser(citizenEmail, CITIZEN);
-        testTokenGenerator.createNewUser(caseworkerEmail, CASEWORKER);
 
         RestAssured.baseURI = submitServiceUrl;
     }
@@ -77,6 +78,22 @@ public class TestUtils {
 
         JsonPath jsonPath = JsonPath.from(response.getBody().asString());
         return jsonPath.get("caseInfo.caseId");
+    }
+
+    public String createCaveatTestCase(String caseData) throws InterruptedException {
+        String applicationId = RandomStringUtils.randomNumeric(16).toLowerCase();
+        caseData = caseData.replace(APPLICATION_ID, applicationId);
+
+        Response response = RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(getCitizenHeaders())
+                .body(caseData)
+                .when()
+                .post("/submissions/" + applicationId);
+        Thread.sleep(10000); // ensure CCD has time to update fully
+
+        JsonPath jsonPath = JsonPath.from(response.getBody().asString());
+        return jsonPath.get("probateCaseDetails.caseInfo.caseId");
     }
 
     public Headers getCitizenHeaders() { return getHeaders(citizenEmail); }

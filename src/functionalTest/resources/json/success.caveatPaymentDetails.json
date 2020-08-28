@@ -1,0 +1,36 @@
+{
+  "caseData": {
+    "type": "Caveat",
+    "deceasedForenames": "Ned",
+    "deceasedSurname": "Stark",
+    "deceasedDateOfBirth": "1930-01-01",
+    "deceasedDateOfDeath": "2018-01-01",
+    "deceasedAddress": {
+      "Country": "United Kingdom",
+      "PostCode": "BA5 2PA",
+      "PostTown": "Wells",
+      "AddressLine1": "Wells Cathedral"
+    },
+    "caveatorForenames": "Caveator fn",
+    "caveatorSurname": "Caveator ln",
+    "caveatorEmailAddress": "testusername@test.com",
+    "caveatorAddress": {
+      "Country": "United Kingdom",
+      "PostCode": "BA5 2PA",
+      "PostTown": "Wells",
+      "AddressLine1": "Wells Cathedral"
+    },
+    "applicationType": "Personal",
+    "applicationId": "appId",
+    "payments": [
+      {
+        "id": "40da7b26-c4a4-4250-bfd6-9ce95e41c497",
+        "value": {
+          "date": "2020-08-19",
+          "status": "Success",
+          "reference": "RC-1597-8259-5048-6628"
+        }
+      }
+    ]
+  }
+}

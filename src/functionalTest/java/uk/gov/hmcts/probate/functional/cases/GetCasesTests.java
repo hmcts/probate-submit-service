@@ -19,6 +19,8 @@ public class GetCasesTests extends IntegrationTestBase {
     @Value("${idam.citizen.username}")
     private String email;
 
+    public static final String INVITE_ID_PLACEHOLDER = "inviteId";
+
     private Boolean setUp = false;
 
     String testCaseId;
@@ -150,11 +152,41 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByInviteIdReturns200() {
+    public void getCaseByInviteIdReturns200() throws InterruptedException {
+        String inviteCaseData = utils.getJsonFromFile("success.inviteCaseData.json");
+        String randomInviteId = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
+
+        inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, randomInviteId);
+        String inviteCaseId = utils.createTestCase(inviteCaseData);
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/invitation/" + randomInviteId)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
     }
 
     @Test
     public void getCaseByIncorrectInviteIdReturns404() {
+        String randomInviteId = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/invitation/" + randomInviteId)
+                .then()
+                .assertThat()
+                .statusCode(404);
     }
 
     @Test
