@@ -1,0 +1,63 @@
+{
+  "caseData": {
+    "type": "GrantOfRepresentation",
+    "caseType": "intestacy",
+    "payments": [
+      {
+        "id": "89e375d1-4c68-4927-bbf0-14e73202d134",
+        "value": {
+          "amount": "21700",
+          "method": "card",
+          "status": "Success",
+          "reference": "RC-1599-2046-9637-6048"
+        }
+      }
+    ],
+    "ihtFormId": "NA",
+    "declaration": {},
+    "ihtNetValue": "100000000",
+    "ihtGrossValue": "200000000",
+    "legalStatement": {},
+    "applicationType": "Personal",
+    "deceasedAddress": {
+      "Country": "United Kingdom",
+      "PostCode": "BA5 2PA",
+      "PostTown": "Wells",
+      "AddressLine1": "Wells Cathedral"
+    },
+    "deceasedSurname": "Deceased ln",
+    "registryAddress": "Line 1 Ox\nLine 2 Ox\nLine 3 Ox\nPostCode Ox\n",
+    "ihtNetValueField": "1000000",
+    "registryLocation": "ctsc",
+    "deceasedForenames": "Deceased fn",
+    "extraCopiesOfGrant": 4,
+    "ihtGrossValueField": "2000000",
+    "ihtReferenceNumber": "IHT1234123412345",
+    "boDocumentsUploaded": [],
+    "deceasedAnyChildren": "No",
+    "deceasedDateOfBirth": "1950-01-01",
+    "deceasedDateOfDeath": "2020-01-01",
+    "declarationCheckbox": "Yes",
+    "legalDeclarationJson": "{\"declarations\":[{\"headers\":[\"In the High Court of Justice\",\"Family Division\",\"(Intestacy)\"],\"sections\":[{\"headingType\":\"large\",\"title\":\"Legal statement\",\"declarationItems\":[{\"title\":\"I, Applicant fn Applicant ln of Wells Cathedral Wells BA5 2PA United Kingdom, make the following statement:\"}]},{\"headingType\":\"small\",\"title\":\"The person who died\",\"declarationItems\":[{\"title\":\"That Deceased fn Deceased ln, of Wells Cathedral Wells BA5 2PA United Kingdom, was born on 1 January 1950 and died on 1 January 2020 intestate. \"},{\"title\":\"They were married or in a civil partnership and domiciled in England and Wales.\"},{\"title\":\"No children under 18 are entitled to the estate.\"}]},{\"headingType\":\"small\",\"title\":\"The estate of the person who died\",\"declarationItems\":[{\"title\":\"The gross value for the estate amounts to £2000000.00 and the net value for the estate amounts to £1000000.00.\"},{\"title\":\"To the best of my knowledge, information and belief, there was no land vested in Deceased fn Deceased ln which was settled previously to the death of Deceased fn Deceased ln and which remained settled land notwithstanding such death.\"},{\"title\":\"I am the lawful spouse or civil partner of Deceased fn Deceased ln and the only person now entitled to the estate.\"},{\"title\":\"I am applying for letters of administration. I have provided what I believe to be true and accurate information about Deceased fn Deceased ln.\"}]},{\"headingType\":\"large\",\"title\":\"Declaration\",\"declarationItems\":[{\"title\":\"I confirm that I will administer the estate of Deceased fn Deceased ln, according to law. I will:\",\"values\":[\"collect the whole estate\",\"keep full details (an inventory) of the estate\",\"keep a full account of how the estate has been distributed\"]},{\"title\":\"If the probate registry (court) asks me to do so, I will:\",\"values\":[\"provide the full details of the estate and how it has been distributed\",\"return the letters of administration to the court\"]},{\"title\":\"I understand that:\",\"values\":[\"my application will be rejected if I do not provide information (if asked)\",\"proceedings for contempt of court may be brought against the undersigned if it is found that the evidence provided is deliberately untruthful or dishonest, as well as revocation of the grant\"]}]}]}],\"dateCreated\":\"9/4/2020, 8:31:13 AM\",\"deceased\":\"Deceased fn Deceased ln\"}",
+    "registryEmailAddress": "ctsc@email.com",
+    "deceasedAliasNameList": [],
+    "deceasedAnyOtherNames": "No",
+    "deceasedMaritalStatus": "marriedCivilPartnership",
+    "ihtFormCompletedOnline": "Yes",
+    "registrySequenceNumber": 26,
+    "checkAnswersSummaryJson": "{\"sections\":[{\"title\":\"About the person who died\",\"type\":\"govuk-heading-m\",\"questionAndAnswers\":[{\"question\":\"Do you require a bilingual grant in English and Welsh?\",\"answers\":[\"No\"]},{\"question\":\"First name and any middle names\",\"answers\":[\"Deceased fn\"]},{\"question\":\"Last name\",\"answers\":[\"Deceased ln\"]},{\"question\":\"Did Deceased fn Deceased ln have assets in another name?\",\"answers\":[\"No\"]},{\"question\":\"What was their date of birth?\",\"answers\":[\"1 January 1950\"]},{\"question\":\"What was the date that they died?\",\"answers\":[\"1 January 2020\"]},{\"question\":\"What was Deceased fn Deceased ln’s marital status?\",\"answers\":[\"Married or in a civil partnership\"]},{\"question\":\"What was the permanent address at the time of their death?\",\"answers\":[\"Wells Cathedral Wells BA5 2PA United Kingdom\"]}]},{\"title\":\"Uploaded documents\",\"type\":\"govuk-heading-m\",\"questionAndAnswers\":[{\"question\":\"Death Certificate\",\"answers\":[\"No documents have been uploaded\"]}]},{\"title\":\"Inheritance tax\",\"type\":\"govuk-heading-m\",\"questionAndAnswers\":[{\"question\":\"How was the Inheritance Tax (IHT) form submitted?\",\"answers\":[\"Through the HMRC online service\"]},{\"question\":\"Inheritance Tax identifier (IHT)\",\"answers\":[\"IHT1234123412345\"]},{\"question\":\"Gross value of the estate in £\",\"answers\":[\"2000000\"]},{\"question\":\"Net value of the estate in £\",\"answers\":[\"1000000\"]}]},{\"title\":\"About the people applying\",\"type\":\"govuk-heading-m\",\"questionAndAnswers\":[{\"question\":\"What was your relationship to the person who died?\",\"answers\":[\"Husband, wife or civil partner (this does not include common law partners even if you lived together)\"]},{\"question\":\"Did Deceased fn Deceased ln have any children?\",\"answers\":[\"No\"]}]},{\"title\":\"About you\",\"type\":\"govuk-heading-s\",\"questionAndAnswers\":[{\"question\":\"First name and any middle names\",\"answers\":[\"Applicant fn\"]},{\"question\":\"Last name\",\"answers\":[\"Applicant ln\"]},{\"question\":\"Phone number\",\"answers\":[\"123456123456\"]},{\"question\":\"What is your address?\",\"answers\":[\"Wells Cathedral Wells BA5 2PA United Kingdom\"]}]}],\"mainParagraph\":\"Check the information below carefully. This will form a record of your application for probate. It will also be stored as a public record, and will be able to be viewed online.\",\"pageTitle\":\"Check your answers\"}",
+    "languagePreferenceWelsh": "No",
+    "primaryApplicantAddress": {
+      "Country": "United Kingdom",
+      "PostCode": "BA5 2PA",
+      "PostTown": "Wells",
+      "AddressLine1": "Wells Cathedral"
+    },
+    "primaryApplicantSurname": "Applicant ln",
+    "applicationSubmittedDate": "2020-09-04",
+    "primaryApplicantForenames": "Applicant fn",
+    "primaryApplicantPhoneNumber": "123456123456",
+    "primaryApplicantEmailAddress": "testusername@test.com",
+    "primaryApplicantRelationshipToDeceased": "partner"
+  }
+}

@@ -23,13 +23,13 @@ public class GetCasesTests extends IntegrationTestBase {
 
     private Boolean setUp = false;
 
-    String testCaseId;
+    String caseId;
 
     @Before
     public void init() throws InterruptedException {
         if (!setUp) {
-            String caseData = utils.getJsonFromFile("success.saveCaseData.json");
-            testCaseId = utils.createTestCase(caseData);
+            String caseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
+            caseId = utils.createTestCase(caseData);
 
             setUp = true;
         }
@@ -42,7 +42,7 @@ public class GetCasesTests extends IntegrationTestBase {
                 .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
-                .get("/cases/" + testCaseId)
+                .get("/cases/" + caseId)
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -58,7 +58,7 @@ public class GetCasesTests extends IntegrationTestBase {
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
                 .when()
-                .get("/cases/" + testCaseId)
+                .get("/cases/" + caseId)
                 .then()
                 .assertThat()
                 .statusCode(400);
@@ -153,11 +153,11 @@ public class GetCasesTests extends IntegrationTestBase {
 
     @Test
     public void getCaseByInviteIdReturns200() throws InterruptedException {
-        String inviteCaseData = utils.getJsonFromFile("success.inviteCaseData.json");
+        String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
         String randomInviteId = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
 
         inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, randomInviteId);
-        String inviteCaseId = utils.createTestCase(inviteCaseData);
+        utils.createTestCase(inviteCaseData);
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
@@ -194,7 +194,7 @@ public class GetCasesTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
-                .queryParam("caseId", testCaseId)
+                .queryParam("caseId", caseId)
                 .when()
                 .get("/cases")
                 .then()

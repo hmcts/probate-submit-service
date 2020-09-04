@@ -22,7 +22,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
     @Before
     public void init() throws InterruptedException {
         if (!setUp) {
-            String caseData = utils.getJsonFromFile("success.saveCaseData.json");
+            String caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
             testCaseId = utils.createTestCase(caseData);
 
             setUp = true;
@@ -63,7 +63,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
 
     @Test
     public void validateCaseWithInvalidDataReturns400() throws InterruptedException {
-        String invalidCaseData = utils.getJsonFromFile("failure.validateCaseData.json");
+        String invalidCaseData = utils.getJsonFromFile("intestacy.invalid.json");
         String invalidCaseId = utils.createTestCase(invalidCaseData);
 
         RestAssured.given()

@@ -14,7 +14,7 @@ public class CaseSubmissionsTest extends IntegrationTestBase {
 
     @Test
     public void submitCaveatsCaseReturns200() {
-        String caseData = utils.getJsonFromFile("success.caveatCaseData.json");
+        String caseData = utils.getJsonFromFile("caveat.partial.json");
         String applicationId = RandomStringUtils.randomNumeric(16).toLowerCase();
 
         caseData = caseData.replace(APPLICATION_ID, applicationId);

@@ -1,0 +1,63 @@
+{
+  "caseData": {
+    "caseType": "gop",
+    "ihtFormId": "NA",
+    "ihtNetValue": "100000000",
+    "ihtGrossValue": "200000000",
+    "applicationType": "Personal",
+    "deceasedAddress": {
+      "Country": "United Kingdom",
+      "PostCode": "BA5 2PA",
+      "PostTown": "Wells",
+      "AddressLine1": "Wells Cathedral"
+    },
+    "deceasedSurname": "Deceased ln",
+    "willHasCodicils": "No",
+    "ihtNetValueField": "1000000",
+    "deceasedForenames": "Deceased fn",
+    "executorsAllAlive": "Yes",
+    "executorsApplying": [
+      {
+        "id": "cddd9914-cc66-41b1-8074-176b4a02eaec",
+        "value": {
+          "applyingExecutorName": "Executor fn Executor ln",
+          "applyingExecutorEmail": "testusername@test.com",
+          "applyingExecutorAddress": {
+            "Country": "United Kingdom",
+            "PostCode": "BA5 2PA",
+            "PostTown": "Wells",
+            "AddressLine1": "Wells Cathedral"
+          },
+          "applyingExecutorPhoneNumber": "074123412345"
+        }
+      }
+    ],
+    "numberOfExecutors": 2,
+    "executorsHaveAlias": "No",
+    "ihtGrossValueField": "2000000",
+    "ihtReferenceNumber": "IHT123412341234",
+    "numberOfApplicants": 2,
+    "boDocumentsUploaded": [],
+    "deceasedDateOfBirth": "1950-01-01",
+    "deceasedDateOfDeath": "2020-01-01",
+    "executorsNotApplying": [],
+    "deceasedAliasNameList": [],
+    "deceasedAnyOtherNames": "No",
+    "ihtFormCompletedOnline": "Yes",
+    "otherExecutorsApplying": "Yes",
+    "languagePreferenceWelsh": "No",
+    "primaryApplicantAddress": {
+      "Country": "United Kingdom",
+      "PostCode": "BA5 2PA",
+      "PostTown": "Wells",
+      "AddressLine1": "Wells Cathedral"
+    },
+    "primaryApplicantSurname": "Applicant ln",
+    "applicationSubmittedDate": "2020-09-03",
+    "primaryApplicantForenames": "Applicant fn",
+    "primaryApplicantPhoneNumber": "012341235124",
+    "primaryApplicantEmailAddress": "testusername@test.com",
+    "primaryApplicantSameWillName": "Yes",
+    "deceasedMarriedAfterWillOrCodicilDate": "No"
+  }
+}
