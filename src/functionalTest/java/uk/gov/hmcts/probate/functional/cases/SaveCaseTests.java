@@ -33,8 +33,27 @@ public class SaveCaseTests extends IntegrationTestBase {
     }
 
     @Test
-    public void saveGOPCaseReturns200() {
+    public void saveSingleExecutorGOPCaseReturns200() {
         String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .body(gopCaseData)
+                .when()
+                .post("/cases/" + gopCaseId)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void saveMultipleExecutorGOPCaseReturns200() {
+        String gopCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
