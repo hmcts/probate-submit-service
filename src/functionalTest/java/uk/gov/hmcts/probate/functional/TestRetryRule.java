@@ -8,6 +8,8 @@ public class TestRetryRule implements TestRule {
 
     private int retryCount;
 
+    public Boolean firstAttempt = true;
+
     public TestRetryRule(int retryCount) {
         this.retryCount = retryCount;
     }
@@ -23,12 +25,14 @@ public class TestRetryRule implements TestRule {
                 Throwable caughtThrowable = null;
 
                 for (int i = 0; i < retryCount; i++) {
+                    firstAttempt = i == 0;
+
                     try {
                         base.evaluate();
                         return;
                     } catch (Throwable t) {
                         caughtThrowable = t;
-                        Thread.sleep(5000);
+                        Thread.sleep(10000);
                         System.err.println(description.getDisplayName() + ": run " + (i + 1) + " failed.");
                     }
                 }

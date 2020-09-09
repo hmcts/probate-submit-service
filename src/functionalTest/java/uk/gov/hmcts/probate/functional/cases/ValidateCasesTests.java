@@ -67,7 +67,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void validateCaseWithInvalidDataReturns400() throws InterruptedException {
+    public void validateCaseWithInvalidDataReturns400() {
         String invalidCaseData = utils.getJsonFromFile("intestacy.invalid.json");
         String invalidCaseId = utils.createTestCase(invalidCaseData);
 

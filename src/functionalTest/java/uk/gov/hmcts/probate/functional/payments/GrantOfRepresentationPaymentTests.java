@@ -37,7 +37,9 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
             setUp = true;
         }
 
-        caseId = utils.createTestCase(caseData);
+        if (retryRule.firstAttempt) {
+            caseId = utils.createTestCase(caseData);
+        }
     }
 
     @Test
