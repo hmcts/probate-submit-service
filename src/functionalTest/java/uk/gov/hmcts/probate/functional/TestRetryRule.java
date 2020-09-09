@@ -22,13 +22,13 @@ public class TestRetryRule implements TestRule {
             public void evaluate() throws Throwable {
                 Throwable caughtThrowable = null;
 
-                // implement retry logic here
                 for (int i = 0; i < retryCount; i++) {
                     try {
                         base.evaluate();
                         return;
                     } catch (Throwable t) {
                         caughtThrowable = t;
+                        Thread.sleep(5000);
                         System.err.println(description.getDisplayName() + ": run " + (i + 1) + " failed.");
                     }
                 }
