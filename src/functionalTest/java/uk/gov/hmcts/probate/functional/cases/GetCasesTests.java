@@ -4,10 +4,12 @@ import io.restassured.RestAssured;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
+import uk.gov.hmcts.probate.functional.TestRetryRule;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -15,6 +17,9 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
 public class GetCasesTests extends IntegrationTestBase {
+
+    @Rule
+    public TestRetryRule retryRule = new TestRetryRule(3);
 
     @Value("${idam.citizen.username}")
     private String email;
@@ -26,7 +31,7 @@ public class GetCasesTests extends IntegrationTestBase {
     String caseId;
 
     @Before
-    public void init() throws InterruptedException {
+    public void init() {
         if (!setUp) {
             String caseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
             caseId = utils.createTestCase(caseData);

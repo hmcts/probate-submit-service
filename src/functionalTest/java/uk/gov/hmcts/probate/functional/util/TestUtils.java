@@ -39,7 +39,6 @@ public class TestUtils {
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String AUTHORIZATION = "Authorization";
     public static final String CITIZEN = "citizen";
-    public static final String CASEWORKER = "caseworker,caseworker-probate,caseworker-probate-issuer";
 
     @Autowired
     protected TestTokenGenerator testTokenGenerator;
@@ -65,7 +64,7 @@ public class TestUtils {
         }
     }
 
-    public String createTestCase(String caseData) throws InterruptedException {
+    public String createTestCase(String caseData) {
         caseData = caseData.replace(EMAIL_PLACEHOLDER, citizenEmail);
 
         Response response = RestAssured.given()
@@ -74,13 +73,12 @@ public class TestUtils {
                 .body(caseData)
                 .when()
                 .post("/cases/initiate");
-        Thread.sleep(5000); // ensure CCD has time to update fully
 
         JsonPath jsonPath = JsonPath.from(response.getBody().asString());
         return jsonPath.get("caseInfo.caseId");
     }
 
-    public String createCaveatTestCase(String caseData) throws InterruptedException {
+    public String createCaveatTestCase(String caseData) {
         String applicationId = RandomStringUtils.randomNumeric(16).toLowerCase();
         caseData = caseData.replace(APPLICATION_ID, applicationId);
 
@@ -90,7 +88,6 @@ public class TestUtils {
                 .body(caseData)
                 .when()
                 .post("/submissions/" + applicationId);
-        Thread.sleep(10000); // ensure CCD has time to update fully
 
         JsonPath jsonPath = JsonPath.from(response.getBody().asString());
         return jsonPath.get("probateCaseDetails.caseInfo.caseId");
