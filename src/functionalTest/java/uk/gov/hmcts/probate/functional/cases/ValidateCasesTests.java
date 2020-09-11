@@ -23,6 +23,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
     private Boolean setUp = false;
 
     String testCaseId;
+    String invalidCaseId;
 
     @Before
     public void init() {
@@ -68,8 +69,10 @@ public class ValidateCasesTests extends IntegrationTestBase {
 
     @Test
     public void validateCaseWithInvalidDataReturns400() {
-        String invalidCaseData = utils.getJsonFromFile("intestacy.invalid.json");
-        String invalidCaseId = utils.createTestCase(invalidCaseData);
+        if (retryRule.firstAttempt) {
+            String invalidCaseData = utils.getJsonFromFile("intestacy.invalid.json");
+            invalidCaseId = utils.createTestCase(invalidCaseData);
+        }
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
