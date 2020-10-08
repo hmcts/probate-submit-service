@@ -409,6 +409,7 @@
         <cve>CVE-2020-5408</cve>
         <cve>CVE-2020-11996</cve>
         <cve>CVE-2020-9484</cve>
+        <cve>CVE-2020-24750</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -746,6 +747,7 @@
     ]]></notes>
         <gav regex="true">^org\.springframework:spring-core:.*$</gav>
         <cve>CVE-2020-5398</cve>
+        <cve>CVE-2020-5421</cve>
     </suppress>
 
     <suppress>
@@ -970,4 +972,13 @@
     <suppress>
         <cve>CVE-2020-24616</cve>
     </suppress>
-</suppressions>
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-web-5.1.7.RELEASE.jar
+   ]]></notes>
+        <gav regex="true">^org\.springframework:spring-web:.*$</gav>
+        <cpe>cpe:/a:pivotal_software:spring_framework</cpe>
+        <cve>CVE-2020-5398</cve>
+        <cve>CVE-2020-5421</cve>
+    </suppress>
+   </suppressions>
