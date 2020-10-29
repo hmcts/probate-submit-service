@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import uk.gov.hmcts.reform.auth.checker.core.RequestAuthorizer;
@@ -39,4 +40,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().authenticated();
     }
+
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/swagger-ui.html",
+            "/swagger-resources/**",
+            "/webjars/springfox-swagger-ui/**",
+            "/v2/api-docs",
+            "/health",
+            "/health/liveness",
+            "/info",
+            "/data-extract/**",
+            "/");
+    }
+
 }
