@@ -1,15 +1,19 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseValidationException;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
 import uk.gov.hmcts.probate.services.submit.services.CaveatExpiryService;
@@ -24,14 +28,15 @@ import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 import uk.gov.hmcts.reform.probate.model.client.AssertFieldException;
 import uk.gov.hmcts.reform.probate.model.client.ValidationErrorResponse;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Path;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Path;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -46,9 +51,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = {CasesController.class}, secure = false)
-public class
-CasesControllerTest {
+@SpringBootTest
+@AutoConfigureMockMvc
+public class CasesControllerTest {
 
     private static final String CASES_URL = "/cases";
     private static final String CASES_BY_APPLICANT_EMAIL_URL = "/cases/applicantEmail";
@@ -78,6 +83,14 @@ CasesControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @Before
+    public void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
     @Test
     public void shouldExpireCaveats() throws Exception {
         List<ProbateCaseDetails> expiredCaveats = Arrays.asList(ProbateCaseDetails.builder().build(), ProbateCaseDetails.builder().build());
@@ -88,7 +101,7 @@ CasesControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string("[{},{}]"));
     }
-    
+
     @Test
     public void shouldGetCaseForIntestacyGrantOfRepresentation() throws Exception {
         String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
@@ -100,9 +113,9 @@ CasesControllerTest {
         when(casesService.getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION)).thenReturn(caseResponse);
 
         mockMvc.perform(get(CASES_URL + "/" + EMAIL_ADDRESS)
-                .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+            .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
         verify(casesService, times(1)).getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
     }
 
@@ -117,9 +130,9 @@ CasesControllerTest {
         when(casesService.getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION)).thenReturn(caseResponse);
 
         mockMvc.perform(get(CASES_BY_APPLICANT_EMAIL_URL + "/" + EMAIL_ADDRESS)
-                .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+            .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
         verify(casesService, times(1)).getCaseByApplicantEmail(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
     }
 
@@ -135,9 +148,9 @@ CasesControllerTest {
         when(casesService.getAllCases(CaseType.GRANT_OF_REPRESENTATION)).thenReturn(Arrays.asList(caseResponse));
 
         mockMvc.perform(get(CASES_ALL_URL)
-                .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+            .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
         verify(casesService, times(1)).getAllCases(CaseType.GRANT_OF_REPRESENTATION);
     }
 
@@ -152,9 +165,9 @@ CasesControllerTest {
         when(casesService.getCaseById(CASE_ID)).thenReturn(caseResponse);
 
         mockMvc.perform(get(CASES_URL)
-                .param("caseId", CASE_ID)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+            .param("caseId", CASE_ID)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
         verify(casesService, times(1)).getCaseById(CASE_ID);
     }
 
@@ -165,9 +178,9 @@ CasesControllerTest {
         when(casesService.getCaseByInvitationId(INVITATION_ID, CaseType.GRANT_OF_REPRESENTATION)).thenReturn(probateCaseDetails);
 
         mockMvc.perform(get(CASES_INVITATION_URL + "/" + INVITATION_ID)
-                .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+            .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
         verify(casesService, times(1)).getCaseByInvitationId(INVITATION_ID, CaseType.GRANT_OF_REPRESENTATION);
     }
 
@@ -177,10 +190,10 @@ CasesControllerTest {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
 
         mockMvc.perform(put(CASES_URL + "/" + EMAIL_ADDRESS + VALIDATE_ENDPOINT)
-                .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
-                .content(objectMapper.writeValueAsString(caseData))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+            .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
+            .content(objectMapper.writeValueAsString(caseData))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
 
         verify(casesService, times(1)).validate(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
     }
@@ -200,12 +213,12 @@ CasesControllerTest {
         when(casesService.validate(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION)).thenThrow(caseValidationException);
 
         mockMvc.perform(put(CASES_URL + "/" + EMAIL_ADDRESS + VALIDATE_ENDPOINT)
-                .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.errors[0].field", is("fieldName")))
-                .andExpect(jsonPath("$.errors[0].message", is("must not be null")))
-                .andExpect(status().isBadRequest());
+            .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.errors[0].field", is("fieldName")))
+            .andExpect(jsonPath("$.errors[0].message", is("must not be null")))
+            .andExpect(status().isBadRequest());
 
         verify(casesService, times(1)).validate(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
     }
@@ -216,9 +229,9 @@ CasesControllerTest {
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
 
         mockMvc.perform(post(CASES_URL + "/" + EMAIL_ADDRESS)
-                .content(objectMapper.writeValueAsString(probateCaseDetails))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+            .content(objectMapper.writeValueAsString(probateCaseDetails))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
 
         verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class));
     }
@@ -229,9 +242,9 @@ CasesControllerTest {
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
 
         mockMvc.perform(post(CASES_INITATE_URL)
-                .content(objectMapper.writeValueAsString(probateCaseDetails))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+            .content(objectMapper.writeValueAsString(probateCaseDetails))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
 
         verify(casesService, times(1)).initiateCase(any(ProbateCaseDetails.class));
     }
@@ -242,9 +255,9 @@ CasesControllerTest {
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
 
         mockMvc.perform(post(CASES_CASEWORKER_INITATE_URL)
-                .content(objectMapper.writeValueAsString(probateCaseDetails))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+            .content(objectMapper.writeValueAsString(probateCaseDetails))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
 
         verify(casesService, times(1)).initiateCaseAsCaseworker(any(ProbateCaseDetails.class));
     }
@@ -255,9 +268,9 @@ CasesControllerTest {
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
 
         mockMvc.perform(post(CASES_CASEWORKER_URL + "/" + EMAIL_ADDRESS)
-                .content(objectMapper.writeValueAsString(probateCaseDetails))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+            .content(objectMapper.writeValueAsString(probateCaseDetails))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
 
         verify(casesService, times(1)).saveCaseAsCaseworker(anyString(), any(ProbateCaseDetails.class));
     }
@@ -267,12 +280,12 @@ CasesControllerTest {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
         when(casesService.saveCase(anyString(), any(ProbateCaseDetails.class)))
-                .thenThrow(new AssertFieldException(ValidationErrorResponse.builder().build()));
+            .thenThrow(new AssertFieldException(ValidationErrorResponse.builder().build()));
 
         mockMvc.perform(post(CASES_URL + "/" + EMAIL_ADDRESS)
-                .content(objectMapper.writeValueAsString(probateCaseDetails))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError());
+            .content(objectMapper.writeValueAsString(probateCaseDetails))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isInternalServerError());
 
         verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class));
     }
@@ -280,9 +293,9 @@ CasesControllerTest {
     @Test
     public void shouldGrantCaseAccessToUser() throws Exception {
 
-        mockMvc.perform(post(CASES_URL + "/" + CASE_ID + "/caseworker/" +GRANT_ACCESS_ENDPOINT+ USER_ID)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        mockMvc.perform(post(CASES_URL + "/" + CASE_ID + "/caseworker/" + GRANT_ACCESS_ENDPOINT + USER_ID)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
 
         verify(casesService, times(1)).grantAccessForCase(eq(CaseType.GRANT_OF_REPRESENTATION), eq(CASE_ID), eq(USER_ID));
     }
