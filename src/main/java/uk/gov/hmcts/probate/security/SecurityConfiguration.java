@@ -34,6 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/submissions/**")
                 .antMatchers("/payments/**")
                 .antMatchers("/ccd-case-update/**")
+                .antMatchers("/health", "/health/liveness")
                 .and()
                 .addFilter(filter)
                 .csrf().disable()
@@ -41,15 +42,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
     }
 
+    @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/swagger-ui.html",
             "/swagger-resources/**",
             "/webjars/springfox-swagger-ui/**",
-            "/v2/api-docs",
             "/health",
             "/health/liveness",
             "/info",
-            "/data-extract/**",
             "/");
     }
 
