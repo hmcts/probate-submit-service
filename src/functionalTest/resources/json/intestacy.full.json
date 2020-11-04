@@ -58,6 +58,8 @@
     "primaryApplicantForenames": "Applicant fn",
     "primaryApplicantPhoneNumber": "123456123456",
     "primaryApplicantEmailAddress": "testusername@test.com",
-    "primaryApplicantRelationshipToDeceased": "partner"
+    "primaryApplicantRelationshipToDeceased": "partner",
+    "deceasedDiedEngOrWales": "Yes",
+    "deceasedDeathCertificate": "deathCertificate"
   }
 }

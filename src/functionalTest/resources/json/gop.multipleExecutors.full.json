@@ -307,6 +307,8 @@
     "primaryApplicantEmailAddress": "testusername@test.com",
     "primaryApplicantSameWillName": "Yes",
     "probateNotificationsGenerated": [],
-    "deceasedMarriedAfterWillOrCodicilDate": "No"
+    "deceasedMarriedAfterWillOrCodicilDate": "No",
+    "deceasedDiedEngOrWales": "Yes",
+    "deceasedDeathCertificate": "deathCertificate"
   }
 }

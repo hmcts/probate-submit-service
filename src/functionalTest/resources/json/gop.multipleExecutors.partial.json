@@ -58,6 +58,8 @@
     "primaryApplicantPhoneNumber": "012341235124",
     "primaryApplicantEmailAddress": "testusername@test.com",
     "primaryApplicantSameWillName": "Yes",
-    "deceasedMarriedAfterWillOrCodicilDate": "No"
+    "deceasedMarriedAfterWillOrCodicilDate": "No",
+    "deceasedDiedEngOrWales": "Yes",
+    "deceasedDeathCertificate": "deathCertificate"
   }
 }
