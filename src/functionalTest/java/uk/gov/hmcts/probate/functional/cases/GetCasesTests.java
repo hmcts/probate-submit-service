@@ -10,10 +10,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 import uk.gov.hmcts.probate.functional.TestRetryRule;
-import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static uk.gov.hmcts.reform.probate.model.cases.CaseType.*;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
 public class GetCasesTests extends IntegrationTestBase {
@@ -48,7 +48,7 @@ public class GetCasesTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
-                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/" + caseId)
                 .then()
@@ -79,7 +79,7 @@ public class GetCasesTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
-                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/" + randomCaseId)
                 .then()
@@ -93,7 +93,7 @@ public class GetCasesTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
-                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/applicantEmail/" + email)
                 .then()
@@ -124,7 +124,7 @@ public class GetCasesTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
-                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/applicantEmail/" + randomEmail)
                 .then()
@@ -134,17 +134,73 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getAllGOPCasesReturns200() {
+    public void getAllGrantOfRepresentationCaseTypeReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
-                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/all")
                 .then()
                 .assertThat()
                 .statusCode(200)
                 .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void getAllStandingSearchGOPCasesReturns200() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", STANDING_SEARCH)
+                .when()
+                .get("/cases/all")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void getAllCaveatGOPCasesReturns200() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", CAVEAT)
+                .when()
+                .get("/cases/all")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void getAllWillLodgementGOPCasesReturns200() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", WILL_LODGEMENT)
+                .when()
+                .get("/cases/all")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void getAllGOPCasesInvalidCaseTypeReturns400() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", "INVALID_CASE_TYPE")
+                .when()
+                .get("/cases/all")
+                .then()
+                .assertThat()
+                .statusCode(400);
+
     }
 
     @Test
@@ -170,7 +226,7 @@ public class GetCasesTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
-                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/invitation/" + inviteId)
                 .then()
@@ -189,7 +245,7 @@ public class GetCasesTests extends IntegrationTestBase {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
-                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/invitation/" + randomInviteId)
                 .then()
