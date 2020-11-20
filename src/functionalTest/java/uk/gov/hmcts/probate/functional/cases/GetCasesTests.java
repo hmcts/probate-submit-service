@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 import uk.gov.hmcts.probate.functional.TestRetryRule;
 
+import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
 import static org.hamcrest.Matchers.*;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.*;
 
@@ -43,7 +44,7 @@ public class GetCasesTests extends IntegrationTestBase {
             caseData = caseData.replace("gop", "intestacy");
             caseId_2 = utils.createTestCase(caseData);
 
-            inviteId = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
+            inviteId = randomAlphanumeric(12).toLowerCase();
             String caveatCaseData = utils.getJsonFromFile("caveat.full.json");
             caveatCaseId = utils.createTestCase(caveatCaseData);
 
@@ -138,7 +139,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
     @Test
     public void getCaseByIncorrectApplicantEmailReturns404() {
-        String randomEmail = RandomStringUtils.randomAlphanumeric(5).toLowerCase() + "@email.com";
+        String randomEmail = randomAlphanumeric(5).toLowerCase() + "@email.com";
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
@@ -262,11 +263,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
     @Test
     public void getCaseByInviteIdAndInCorrectHeaderReturns404() {
-        if (retryRule.firstAttempt) {
-            String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
-            inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, inviteId);
-            utils.createTestCase(inviteCaseData);
-        }
+
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCaseworkerHeaders())
@@ -279,7 +276,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
     @Test
     public void getCaseByIncorrectInviteIdReturns404() {
-        String randomInviteId = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
+        String randomInviteId = randomAlphanumeric(12).toLowerCase();
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
