@@ -11,8 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 import uk.gov.hmcts.probate.functional.TestRetryRule;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.*;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
@@ -30,7 +29,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
     String caseId;
     String inviteId;
-
+    String caveatCaseId;
     @Before
     public void init() {
         if (!setUp) {
@@ -38,6 +37,8 @@ public class GetCasesTests extends IntegrationTestBase {
             caseId = utils.createTestCase(caseData);
 
             inviteId = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
+            String caveatCaseData = utils.getJsonFromFile("caveat.full.json");
+            caveatCaseId = utils.createTestCase(caveatCaseData);
 
             setUp = true;
         }
@@ -144,11 +145,12 @@ public class GetCasesTests extends IntegrationTestBase {
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .extract().jsonPath().prettify();
+                .body("[0].caseData.type", equalTo("GrantOfRepresentation"));
+
     }
 
     @Test
-    public void getAllStandingSearchGOPCasesReturns200() {
+    public void getAllStandingSearchGOPCasesReturnsEmptyBodyAndStatusCodeIs200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
@@ -158,7 +160,8 @@ public class GetCasesTests extends IntegrationTestBase {
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .extract().jsonPath().prettify();
+                .body("isEmpty()", is(true));
+
     }
 
     @Test
@@ -172,7 +175,8 @@ public class GetCasesTests extends IntegrationTestBase {
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .extract().jsonPath().prettify();
+                .log().all(true)
+                .body("[0].caseData.type", equalTo("Caveat"));
     }
 
     @Test
