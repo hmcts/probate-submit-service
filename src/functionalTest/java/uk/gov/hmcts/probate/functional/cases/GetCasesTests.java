@@ -70,6 +70,18 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
+    public void getCaseByIdAsPathVariableReturns404() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", CAVEAT)
+                .when()
+                .get("/cases/" + caseId_1)
+                .then()
+                .assertThat().statusCode(404);
+    }
+
+    @Test
     public void getCaseMissingCaseTypeReturns400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
