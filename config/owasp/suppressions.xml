@@ -45,4 +45,8 @@
         <gav regex="true">^junit:junit:.*$</gav>
         <cve>CVE-2020-15250</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[file name: junit-4.12.jar]]></notes>
+        <cve>CVE-2020-15250</cve>
+    </suppress>
    </suppressions>
