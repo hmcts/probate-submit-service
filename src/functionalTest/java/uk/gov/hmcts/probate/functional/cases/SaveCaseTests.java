@@ -95,6 +95,42 @@ public class SaveCaseTests extends IntegrationTestBase {
     }
 
     @Test
+    public void saveCasesWorkerIntestacyCaseReturns200() {
+        String intestacyCaseData = utils.getJsonFromFile("intestacy.full.json");
+        String applicationId = RandomStringUtils.randomNumeric(16).toLowerCase();
+        intestacyCaseData = intestacyCaseData.replace("appId", applicationId);
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .body(intestacyCaseData)
+                .when()
+                .post("/cases/caseworker/" + applicationId)
+                .then()
+                .assertThat()
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"));
+    }
+
+    @Test
+    public void saveCasesWorkerIntestacyCaseReturns403() {
+        String intestacyCaseData = utils.getJsonFromFile("intestacy.full.json");
+        String applicationId = RandomStringUtils.randomNumeric(16).toLowerCase();
+        intestacyCaseData = intestacyCaseData.replace("appId", applicationId);
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCaseworkerHeaders())
+                .body(intestacyCaseData)
+                .when()
+                .post("/cases/caseworker/" + applicationId)
+                .then()
+                .assertThat()
+                .statusCode(403);
+    }
+
+    @Test
     public void saveCaseWithInvalidDataReturns400() {
         String caseId = RandomStringUtils.randomNumeric(16).toLowerCase();
 
