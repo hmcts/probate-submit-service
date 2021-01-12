@@ -123,7 +123,9 @@
     "primaryApplicantPhoneNumber": "0712341234",
     "primaryApplicantEmailAddress": "testusername@test.com",
     "primaryApplicantSameWillName": "Yes",
-    "deceasedMarriedAfterWillOrCodicilDate": "No"
+    "deceasedMarriedAfterWillOrCodicilDate": "No",
+    "deceasedDiedEngOrWales": "Yes",
+    "deceasedDeathCertificate": "deathCertificate"
   },
   "caseInfo": {
     "caseId": "1234123412341234",
