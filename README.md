@@ -36,7 +36,7 @@ npx @hmcts/probate-dev-env
 
 ### Unit tests
 
-To run all unit tests please execute the following command:
+e the following command:
 
 ```bash
 $ ./gradlew test
