@@ -234,7 +234,7 @@ dependencies {
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-single-page-report', version: versions.serenityreporter
-    testFunctionalCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+    testFunctionalCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     testFunctionalCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
     testFunctionalCompile("com.fasterxml.jackson.core:jackson-databind:2.11.2") {
         force = true
