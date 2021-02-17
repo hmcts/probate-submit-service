@@ -10,6 +10,35 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
+   file name: bcprov-jdk15on-1.60.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</packageUrl>
+        <cve>CVE-2020-26939</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: httpclient-4.5.12.jar
+   ]]></notes>
+        <gav regex="true">^org\.apache\.httpcomponents:httpclient:.*$</gav>
+        <cve>CVE-2020-13956</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: junit-4.13.jar
+   ]]></notes>
+        <gav regex="true">^junit:junit:.*$</gav>
+        <cve>CVE-2020-15250</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-security-config-5.3.4.RELEASE.jar
+   ]]></notes>
+        <gav regex="true">^org\.springframework\.security:spring-security-config:.*$</gav>
+        <cpe>cpe:/a:security-framework_project:security-framework</cpe>
+        <cve>CVE-2018-1258</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
    file name: spring-security-core-5.3.4.RELEASE.jar
    ]]></notes>
         <gav regex="true">^org\.springframework\.security:spring-security-core:.*$</gav>
@@ -32,32 +61,6 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: spring-security-config-5.3.4.RELEASE.jar
-   ]]></notes>
-        <gav regex="true">^org\.springframework\.security:spring-security-config:.*$</gav>
-        <cpe>cpe:/a:security-framework_project:security-framework</cpe>
-        <cve>CVE-2018-1258</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: junit-4.13.jar
-   ]]></notes>
-        <gav regex="true">^junit:junit:.*$</gav>
-        <cve>CVE-2020-15250</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[file name: junit-4.12.jar]]></notes>
-        <cve>CVE-2020-15250</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: httpclient-4.5.12.jar
-   ]]></notes>
-        <gav regex="true">^org\.apache\.httpcomponents:httpclient:.*$</gav>
-        <cve>CVE-2020-13956</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
    file name: tomcat-embed-core-9.0.38.jar
    ]]></notes>
         <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-core:.*$</gav>
@@ -71,20 +74,5 @@
         <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-websocket:.*$</gav>
         <cve>CVE-2020-17527</cve>
         <cve>CVE-2021-24122</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: bcprov-jdk15on-1.60.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</packageUrl>
-        <cve>CVE-2020-26939</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: guava-27.1-jre.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
-        <cpe>cpe:/a:google:guava</cpe>
-        <cve>CVE-2020-8908</cve>
     </suppress>
 </suppressions>
