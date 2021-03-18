@@ -10,13 +10,6 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: bcprov-jdk15on-1.60.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</packageUrl>
-        <cve>CVE-2020-26939</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
    file name: httpclient-4.5.12.jar
    ]]></notes>
         <gav regex="true">^org\.apache\.httpcomponents:httpclient:.*$</gav>
@@ -45,7 +38,8 @@
         <filePath regex="true">.*tomcat-embed-(core|websocket)-9.0.38.jar</filePath>
         <cve>CVE-2020-17527</cve>
         <cve>CVE-2021-24122</cve>
-         <cve>CVE-2021-25122</cve>
-         <cve>CVE-2021-25329</cve>
+        <cve>CVE-2021-25122</cve>
+        <cve>CVE-2021-25329</cve>
+        <cve>CVE-2020-9484</cve>
     </suppress>
 </suppressions>

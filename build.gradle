@@ -13,7 +13,7 @@ plugins {
     id 'pmd'
     id 'org.springframework.boot' version '2.3.4.RELEASE'
     id 'uk.gov.hmcts.java' version '0.12.2'
-    id 'com.github.ben-manes.versions' version '0.15.0'
+    id 'com.github.ben-manes.versions' version '0.38.0'
     id 'com.gorylenko.gradle-git-properties' version '1.4.21'
     id 'info.solidsoft.pitest' version '1.5.2'
     id "io.spring.dependency-management" version "1.0.11.RELEASE"
@@ -173,6 +173,13 @@ def versions = [
         feignHttpClient                 : '10.2.3',
         lombok                          : '1.18.8'
 ]
+
+dependencyManagement {
+    dependencies {
+        dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.67'
+        // CVE-2018-10237 - Unbounded memory allocation
+    }
+}
 
 dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
