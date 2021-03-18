@@ -296,7 +296,6 @@ ext['rest-assured.version'] = '4.2.0'
 bootJar {
     archiveName = 'submit-service.jar'
     manifest {
-
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': project.version
     }
