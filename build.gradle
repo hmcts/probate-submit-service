@@ -208,6 +208,8 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
     compile group: 'uk.gov.hmcts.reform.probate', name: 'probate-commons', version: versions.probateCommons
 
+    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
     compile group: 'com.google.guava', name: 'guava', version: '30.1-jre'
 
