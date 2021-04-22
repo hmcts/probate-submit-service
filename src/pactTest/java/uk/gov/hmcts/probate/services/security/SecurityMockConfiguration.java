@@ -1,11 +1,7 @@
 package uk.gov.hmcts.probate.services.security;
 
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,9 +13,6 @@ import uk.gov.hmcts.reform.auth.checker.core.RequestAuthorizer;
 import uk.gov.hmcts.reform.auth.checker.core.service.Service;
 import uk.gov.hmcts.reform.auth.checker.core.user.User;
 import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.AuthCheckerServiceAndUserFilter;
-
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
 
 @Profile("SECURITY_MOCK")
 @Configuration
@@ -33,7 +26,8 @@ public class SecurityMockConfiguration extends WebSecurityConfigurerAdapter {
     public SecurityMockConfiguration(RequestAuthorizer<User> userRequestAuthorizer,
                                      RequestAuthorizer<Service> serviceRequestAuthorizer,
                                      AuthenticationManager authenticationManager) {
-        authCheckerServiceAndUserFilter = new AuthCheckerServiceAndUserFilter(serviceRequestAuthorizer, userRequestAuthorizer);
+        authCheckerServiceAndUserFilter = new AuthCheckerServiceAndUserFilter(serviceRequestAuthorizer,
+            userRequestAuthorizer);
         authCheckerServiceAndUserFilter.setAuthenticationManager(authenticationManager);
     }
 

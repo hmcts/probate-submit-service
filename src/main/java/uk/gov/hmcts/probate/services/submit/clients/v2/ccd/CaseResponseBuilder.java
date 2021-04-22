@@ -28,7 +28,8 @@ public class CaseResponseBuilder {
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(caseDetails.getId().toString());
         caseInfo.setState(CaseState.getState(caseDetails.getState()));
-        caseInfo.setCaseCreatedDate(caseDetails.getCreatedDate() != null ? caseDetails.getCreatedDate().toLocalDate() : null);
+        caseInfo.setCaseCreatedDate(
+            caseDetails.getCreatedDate() != null ? caseDetails.getCreatedDate().toLocalDate() : null);
         return caseInfo;
     }
 }

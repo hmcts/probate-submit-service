@@ -36,19 +36,19 @@ public class SecurityUtilsTest {
     private SecurityUtils securityUtils;
 
     @Test
-    public void shouldGetSecurityDTO() {
+    public void shouldGetSecurityDto() {
         when(authTokenGenerator.generate()).thenReturn(SERVICE_AUTH_TOKEN);
         ServiceAndUserDetails serviceAndUserDetails =
                 new ServiceAndUserDetails(USER_ID, "token1234", Collections.emptyList(), "probate_backend");
         TestSecurityContextHolder.getContext().setAuthentication(
                 new TestingAuthenticationToken(serviceAndUserDetails, AUTH_TOKEN, "ROLE_USER"));
 
-        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        SecurityDto securityDto = securityUtils.getSecurityDto();
 
-        assertThat(securityDTO, is(notNullValue()));
-        assertThat(securityDTO.getAuthorisation(), is("Bearer " + AUTH_TOKEN));
-        assertThat(securityDTO.getServiceAuthorisation(), is(SERVICE_AUTH_TOKEN));
-        assertThat(securityDTO.getUserId(), is(USER_ID));
+        assertThat(securityDto, is(notNullValue()));
+        assertThat(securityDto.getAuthorisation(), is("Bearer " + AUTH_TOKEN));
+        assertThat(securityDto.getServiceAuthorisation(), is(SERVICE_AUTH_TOKEN));
+        assertThat(securityDto.getUserId(), is(USER_ID));
         TestSecurityContextHolder.clearContext();
     }
 

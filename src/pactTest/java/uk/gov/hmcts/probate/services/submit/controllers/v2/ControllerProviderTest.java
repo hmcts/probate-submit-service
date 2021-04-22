@@ -16,9 +16,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 
-@PactBroker(scheme = "${pact.broker.scheme}",host = "${pact.broker.baseUrl}", port = "${pact.broker.port}", tags={"${pact.broker.consumer.tag}"})
+@PactBroker(scheme = "${pact.broker.scheme}", host = "${pact.broker.baseUrl}", port = "${pact.broker.port}", tags = {
+    "${pact.broker.consumer.tag}"})
 @IgnoreNoPactsToVerify
-abstract public class ControllerProviderTest {
+public abstract class ControllerProviderTest {
 
     @Autowired
     ObjectMapper objectMapper;

@@ -8,7 +8,6 @@ import org.junit.Test;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CaseDetailsToCaseDataMapper;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
-import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
 import java.util.HashMap;
@@ -28,11 +27,11 @@ public class CaseDetailsToCaseDataMapperTest {
     @Test
     public void shouldMap() {
         Map<String, Object> map = ImmutableMap.<String, Object>builder()
-                .put("applicationType", "Personal")
-                .put("caseType", "intestacy")
-                .put("deceasedForenames", "Robert")
-                .put("deceasedSurname", "Baratheon")
-                .build();
+            .put("applicationType", "Personal")
+            .put("caseType", "intestacy")
+            .put("deceasedForenames", "Robert")
+            .put("deceasedSurname", "Baratheon")
+            .build();
         CaseDetails caseDetails = CaseDetails.builder().caseTypeId("GrantOfRepresentation").data(map).build();
 
         CaseData caseData = caseDetailsToCaseDataMapper.map(caseDetails);

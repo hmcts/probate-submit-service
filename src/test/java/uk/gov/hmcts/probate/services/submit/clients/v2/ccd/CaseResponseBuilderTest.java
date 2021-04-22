@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
@@ -48,8 +47,7 @@ public class CaseResponseBuilderTest {
     @Test
     public void shouldCreateResponseWithDate() {
         LocalDateTime localDateTime = LocalDateTime.now();
-        LocalDate localDate = localDateTime.toLocalDate();
-
+        final LocalDate localDate = localDateTime.toLocalDate();
         when(caseDetails.getCreatedDate()).thenReturn(localDateTime);
 
         ProbateCaseDetails probateCaseDetails = caseResponseBuilder.createCaseResponse(caseDetails);

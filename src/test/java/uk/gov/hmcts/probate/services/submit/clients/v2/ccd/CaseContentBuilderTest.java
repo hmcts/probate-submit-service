@@ -19,17 +19,14 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class CaseContentBuilderTest {
 
+    private static final String DESCRIPTOR = "Descriptor";
+    private static final String EVENT_TOKEN = "Event token";
     private CaseContentBuilder caseContentBuilder;
-
     @Mock
     private CaseData caseData;
     @Mock
     private StartEventResponse startEventResponse;
-
     private EventId eventId;
-
-    private static final String DESCRIPTOR = "Descriptor";
-    private static final String EVENT_TOKEN = "Event token";
 
     @Before
     public void setup() {
@@ -43,7 +40,8 @@ public class CaseContentBuilderTest {
     @Test
     public void shouldAddContent() {
 
-        CaseDataContent caseDataContent = caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse, DESCRIPTOR);
+        CaseDataContent caseDataContent =
+            caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse, DESCRIPTOR);
         assertThat(caseDataContent, is(notNullValue()));
         assertThat(caseDataContent.getCaseReference(), is(nullValue()));
         assertThat(caseDataContent.getEventToken(), is(EVENT_TOKEN));

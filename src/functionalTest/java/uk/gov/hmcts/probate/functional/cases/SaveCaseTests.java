@@ -18,11 +18,9 @@ public class SaveCaseTests extends IntegrationTestBase {
 
     @Rule
     public TestRetryRule retryRule = new TestRetryRule(3);
-
-    private Boolean setUp = false;
-
     String gopCaseId;
     String intestacyCaseId;
+    private Boolean setUp = false;
 
     @Before
     public void init() {
@@ -30,7 +28,7 @@ public class SaveCaseTests extends IntegrationTestBase {
             String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
             gopCaseId = utils.createTestCase(gopCaseData);
 
-            String intestacyCaseData =  utils.getJsonFromFile("intestacy.partial.json");
+            String intestacyCaseData = utils.getJsonFromFile("intestacy.partial.json");
             intestacyCaseId = utils.createTestCase(intestacyCaseData);
 
             setUp = true;
@@ -38,41 +36,41 @@ public class SaveCaseTests extends IntegrationTestBase {
     }
 
     @Test
-    public void saveSingleExecutorGOPCaseReturns200() {
+    public void saveSingleExecutorGopCaseReturns200() {
         String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
 
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(gopCaseData)
-                .when()
-                .post("/cases/" + gopCaseId)
-                .then()
-                .assertThat()
-                .statusCode(200)
-                .body("caseData", notNullValue())
-                .body("caseInfo.caseId", notNullValue())
-                .body("caseInfo.state", equalTo("Pending"))
-                .extract().jsonPath().prettify();
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(gopCaseData)
+            .when()
+            .post("/cases/" + gopCaseId)
+            .then()
+            .assertThat()
+            .statusCode(200)
+            .body("caseData", notNullValue())
+            .body("caseInfo.caseId", notNullValue())
+            .body("caseInfo.state", equalTo("Pending"))
+            .extract().jsonPath().prettify();
     }
 
     @Test
-    public void saveMultipleExecutorGOPCaseReturns200() {
+    public void saveMultipleExecutorGopCaseReturns200() {
         String gopCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
 
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(gopCaseData)
-                .when()
-                .post("/cases/" + gopCaseId)
-                .then()
-                .assertThat()
-                .statusCode(200)
-                .body("caseData", notNullValue())
-                .body("caseInfo.caseId", notNullValue())
-                .body("caseInfo.state", equalTo("Pending"))
-                .extract().jsonPath().prettify();
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(gopCaseData)
+            .when()
+            .post("/cases/" + gopCaseId)
+            .then()
+            .assertThat()
+            .statusCode(200)
+            .body("caseData", notNullValue())
+            .body("caseInfo.caseId", notNullValue())
+            .body("caseInfo.state", equalTo("Pending"))
+            .extract().jsonPath().prettify();
     }
 
     @Test
@@ -80,18 +78,18 @@ public class SaveCaseTests extends IntegrationTestBase {
         String intestacyCaseData = utils.getJsonFromFile("intestacy.full.json");
 
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(intestacyCaseData)
-                .when()
-                .post("/cases/" + intestacyCaseId)
-                .then()
-                .assertThat()
-                .statusCode(200)
-                .body("caseData", notNullValue())
-                .body("caseInfo.caseId", notNullValue())
-                .body("caseInfo.state", equalTo("Pending"))
-                .extract().jsonPath().prettify();
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(intestacyCaseData)
+            .when()
+            .post("/cases/" + intestacyCaseId)
+            .then()
+            .assertThat()
+            .statusCode(200)
+            .body("caseData", notNullValue())
+            .body("caseInfo.caseId", notNullValue())
+            .body("caseInfo.state", equalTo("Pending"))
+            .extract().jsonPath().prettify();
     }
 
     @Test
@@ -101,16 +99,16 @@ public class SaveCaseTests extends IntegrationTestBase {
         intestacyCaseData = intestacyCaseData.replace("appId", applicationId);
 
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(intestacyCaseData)
-                .when()
-                .post("/cases/caseworker/" + applicationId)
-                .then()
-                .assertThat()
-                .body("caseData", notNullValue())
-                .body("caseInfo.caseId", notNullValue())
-                .body("caseInfo.state", equalTo("Pending"));
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(intestacyCaseData)
+            .when()
+            .post("/cases/caseworker/" + applicationId)
+            .then()
+            .assertThat()
+            .body("caseData", notNullValue())
+            .body("caseInfo.caseId", notNullValue())
+            .body("caseInfo.state", equalTo("Pending"));
     }
 
     @Test
@@ -120,14 +118,14 @@ public class SaveCaseTests extends IntegrationTestBase {
         intestacyCaseData = intestacyCaseData.replace("appId", applicationId);
 
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCaseworkerHeaders())
-                .body(intestacyCaseData)
-                .when()
-                .post("/cases/caseworker/" + applicationId)
-                .then()
-                .assertThat()
-                .statusCode(403);
+            .relaxedHTTPSValidation()
+            .headers(utils.getCaseworkerHeaders())
+            .body(intestacyCaseData)
+            .when()
+            .post("/cases/caseworker/" + applicationId)
+            .then()
+            .assertThat()
+            .statusCode(403);
     }
 
     @Test
@@ -135,33 +133,33 @@ public class SaveCaseTests extends IntegrationTestBase {
         String caseId = RandomStringUtils.randomNumeric(16).toLowerCase();
 
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body("")
-                .when()
-                .post("/cases/" + caseId)
-                .then()
-                .assertThat()
-                .statusCode(400);
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body("")
+            .when()
+            .post("/cases/" + caseId)
+            .then()
+            .assertThat()
+            .statusCode(400);
     }
 
     @Test
-    public void initiateGOPCaseReturns200() {
+    public void initiateGopCaseReturns200() {
         String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
 
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(gopCaseData)
-                .when()
-                .post("/cases/initiate")
-                .then()
-                .assertThat()
-                .statusCode(200)
-                .body("caseData", notNullValue())
-                .body("caseInfo.caseId", notNullValue())
-                .body("caseInfo.state", equalTo("Pending"))
-                .extract().jsonPath().prettify();
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(gopCaseData)
+            .when()
+            .post("/cases/initiate")
+            .then()
+            .assertThat()
+            .statusCode(200)
+            .body("caseData", notNullValue())
+            .body("caseInfo.caseId", notNullValue())
+            .body("caseInfo.state", equalTo("Pending"))
+            .extract().jsonPath().prettify();
     }
 
     @Test
@@ -169,30 +167,30 @@ public class SaveCaseTests extends IntegrationTestBase {
         String intestacyCaseData = utils.getJsonFromFile("intestacy.partial.json");
 
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(intestacyCaseData)
-                .when()
-                .post("/cases/initiate")
-                .then()
-                .assertThat()
-                .statusCode(200)
-                .body("caseData", notNullValue())
-                .body("caseInfo.caseId", notNullValue())
-                .body("caseInfo.state", equalTo("Pending"))
-                .extract().jsonPath().prettify();
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(intestacyCaseData)
+            .when()
+            .post("/cases/initiate")
+            .then()
+            .assertThat()
+            .statusCode(200)
+            .body("caseData", notNullValue())
+            .body("caseInfo.caseId", notNullValue())
+            .body("caseInfo.state", equalTo("Pending"))
+            .extract().jsonPath().prettify();
     }
 
     @Test
     public void initiateCaseWithInvalidDataReturns400() {
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body("")
-                .when()
-                .post("/cases/initiate")
-                .then()
-                .assertThat()
-                .statusCode(400);
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body("")
+            .when()
+            .post("/cases/initiate")
+            .then()
+            .assertThat()
+            .statusCode(400);
     }
 }

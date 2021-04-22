@@ -26,12 +26,12 @@ public class ResponseDecoratorTest {
     @Test
     public void bodyToStringShouldReturnString() {
         Response response = Response.builder()
-                .status(400)
-                .reason("Bad Request")
-                .request(Request.create(HttpMethod.GET.toString(), "/api", Collections.emptyMap(), null, Util.UTF_8))
-                .headers(headers)
-                .body("hello world", UTF_8)
-                .build();
+            .status(400)
+            .reason("Bad Request")
+            .request(Request.create(HttpMethod.GET.toString(), "/api", Collections.emptyMap(), null, Util.UTF_8))
+            .headers(headers)
+            .body("hello world", UTF_8)
+            .build();
 
         ResponseDecorator responseDecorator = new ResponseDecorator(response);
         String body = responseDecorator.bodyToString();
@@ -42,11 +42,11 @@ public class ResponseDecoratorTest {
     @Test
     public void bodyToStringShouldReturnEmptyStringIfResponseBodyIsNull() {
         Response response = Response.builder()
-                .status(400)
-                .reason("Bad Request")
-                .request(Request.create(HttpMethod.GET.toString(), "/api", Collections.emptyMap(), null, Util.UTF_8))
-                .headers(headers)
-                .build();
+            .status(400)
+            .reason("Bad Request")
+            .request(Request.create(HttpMethod.GET.toString(), "/api", Collections.emptyMap(), null, Util.UTF_8))
+            .headers(headers)
+            .build();
 
         ResponseDecorator responseDecorator = new ResponseDecorator(response);
         String body = responseDecorator.bodyToString();
@@ -57,15 +57,16 @@ public class ResponseDecoratorTest {
 
     @Test
     public void mapBodyToApiClientErrorShouldReturnApiClientError() {
-        String validApiClientErrorResponse = "{\"status\":500,\"error\":\"Not Found\",\"exception\":\"ResourceNotFound\"}";
+        String validApiClientErrorResponse =
+            "{\"status\":500,\"error\":\"Not Found\",\"exception\":\"ResourceNotFound\"}";
 
         Response response = Response.builder()
-                .status(500)
-                .reason("Bad Request")
-                .request(Request.create(HttpMethod.GET.toString(), "/api", Collections.emptyMap(), null, Util.UTF_8))
-                .headers(headers)
-                .body(validApiClientErrorResponse, UTF_8)
-                .build();
+            .status(500)
+            .reason("Bad Request")
+            .request(Request.create(HttpMethod.GET.toString(), "/api", Collections.emptyMap(), null, Util.UTF_8))
+            .headers(headers)
+            .body(validApiClientErrorResponse, UTF_8)
+            .build();
 
         ResponseDecorator responseDecorator = new ResponseDecorator(response);
         ApiClientErrorResponse errorResponse = (ApiClientErrorResponse) responseDecorator.mapBodyToErrorResponse();
@@ -80,11 +81,11 @@ public class ResponseDecoratorTest {
     public void mapBodyToApiClientErrorShouldReturnEmptyApiClientErrorWhenResponseBodyIsNull() {
 
         Response response = Response.builder()
-                .status(500)
-                .reason("Bad Request")
-                .request(Request.create(HttpMethod.GET.toString(), "/api", Collections.emptyMap(), null, Util.UTF_8))
-                .headers(headers)
-                .build();
+            .status(500)
+            .reason("Bad Request")
+            .request(Request.create(HttpMethod.GET.toString(), "/api", Collections.emptyMap(), null, Util.UTF_8))
+            .headers(headers)
+            .build();
 
         ResponseDecorator responseDecorator = new ResponseDecorator(response);
         ApiClientErrorResponse errorResponse = (ApiClientErrorResponse) responseDecorator.mapBodyToErrorResponse();

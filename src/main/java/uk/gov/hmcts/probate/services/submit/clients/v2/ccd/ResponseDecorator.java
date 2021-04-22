@@ -1,6 +1,5 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.Util;
@@ -17,7 +16,7 @@ class ResponseDecorator {
     private Response response;
 
     ResponseDecorator(Response response) {
-        this.response=response;
+        this.response = response;
     }
 
     String bodyToString() {

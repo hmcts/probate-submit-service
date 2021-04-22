@@ -35,18 +35,26 @@ public class RegistryService {
         }
     }
 
-    private void determineRegistryLocationName(Registry nextRegistry, GrantOfRepresentationData grantOfRepresentationData) {
-        if (grantOfRepresentationData.getLanguagePreferenceWelsh() != null && grantOfRepresentationData.getLanguagePreferenceWelsh()) {
+    private void determineRegistryLocationName(Registry nextRegistry,
+                                               GrantOfRepresentationData grantOfRepresentationData) {
+        if (grantOfRepresentationData.getLanguagePreferenceWelsh() != null && grantOfRepresentationData
+            .getLanguagePreferenceWelsh()) {
             grantOfRepresentationData.setRegistryLocation(RegistryLocation.CARDIFF);
-        } else if (grantOfRepresentationData.getRegistryLocation() == null || (grantOfRepresentationData.getLanguagePreferenceWelsh() != null && !grantOfRepresentationData.getLanguagePreferenceWelsh() && grantOfRepresentationData.getRegistryLocation().equals(RegistryLocation.CARDIFF))) {
-            grantOfRepresentationData.setRegistryLocation(RegistryLocation.findRegistryLocationByName(nextRegistry.getName()));
+        } else if (grantOfRepresentationData.getRegistryLocation() == null || (
+            grantOfRepresentationData.getLanguagePreferenceWelsh() != null && !grantOfRepresentationData
+                .getLanguagePreferenceWelsh() && grantOfRepresentationData.getRegistryLocation()
+                .equals(RegistryLocation.CARDIFF))) {
+            grantOfRepresentationData
+                .setRegistryLocation(RegistryLocation.findRegistryLocationByName(nextRegistry.getName()));
         }
     }
 
     private void determineRegistryLocationName(Registry nextRegistry, CaveatData caveatData) {
         if (caveatData.getLanguagePreferenceWelsh() != null && caveatData.getLanguagePreferenceWelsh()) {
             caveatData.setRegistryLocation(RegistryLocation.CARDIFF);
-        } else if (caveatData.getRegistryLocation() == null || (caveatData.getLanguagePreferenceWelsh() != null && !caveatData.getLanguagePreferenceWelsh() && caveatData.getRegistryLocation().equals(RegistryLocation.CARDIFF))) {
+        } else if (caveatData.getRegistryLocation() == null || (caveatData.getLanguagePreferenceWelsh() != null
+            && !caveatData.getLanguagePreferenceWelsh() && caveatData.getRegistryLocation()
+            .equals(RegistryLocation.CARDIFF))) {
             caveatData.setRegistryLocation(RegistryLocation.findRegistryLocationByName(nextRegistry.getName()));
         }
     }

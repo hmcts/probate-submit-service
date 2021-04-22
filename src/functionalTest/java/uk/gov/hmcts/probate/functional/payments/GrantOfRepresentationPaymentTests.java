@@ -45,104 +45,103 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
     @Test
     public void updatePendingCaseWithInitiatedPaymentReturns200() {
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(paymentInitiatedData)
-                .when()
-                .post("/payments/" + caseId + "/cases")
-                .then()
-                .assertThat()
-                .statusCode(200)
-                .body("caseData", notNullValue())
-                .body("caseInfo.caseId", notNullValue())
-                .body("caseInfo.state", equalTo("PAAppCreated"))
-                .extract().jsonPath().prettify();
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(paymentInitiatedData)
+            .when()
+            .post("/payments/" + caseId + "/cases")
+            .then()
+            .assertThat()
+            .statusCode(200)
+            .body("caseData", notNullValue())
+            .body("caseInfo.caseId", notNullValue())
+            .body("caseInfo.state", equalTo("PAAppCreated"))
+            .extract().jsonPath().prettify();
     }
 
 
     @Test
     public void updatePendingCaseWithoutPaymentReturns400() {
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(caseData)
-                .when()
-                .post("/payments/" + caseId + "/cases")
-                .then()
-                .assertThat()
-                .statusCode(400);
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(caseData)
+            .when()
+            .post("/payments/" + caseId + "/cases")
+            .then()
+            .assertThat()
+            .statusCode(400);
     }
 
     @Test
     public void updatePendingCaseWithSuccessfulPaymentReturns422() {
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(paymentSuccessData)
-                .when()
-                .post("/payments/" + caseId + "/cases")
-                .then()
-                .assertThat()
-                .statusCode(422);
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(paymentSuccessData)
+            .when()
+            .post("/payments/" + caseId + "/cases")
+            .then()
+            .assertThat()
+            .statusCode(422);
     }
 
     @Test
-    public void updatePAAppCreatedCaseWithSuccessfulPaymentReturns200() throws InterruptedException {
+    public void updatePaAppCreatedCaseWithSuccessfulPaymentReturns200() throws InterruptedException {
         initiatePayment();
 
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(paymentSuccessData)
-                .when()
-                .post("/payments/" + caseId + "/cases")
-                .then()
-                .assertThat()
-                .statusCode(200)
-                .body("caseData", notNullValue())
-                .body("caseInfo.caseId", notNullValue())
-                .body("caseInfo.state", equalTo("CaseCreated"))
-                .extract().jsonPath().prettify();
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(paymentSuccessData)
+            .when()
+            .post("/payments/" + caseId + "/cases")
+            .then()
+            .assertThat()
+            .statusCode(200)
+            .body("caseData", notNullValue())
+            .body("caseInfo.caseId", notNullValue())
+            .body("caseInfo.state", equalTo("CaseCreated"))
+            .extract().jsonPath().prettify();
     }
 
     @Test
-    public void updatePAAppCreatedCaseWithoutPaymentReturns400() throws InterruptedException {
+    public void updatePaAppCreatedCaseWithoutPaymentReturns400() throws InterruptedException {
         initiatePayment();
 
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(caseData)
-                .when()
-                .post("/payments/" + caseId + "/cases")
-                .then()
-                .assertThat()
-                .statusCode(400);
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(caseData)
+            .when()
+            .post("/payments/" + caseId + "/cases")
+            .then()
+            .assertThat()
+            .statusCode(400);
     }
 
     @Test
-    public void updatePAAppCreatedCaseWithInitiatedPaymentReturns422() {
+    public void updatePaAppCreatedCaseWithInitiatedPaymentReturns422() {
         initiatePayment();
 
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(paymentInitiatedData)
-                .when()
-                .post("/payments/" + caseId + "/cases")
-                .then()
-                .assertThat()
-                .statusCode(422);
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(paymentInitiatedData)
+            .when()
+            .post("/payments/" + caseId + "/cases")
+            .then()
+            .assertThat()
+            .statusCode(422);
     }
-
 
 
     public void initiatePayment() {
         RestAssured.given()
-                    .relaxedHTTPSValidation()
-                    .headers(utils.getCitizenHeaders())
-                    .body(paymentInitiatedData)
-                    .when()
-                    .post("/payments/" + caseId + "/cases");
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(paymentInitiatedData)
+            .when()
+            .post("/payments/" + caseId + "/cases");
     }
 }

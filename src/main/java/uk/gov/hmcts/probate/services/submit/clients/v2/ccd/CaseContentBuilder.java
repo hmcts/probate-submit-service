@@ -14,7 +14,8 @@ import uk.gov.hmcts.reform.probate.model.cases.EventId;
 @RequiredArgsConstructor
 public class CaseContentBuilder {
 
-    public CaseDataContent createCaseDataContent(CaseData caseData, EventId eventId, StartEventResponse startEventResponse, String eventDescriptor) {
+    public CaseDataContent createCaseDataContent(CaseData caseData, EventId eventId,
+                                                 StartEventResponse startEventResponse, String eventDescriptor) {
         return CaseDataContent.builder()
             .event(createEvent(eventId, eventDescriptor))
             .eventToken(startEventResponse.getToken())

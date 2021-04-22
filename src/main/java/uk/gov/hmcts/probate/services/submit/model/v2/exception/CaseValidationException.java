@@ -3,8 +3,8 @@ package uk.gov.hmcts.probate.services.submit.model.v2.exception;
 import lombok.Getter;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 
-import javax.validation.ConstraintViolation;
 import java.util.Set;
+import javax.validation.ConstraintViolation;
 
 public class CaseValidationException extends RuntimeException {
 

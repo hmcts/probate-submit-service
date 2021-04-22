@@ -21,23 +21,25 @@ import uk.gov.hmcts.reform.probate.model.validation.groups.nullcheck.PaNullCheck
 import uk.gov.hmcts.reform.probate.model.validation.groups.submission.IntestacySubmission;
 import uk.gov.hmcts.reform.probate.model.validation.groups.submission.PaSubmission;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import javax.validation.groups.Default;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import javax.validation.groups.Default;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class ValidationServiceImpl implements ValidationService {
 
-    private static final List<Class> PA_VALIDATION_GROUPS = Lists.newArrayList(PaNullCheck.class, PaFieldCheck.class, PaCrossFieldCheck.class);
+    private static final List<Class> PA_VALIDATION_GROUPS =
+        Lists.newArrayList(PaNullCheck.class, PaFieldCheck.class, PaCrossFieldCheck.class);
 
-    private static final List<Class> INTESTACY_VALIDATION_GROUPS = Lists.newArrayList(IntestacyNullCheck.class, IntestacyFieldCheck.class, IntestacyCrossFieldCheck.class);
+    private static final List<Class> INTESTACY_VALIDATION_GROUPS =
+        Lists.newArrayList(IntestacyNullCheck.class, IntestacyFieldCheck.class, IntestacyCrossFieldCheck.class);
 
     private static final List<Class> CAVEAT_VALIDATION_GROUPS = Lists.newArrayList(Default.class);
 
@@ -47,10 +49,11 @@ public class ValidationServiceImpl implements ValidationService {
 
     private static final List<Class> CAVEAT_SUBMISSION_GROUPS = Lists.newArrayList();
 
-    private final Map<GrantType, List<Class>> grantTypeValidationGroupMap = ImmutableMap.<GrantType, List<Class>>builder()
-        .put(GrantType.GRANT_OF_PROBATE, PA_VALIDATION_GROUPS)
-        .put(GrantType.INTESTACY, INTESTACY_VALIDATION_GROUPS)
-        .build();
+    private final Map<GrantType, List<Class>> grantTypeValidationGroupMap =
+        ImmutableMap.<GrantType, List<Class>>builder()
+            .put(GrantType.GRANT_OF_PROBATE, PA_VALIDATION_GROUPS)
+            .put(GrantType.INTESTACY, INTESTACY_VALIDATION_GROUPS)
+            .build();
 
 
     private final Map<CaseType, Function<CaseData, List<Class>>> caseTypeValidationGroupMap =
@@ -59,10 +62,11 @@ public class ValidationServiceImpl implements ValidationService {
             .put(CaseType.CAVEAT, caseData -> CAVEAT_VALIDATION_GROUPS)
             .build();
 
-    private final Map<GrantType, List<Class>> grantTypeSubmissionGroupMap = ImmutableMap.<GrantType, List<Class>>builder()
-        .put(GrantType.GRANT_OF_PROBATE, PA_SUBMISSION_GROUPS)
-        .put(GrantType.INTESTACY, INTESTACY_SUBMISSION_GROUPS)
-        .build();
+    private final Map<GrantType, List<Class>> grantTypeSubmissionGroupMap =
+        ImmutableMap.<GrantType, List<Class>>builder()
+            .put(GrantType.GRANT_OF_PROBATE, PA_SUBMISSION_GROUPS)
+            .put(GrantType.INTESTACY, INTESTACY_SUBMISSION_GROUPS)
+            .build();
 
 
     private final Map<CaseType, Function<CaseData, List<Class>>> caseTypeSubmissionGroupMap =
@@ -80,8 +84,8 @@ public class ValidationServiceImpl implements ValidationService {
     }
 
     private void validate(ProbateCaseDetails probateCaseDetails, List<Class> submissionGroups) {
-        log.info("validationServiceImpl.validate caseId: {}", (probateCaseDetails.getCaseInfo()!= null ? 
-            probateCaseDetails.getCaseInfo().getCaseId() : "NA"));
+        log.info("validationServiceImpl.validate caseId: {}", (probateCaseDetails.getCaseInfo() != null
+            ? probateCaseDetails.getCaseInfo().getCaseId() : "NA"));
         CaseData caseData = probateCaseDetails.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
         List<Class> validationGroupClasses = caseTypeValidationGroupMap.get(caseType).apply(caseData);

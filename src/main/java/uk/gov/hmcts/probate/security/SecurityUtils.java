@@ -24,8 +24,8 @@ public class SecurityUtils {
         return headers;
     }
 
-    public SecurityDTO getSecurityDTO() {
-        return SecurityDTO.builder()
+    public SecurityDto getSecurityDto() {
+        return SecurityDto.builder()
                 .authorisation(getUserToken())
                 .userId(getUserId())
                 .serviceAuthorisation(generateServiceToken())

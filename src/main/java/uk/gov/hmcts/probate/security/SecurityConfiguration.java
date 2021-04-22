@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import uk.gov.hmcts.reform.auth.checker.core.RequestAuthorizer;
@@ -33,10 +34,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/submissions/**")
                 .antMatchers("/payments/**")
                 .antMatchers("/ccd-case-update/**")
+                .antMatchers("/health", "/health/liveness")
                 .and()
                 .addFilter(filter)
                 .csrf().disable()
                 .authorizeRequests()
                 .anyRequest().authenticated();
     }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/swagger-ui.html",
+            "/swagger-resources/**",
+            "/webjars/springfox-swagger-ui/**",
+            "/health",
+            "/health/liveness",
+            "/info",
+            "/");
+    }
+
 }

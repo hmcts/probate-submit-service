@@ -15,7 +15,7 @@ import uk.gov.hmcts.reform.probate.model.client.ErrorResponse;
 public class ProbateExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ApiClientException.class)
-    public ResponseEntity<ErrorResponse> handleApiClientException(final ApiClientException exception){
+    public ResponseEntity<ErrorResponse> handleApiClientException(final ApiClientException exception) {
         HttpStatus status = HttpStatus.resolve(exception.getStatus());
 
         if (status == null) {
@@ -26,7 +26,7 @@ public class ProbateExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AssertFieldException.class)
-    public ResponseEntity<ErrorResponse> handleAssertFieldException(final AssertFieldException exception){
+    public ResponseEntity<ErrorResponse> handleAssertFieldException(final AssertFieldException exception) {
         return new ResponseEntity<>(exception.getErrorResponse(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

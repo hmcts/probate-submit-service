@@ -1,6 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
-import au.  com.dius.pact.provider.junit.Provider;
+import au.com.dius.pact.provider.junit.Provider;
 import au.com.dius.pact.provider.junit.State;
 import au.com.dius.pact.provider.junit.target.HttpTarget;
 import au.com.dius.pact.provider.junit.target.Target;
@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.gov.hmcts.probate.security.SecurityDTO;
+import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
@@ -30,7 +30,6 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 
@@ -38,7 +37,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESEN
 @RunWith(SpringRestPactRunner.class)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {
-        "server.port=8125", "spring.application.name=PACT_TEST"
+    "server.port=8125", "spring.application.name=PACT_TEST"
 })
 public class SubmissionsControllerProviderTest extends ControllerProviderTest {
 
@@ -60,7 +59,7 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
 
     private GrantOfRepresentationData caseData;
 
-    private SecurityDTO securityDTO;
+    private SecurityDto securityDto;
 
     private CaseInfo caseInfo;
 
@@ -68,27 +67,27 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
 
     @Before
     public void setUp() {
-        securityDTO = SecurityDTO.builder().build();
-        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        securityDto = SecurityDto.builder().build();
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
 
     }
 
     @State({"provider POSTS submission with success",
-            "provider POSTS  submission with success"})
+        "provider POSTS  submission with success"})
     public void toPostSubmissionCaseDetailsWithSuccess() throws IOException, JSONException {
 
         caseResponse = getProbateCaseDetails("intestacyGrantOfRepresentation_full_submission.json");
 
-        when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
-                .thenReturn(Optional.of(caseResponse));
+        when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto))
+            .thenReturn(Optional.of(caseResponse));
         when(coreCaseDataService.updateCase(anyString(), any(GrantOfRepresentationData.class),
-                any(EventId.class), any(SecurityDTO.class)))
-                .thenReturn(caseResponse);
+            any(EventId.class), any(SecurityDto.class)))
+            .thenReturn(caseResponse);
 
     }
 
     @State({"provider POSTS submission with errors",
-            "provider POSTS submission with errors"})
+        "provider POSTS submission with errors"})
     public void verifyExecutePostSubmissionWithClientErrors() {
 
         ApiClientError apiClientError = new ApiClientError();
@@ -100,7 +99,7 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
         ErrorResponse errorResponse = new ApiClientErrorResponse(apiClientError);
         ApiClientException apiClientException = new ApiClientException(400, errorResponse);
 
-        when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
-                .thenThrow(apiClientException);
+        when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto))
+            .thenThrow(apiClientException);
     }
 }

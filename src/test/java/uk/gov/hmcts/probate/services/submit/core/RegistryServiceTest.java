@@ -17,10 +17,10 @@ import static org.junit.Assert.assertThat;
 public class RegistryServiceTest {
 
     private static final String CTSC_EMAIL = "ctsc@email.com";
-    private static final String CTSC_ADDRESS = "Line 1 Ox\n" +
-        "Line 2 Ox\n" +
-        "Line 3 Ox\n" +
-        "PostCode Ox\n";
+    private static final String CTSC_ADDRESS = "Line 1 Ox\n"
+        + "Line 2 Ox\n"
+        + "Line 3 Ox\n"
+        + "PostCode Ox\n";
 
     @Autowired
     private RegistryService registryService;
@@ -28,7 +28,7 @@ public class RegistryServiceTest {
     @Test
     public void shouldGetRegistry() {
         GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder()
-                .build();
+            .build();
 
         registryService.updateRegistry(grantOfRepresentationData);
         assertThat(grantOfRepresentationData.getRegistryLocation(), is(RegistryLocation.CTSC));
@@ -36,7 +36,7 @@ public class RegistryServiceTest {
         assertThat(grantOfRepresentationData.getRegistryEmailAddress(), is(CTSC_EMAIL));
 
         CaveatData caveatData = CaveatData.builder()
-                .build();
+            .build();
         registryService.updateRegistry(caveatData);
 
         assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CTSC));
@@ -44,7 +44,8 @@ public class RegistryServiceTest {
 
     @Test
     public void shouldSetCardiffRegistryForWelshCase() {
-        GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.TRUE)
+        GrantOfRepresentationData grantOfRepresentationData =
+            GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.TRUE)
                 .build();
 
         registryService.updateRegistry(grantOfRepresentationData);
@@ -53,7 +54,7 @@ public class RegistryServiceTest {
         assertThat(grantOfRepresentationData.getRegistryEmailAddress(), is(CTSC_EMAIL));
 
         CaveatData caveatData = CaveatData.builder().languagePreferenceWelsh(Boolean.TRUE)
-                .build();
+            .build();
         registryService.updateRegistry(caveatData);
 
         assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CARDIFF));
@@ -61,15 +62,17 @@ public class RegistryServiceTest {
 
     @Test
     public void shouldSetCardiffRegistryForWelshCaseEvenIfRegistryPreviouslyPopulated() {
-        GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.TRUE)
-               .registryLocation(RegistryLocation.CTSC) .build();
+        GrantOfRepresentationData grantOfRepresentationData =
+            GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.TRUE)
+                .registryLocation(RegistryLocation.CTSC).build();
 
         registryService.updateRegistry(grantOfRepresentationData);
         assertThat(grantOfRepresentationData.getRegistryLocation(), is(RegistryLocation.CARDIFF));
         assertThat(grantOfRepresentationData.getRegistryAddress(), is(CTSC_ADDRESS));
         assertThat(grantOfRepresentationData.getRegistryEmailAddress(), is(CTSC_EMAIL));
 
-        CaveatData caveatData = CaveatData.builder().registryLocation(RegistryLocation.CTSC).languagePreferenceWelsh(Boolean.TRUE).build();
+        CaveatData caveatData =
+            CaveatData.builder().registryLocation(RegistryLocation.CTSC).languagePreferenceWelsh(Boolean.TRUE).build();
         registryService.updateRegistry(caveatData);
 
         assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CARDIFF));
@@ -77,14 +80,17 @@ public class RegistryServiceTest {
 
     @Test
     public void shouldNotChangeRegistryIfRegistryPreviouslyPopulatedAndLanguagePreferenceNotWelsh() {
-        GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.FALSE)
-                .registryLocation(RegistryLocation.BIRMINGHAM) .build();
+        GrantOfRepresentationData grantOfRepresentationData =
+            GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.FALSE)
+                .registryLocation(RegistryLocation.BIRMINGHAM).build();
 
         registryService.updateRegistry(grantOfRepresentationData);
         assertThat(grantOfRepresentationData.getRegistryLocation(), is(RegistryLocation.BIRMINGHAM));
 
 
-        CaveatData caveatData = CaveatData.builder().registryLocation(RegistryLocation.MANCHESTER).languagePreferenceWelsh(Boolean.FALSE).build();
+        CaveatData caveatData =
+            CaveatData.builder().registryLocation(RegistryLocation.MANCHESTER).languagePreferenceWelsh(Boolean.FALSE)
+                .build();
         registryService.updateRegistry(caveatData);
 
         assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.MANCHESTER));
@@ -92,7 +98,9 @@ public class RegistryServiceTest {
 
     @Test
     public void shouldSetCtcsRegistryForEnglishCaseIfPreviouslyCardiff() {
-        GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.FALSE).registryLocation(RegistryLocation.CARDIFF)
+        GrantOfRepresentationData grantOfRepresentationData =
+            GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.FALSE)
+                .registryLocation(RegistryLocation.CARDIFF)
                 .build();
 
         registryService.updateRegistry(grantOfRepresentationData);
@@ -100,7 +108,9 @@ public class RegistryServiceTest {
         assertThat(grantOfRepresentationData.getRegistryAddress(), is(CTSC_ADDRESS));
         assertThat(grantOfRepresentationData.getRegistryEmailAddress(), is(CTSC_EMAIL));
 
-        CaveatData caveatData = CaveatData.builder().registryLocation(RegistryLocation.CARDIFF).languagePreferenceWelsh(Boolean.FALSE).build();
+        CaveatData caveatData =
+            CaveatData.builder().registryLocation(RegistryLocation.CARDIFF).languagePreferenceWelsh(Boolean.FALSE)
+                .build();
         registryService.updateRegistry(caveatData);
 
         assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CTSC));

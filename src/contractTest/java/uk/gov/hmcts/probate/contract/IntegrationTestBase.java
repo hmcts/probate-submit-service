@@ -15,27 +15,24 @@ import uk.gov.hmcts.probate.contract.util.ContractTestUtils;
 @ContextConfiguration(classes = TestContextConfiguration.class)
 public abstract class IntegrationTestBase {
 
+    @Rule
+    public SpringIntegration springIntegration;
     @Autowired
     protected SolCcdServiceAuthTokenGenerator solCcdServiceAuthTokenGenerator;
-
     @Autowired
     protected ContractTestUtils contractTestUtils;
-
     private String solCcdServiceUrl;
+
+
+    public IntegrationTestBase() {
+        this.springIntegration = new SpringIntegration();
+
+    }
 
     @Autowired
     public void solCcdServiceUrl(@Value("${ccd.data.store.api.url}") String solCcdServiceUrl) {
         this.solCcdServiceUrl = solCcdServiceUrl;
         RestAssured.baseURI = solCcdServiceUrl;
         RestAssured.defaultParser = Parser.JSON;
-    }
-
-
-    @Rule
-    public SpringIntegration springIntegration;
-
-    public IntegrationTestBase() {
-        this.springIntegration = new SpringIntegration();
-
     }
 }

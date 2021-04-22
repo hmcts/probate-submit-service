@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.gov.hmcts.probate.security.SecurityDTO;
+import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CaseResponseBuilder;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CcdElasticSearchQueryBuilder;
@@ -44,6 +44,10 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.CAVEAT_EXPIRED_FOR
 
 @RunWith(MockitoJUnitRunner.class)
 public class CaveatExpiryServiceImplTest {
+    private static final String EXPIRY_DATE = "2020-12-31";
+    private static final String SEARCH_QUERY = "Search query";
+    private static final String CAVEAT_ID = "1234567890";
+    private static final String EVENT_DESCRIPTOR_CAVEAT_EXPIRED = "Caveat Auto Expired";
     @Mock
     private CoreCaseDataService coreCaseDataService;
     @Mock
@@ -52,17 +56,10 @@ public class CaveatExpiryServiceImplTest {
     private SecurityUtils securityUtils;
     @Mock
     private CoreCaseDataApi coreCaseDataApi;
-
     @Mock
     private CcdElasticSearchQueryBuilder elasticSearchQueryBuilder;
-
     @InjectMocks
     private CaveatExpiryServiceImpl caveatExpiryService;
-
-    private static final String EXPIRY_DATE = "2020-12-31";
-    private static final String SEARCH_QUERY = "Search query";
-    private static final String CAVEAT_ID = "1234567890";
-    private static final String EVENT_DESCRIPTOR_CAVEAT_EXPIRED = "Caveat Auto Expired";
 
     @Before
     public void setUp() {
@@ -70,14 +67,14 @@ public class CaveatExpiryServiceImplTest {
 
     @Test
     public void shouldExpireNoCaveatsWhenNoneHaveExpired() {
-        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        SecurityDto securityDto = SecurityDto.builder().build();
         SearchResult searchResult = SearchResult.builder().cases(Collections.emptyList()).build();
 
-        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
         when(coreCaseDataApi.searchCases(
-            securityDTO.getAuthorisation(),
-            securityDTO.getServiceAuthorisation(),
+            securityDto.getAuthorisation(),
+            securityDto.getServiceAuthorisation(),
             CaseType.CAVEAT.getName(),
             SEARCH_QUERY)).thenReturn(searchResult);
 
@@ -85,20 +82,19 @@ public class CaveatExpiryServiceImplTest {
 
         assertThat(expiredCaveats, is(notNullValue()));
         assertThat(expiredCaveats.size(), is(0));
-        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
     }
 
     @Test
     public void shouldExpireCaveatsNotMatched() {
         CaseState caseState = CAVEAT_NOT_MATCHED;
-        EventId eventId = CAVEAT_EXPIRED_FOR_CAVEAT_NOT_MATCHED;
-
+        final EventId eventId = CAVEAT_EXPIRED_FOR_CAVEAT_NOT_MATCHED;
         CaseInfo caseInfo = CaseInfo.builder().state(caseState)
             .caseId(CAVEAT_ID)
             .build();
         CaveatData caseData = CaveatData.builder().build();
-        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        SecurityDto securityDto = SecurityDto.builder().build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseInfo(caseInfo)
             .caseData(caseData)
@@ -108,11 +104,11 @@ public class CaveatExpiryServiceImplTest {
         SearchResult searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
 
         when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
-        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
         when(coreCaseDataApi.searchCases(
-            securityDTO.getAuthorisation(),
-            securityDTO.getServiceAuthorisation(),
+            securityDto.getAuthorisation(),
+            securityDto.getServiceAuthorisation(),
             CaseType.CAVEAT.getName(),
             SEARCH_QUERY)).thenReturn(searchResult);
 
@@ -122,22 +118,21 @@ public class CaveatExpiryServiceImplTest {
         assertThat(expiredCaveats.size(), is(1));
         assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName(), containsString("CaveatData"));
         assertThat(((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry(), is(true));
-        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
-            probateCaseDetails.getCaseData(), eventId, securityDTO, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
+            probateCaseDetails.getCaseData(), eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
     }
 
     @Test
     public void shouldExpireCaveatsAwaitingResolution() {
         CaseState caseState = CAVEAT_AWAITING_RESOLUTION;
-        EventId eventId = CAVEAT_EXPIRED_FOR_AWAITING_RESOLUTION;
-
+        final EventId eventId = CAVEAT_EXPIRED_FOR_AWAITING_RESOLUTION;
         CaseInfo caseInfo = CaseInfo.builder().state(caseState)
             .caseId(CAVEAT_ID)
             .build();
         CaveatData caseData = CaveatData.builder().build();
-        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        SecurityDto securityDto = SecurityDto.builder().build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseInfo(caseInfo)
             .caseData(caseData)
@@ -147,11 +142,11 @@ public class CaveatExpiryServiceImplTest {
         SearchResult searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
 
         when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
-        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
         when(coreCaseDataApi.searchCases(
-            securityDTO.getAuthorisation(),
-            securityDTO.getServiceAuthorisation(),
+            securityDto.getAuthorisation(),
+            securityDto.getServiceAuthorisation(),
             CaseType.CAVEAT.getName(),
             SEARCH_QUERY)).thenReturn(searchResult);
 
@@ -161,22 +156,21 @@ public class CaveatExpiryServiceImplTest {
         assertThat(expiredCaveats.size(), is(1));
         assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName(), containsString("CaveatData"));
         assertThat(((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry(), is(true));
-        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
-            probateCaseDetails.getCaseData(), eventId, securityDTO, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
+            probateCaseDetails.getCaseData(), eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
     }
 
     @Test
     public void shouldExpireCaveatsAwaitingWarningResponse() {
         CaseState caseState = CAVEAT_AWAITING_WARNING_RESPONSE;
-        EventId eventId = CAVEAT_APPLY_FOR_AWAITING_WARNING_RESPONSE;
-
+        final EventId eventId = CAVEAT_APPLY_FOR_AWAITING_WARNING_RESPONSE;
         CaseInfo caseInfo = CaseInfo.builder().state(caseState)
             .caseId(CAVEAT_ID)
             .build();
         CaveatData caseData = CaveatData.builder().build();
-        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        SecurityDto securityDto = SecurityDto.builder().build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseInfo(caseInfo)
             .caseData(caseData)
@@ -186,11 +180,11 @@ public class CaveatExpiryServiceImplTest {
         SearchResult searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
 
         when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
-        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
         when(coreCaseDataApi.searchCases(
-            securityDTO.getAuthorisation(),
-            securityDTO.getServiceAuthorisation(),
+            securityDto.getAuthorisation(),
+            securityDto.getServiceAuthorisation(),
             CaseType.CAVEAT.getName(),
             SEARCH_QUERY)).thenReturn(searchResult);
 
@@ -200,22 +194,21 @@ public class CaveatExpiryServiceImplTest {
         assertThat(expiredCaveats.size(), is(1));
         assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName(), containsString("CaveatData"));
         assertThat(((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry(), is(true));
-        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
-            probateCaseDetails.getCaseData(), eventId, securityDTO, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
+            probateCaseDetails.getCaseData(), eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
     }
 
     @Test
     public void shouldExpireCaveatsWarningValidation() {
         CaseState caseState = CAVEAT_WARNING_VALIDATION;
-        EventId eventId = CAVEAT_APPLY_FOR_WARNNG_VALIDATION;
-
+        final EventId eventId = CAVEAT_APPLY_FOR_WARNNG_VALIDATION;
         CaseInfo caseInfo = CaseInfo.builder().state(caseState)
             .caseId(CAVEAT_ID)
             .build();
         CaveatData caseData = CaveatData.builder().build();
-        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        SecurityDto securityDto = SecurityDto.builder().build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseInfo(caseInfo)
             .caseData(caseData)
@@ -225,11 +218,11 @@ public class CaveatExpiryServiceImplTest {
         SearchResult searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
 
         when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
-        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
         when(coreCaseDataApi.searchCases(
-            securityDTO.getAuthorisation(),
-            securityDTO.getServiceAuthorisation(),
+            securityDto.getAuthorisation(),
+            securityDto.getServiceAuthorisation(),
             CaseType.CAVEAT.getName(),
             SEARCH_QUERY)).thenReturn(searchResult);
 
@@ -239,22 +232,22 @@ public class CaveatExpiryServiceImplTest {
         assertThat(expiredCaveats.size(), is(1));
         assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName(), containsString("CaveatData"));
         assertThat(((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry(), is(true));
-        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
-            probateCaseDetails.getCaseData(), eventId, securityDTO, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
+            probateCaseDetails.getCaseData(), eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
     }
 
     @Test
     public void shouldFailExpireCaveatsWarningValidation() {
         CaseState caseState = CAVEAT_WARNING_VALIDATION;
-        EventId eventId = CAVEAT_APPLY_FOR_WARNNG_VALIDATION;
+        final EventId eventId = CAVEAT_APPLY_FOR_WARNNG_VALIDATION;
 
         CaseInfo caseInfo = CaseInfo.builder().state(caseState)
             .caseId(CAVEAT_ID)
             .build();
         CaveatData caseData = CaveatData.builder().build();
-        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        SecurityDto securityDto = SecurityDto.builder().build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseInfo(caseInfo)
             .caseData(caseData)
@@ -264,24 +257,24 @@ public class CaveatExpiryServiceImplTest {
         SearchResult searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
 
         when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
-        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
         when(coreCaseDataApi.searchCases(
-            securityDTO.getAuthorisation(),
-            securityDTO.getServiceAuthorisation(),
+            securityDto.getAuthorisation(),
+            securityDto.getServiceAuthorisation(),
             CaseType.CAVEAT.getName(),
             SEARCH_QUERY)).thenReturn(searchResult);
         RuntimeException e = new RuntimeException("Problem updating caveat");
         when(coreCaseDataService.updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
-            probateCaseDetails.getCaseData(), eventId, securityDTO, EVENT_DESCRIPTOR_CAVEAT_EXPIRED)).thenThrow(e);
-        
+            probateCaseDetails.getCaseData(), eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED)).thenThrow(e);
+
         List<ProbateCaseDetails> expiredCaveats = caveatExpiryService.expireCaveats(EXPIRY_DATE);
 
         assertThat(expiredCaveats, is(notNullValue()));
         assertThat(expiredCaveats.size(), is(1));
         assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName(), containsString("CaveatData"));
         assertThat(((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry(), is(true));
-        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
     }
 
@@ -293,7 +286,7 @@ public class CaveatExpiryServiceImplTest {
             .caseId(CAVEAT_ID)
             .build();
         CaveatData caseData = CaveatData.builder().build();
-        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        SecurityDto securityDto = SecurityDto.builder().build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseInfo(caseInfo)
             .caseData(caseData)
@@ -303,11 +296,11 @@ public class CaveatExpiryServiceImplTest {
         SearchResult searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
 
         when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
-        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
         when(coreCaseDataApi.searchCases(
-            securityDTO.getAuthorisation(),
-            securityDTO.getServiceAuthorisation(),
+            securityDto.getAuthorisation(),
+            securityDto.getServiceAuthorisation(),
             CaseType.CAVEAT.getName(),
             SEARCH_QUERY)).thenReturn(searchResult);
 

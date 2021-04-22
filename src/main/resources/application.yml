@@ -183,7 +183,7 @@ feign:
   client:
     config:
       core-case-data-api:
-        connectTimeout: 10000
-        readTimeout: 10000
+        connectTimeout: 30000
+        readTimeout: 30000
         loggerLevel: full
         errorDecoder: uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CcdClientApiErrorDecoder

@@ -44,13 +44,13 @@ public class TestTokenGenerator {
         ObjectMapper objectMapper = new ObjectMapper();
 
         IdamData idamData = IdamData.builder().email(email).forename("forename").surname("surname")
-                .password(password).roles(Arrays.asList(Role.builder().code(role).build()))
-                .build();
+            .password(password).roles(Arrays.asList(Role.builder().code(role).build()))
+            .build();
 
         given().headers("Content-type", "application/json")
-                .relaxedHTTPSValidation()
-                .body(objectMapper.writeValueAsString(idamData))
-                .post(idamUserBaseUrl + "/testing-support/accounts");
+            .relaxedHTTPSValidation()
+            .body(objectMapper.writeValueAsString(idamData))
+            .post(idamUserBaseUrl + "/testing-support/accounts");
     }
 
     public String generateAuthorisation(String email) {
@@ -59,21 +59,21 @@ public class TestTokenGenerator {
 
     private String generateClientToken(String email) {
         String code = generateClientCode(email);
-        String token = RestAssured.given().post(idamUserBaseUrl + "/oauth2/token?" + "code=" + code +
-                "&client_secret=" + secret +
-                "&client_id=" + clientId +
-                "&redirect_uri=" + redirectUri +
-                "&grant_type=authorization_code")
-                .body().path("access_token");
+        String token = RestAssured.given().post(idamUserBaseUrl + "/oauth2/token?" + "code=" + code
+            + "&client_secret=" + secret
+            + "&client_id=" + clientId
+            + "&redirect_uri=" + redirectUri
+            + "&grant_type=authorization_code")
+            .body().path("access_token");
         return token;
     }
 
     private String generateClientCode(String email) {
         final String encoded = Base64.getEncoder().encodeToString((email + ":" + password).getBytes());
         return RestAssured.given().baseUri(idamUserBaseUrl)
-                .header("Authorization", "Basic " + encoded)
-                .post("/oauth2/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri)
-                .body().path("code");
+            .header("Authorization", "Basic " + encoded)
+            .post("/oauth2/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri)
+            .body().path("code");
 
     }
 }

@@ -37,11 +37,11 @@ public class SearchFieldFactory {
     }
 
     public String getEsSearchFieldName(CaseType caseType) {
-        if(caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
+        if (caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
             return Optional.ofNullable(searchFieldsMap.get(caseType)).orElseThrow(IllegalArgumentException::new);
-        }
-        else{
-            return Optional.ofNullable("data." + searchFieldsMap.get(caseType)).orElseThrow(IllegalArgumentException::new);
+        } else {
+            return Optional.ofNullable("data." + searchFieldsMap.get(caseType))
+                .orElseThrow(IllegalArgumentException::new);
         }
     }
 

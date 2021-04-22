@@ -11,10 +11,10 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 
 public class SubmitHealthIndicator implements HealthIndicator {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SubmitHealthIndicator.class);
-	
-	private final static String EXCEPTION_KEY = "exception";
-	private final static String MESSAGE_KEY = "message";
-    private final static String URL_KEY = "url";
+
+    private static final String EXCEPTION_KEY = "exception";
+    private static final String MESSAGE_KEY = "message";
+    private static final String URL_KEY = "url";
 
     private final String url;
     private RestTemplate restTemplate;
@@ -26,7 +26,7 @@ public class SubmitHealthIndicator implements HealthIndicator {
 
     @Override
     public Health health() {
-    	ResponseEntity<String> responseEntity;
+        ResponseEntity<String> responseEntity;
 
         try {
             responseEntity = restTemplate.getForEntity(url + "/health", String.class);
@@ -37,14 +37,16 @@ public class SubmitHealthIndicator implements HealthIndicator {
         } catch (HttpStatusCodeException hsce) {
             log.error(hsce.getMessage(), hsce);
             return getHealthWithDownStatus(url, hsce.getMessage(),
-                    "HttpStatusCodeException - HTTP Status: " + hsce.getStatusCode().value());
+                "HttpStatusCodeException - HTTP Status: " + hsce.getStatusCode().value());
         } catch (UnknownHttpStatusCodeException uhsce) {
             log.error(uhsce.getMessage(), uhsce);
-            return getHealthWithDownStatus(url, uhsce.getMessage(), "UnknownHttpStatusCodeException - " + uhsce.getStatusText());
+            return getHealthWithDownStatus(url, uhsce.getMessage(),
+                "UnknownHttpStatusCodeException - " + uhsce.getStatusText());
         }
 
         if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            return getHealthWithDownStatus(url, "HTTP Status code not 200", "HTTP Status: " + responseEntity.getStatusCodeValue());
+            return getHealthWithDownStatus(url, "HTTP Status code not 200",
+                "HTTP Status: " + responseEntity.getStatusCodeValue());
         }
 
         return getHealthWithUpStatus(url);
@@ -53,16 +55,16 @@ public class SubmitHealthIndicator implements HealthIndicator {
 
     private Health getHealthWithUpStatus(String url) {
         return Health.up()
-                .withDetail(URL_KEY, url)
-                .withDetail(MESSAGE_KEY, "HTTP Status OK")
-                .build();
+            .withDetail(URL_KEY, url)
+            .withDetail(MESSAGE_KEY, "HTTP Status OK")
+            .build();
     }
 
     private Health getHealthWithDownStatus(String url, String message, String status) {
         return Health.down()
-                .withDetail(URL_KEY, url)
-                .withDetail(MESSAGE_KEY, message)
-                .withDetail(EXCEPTION_KEY, status)
-                .build();
+            .withDetail(URL_KEY, url)
+            .withDetail(MESSAGE_KEY, message)
+            .withDetail(EXCEPTION_KEY, status)
+            .build();
     }
 }

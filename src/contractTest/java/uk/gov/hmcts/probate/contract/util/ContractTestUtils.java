@@ -12,9 +12,9 @@ import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.probate.contract.SolCcdServiceAuthTokenGenerator;
 import uk.gov.hmcts.probate.contract.TestContextConfiguration;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import javax.annotation.PostConstruct;
 
 
 @ContextConfiguration(classes = TestContextConfiguration.class)

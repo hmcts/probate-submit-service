@@ -1,6 +1,5 @@
 package uk.gov.hmcts.probate.contract;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -23,23 +22,17 @@ import static io.restassured.RestAssured.given;
 @Slf4j
 public class SolCcdServiceAuthTokenGenerator {
 
+    String clientToken;
     @Value("${idam.oauth2.client.id}")
     private String clientId;
-
     @Value("${idam.oauth2.client.secret}")
     private String clientSecret;
-
     @Value("${idam.oauth2.redirect_uri}")
     private String redirectUri;
-
     @Value("${service.name}")
     private String serviceName;
-
     @Value("${service.auth.provider.base.url}")
     private String baseServiceAuthUrl;
-
-    String clientToken;
-
     @Value("${idam.username}")
     private String idamUsername;
 
@@ -56,17 +49,15 @@ public class SolCcdServiceAuthTokenGenerator {
     private String idamUserBaseUrl;
 
     private String userToken;
+    @Autowired
+    private ServiceAuthTokenGenerator tokenGenerator;
 
     private String idamCreateUrl() {
         return idamUserBaseUrl + "/testing-support/accounts";
     }
 
-    @Autowired
-    private ServiceAuthTokenGenerator tokenGenerator;
-
     public String generateServiceToken() {
-        String sAuth = tokenGenerator.generate();
-        return sAuth;
+        return tokenGenerator.generate();
     }
 
 
@@ -91,13 +82,13 @@ public class SolCcdServiceAuthTokenGenerator {
         String code = generateClientCode();
         String token = "";
 
-        String path = idamUserBaseUrl + "/oauth2/token?code=" + code +
-                "&client_secret=" + secret +
-                "&client_id=" + clientId +
-                "&redirect_uri=" + redirectUri +
-                "&grant_type=authorization_code";
+        String path = idamUserBaseUrl + "/oauth2/token?code=" + code
+            + "&client_secret=" + secret
+            + "&client_id=" + clientId
+            + "&redirect_uri=" + redirectUri
+            + "&grant_type=authorization_code";
         ResponseBody body = RestAssured.given().post(path)
-                .body();
+            .body();
         String jsonResponse = body.asString();
 
         ObjectMapper mapper = new ObjectMapper();
@@ -116,12 +107,12 @@ public class SolCcdServiceAuthTokenGenerator {
         final String encoded = Base64.getEncoder().encodeToString(("testABC@TEST.COM:Probate123").getBytes());
 
         String jsonResponse = given()
-                .relaxedHTTPSValidation()
-                .header("Authorization", "Basic "+encoded)
-                .post(idamUserBaseUrl + "/oauth2/authorize?response_type=code" +
-                        "&client_id=" + clientId +
-                        "&redirect_uri=" + redirectUri)
-                .asString();
+            .relaxedHTTPSValidation()
+            .header("Authorization", "Basic " + encoded)
+            .post(idamUserBaseUrl + "/oauth2/authorize?response_type=code"
+                + "&client_id=" + clientId
+                + "&redirect_uri=" + redirectUri)
+            .asString();
         ObjectMapper mapper = new ObjectMapper();
 
         try {
@@ -136,8 +127,10 @@ public class SolCcdServiceAuthTokenGenerator {
 
     public void createNewUser() {
         given().headers("Content-type", "application/json")
-                .relaxedHTTPSValidation()
-                .body("{ \"email\":\"testABC@TEST.COM\", \"forename\":\"testABC@TEST.COM\",\"surname\":\"testABC@TEST.COM\",\"password\":\"Probate123\",\"continue-url\":\"test\", \"user_group_name\":\"citizen\"}")
-                .post(idamUserBaseUrl + "/testing-support/accounts");
+            .relaxedHTTPSValidation()
+            .body(
+                "{ \"email\":\"testABC@TEST.COM\", \"forename\":\"testABC@TEST.COM\",\"surname\":\"testABC@TEST.COM\","
+                    + "\"password\":\"Probate123\",\"continue-url\":\"test\", \"user_group_name\":\"citizen\"}")
+            .post(idamUserBaseUrl + "/testing-support/accounts");
     }
 }

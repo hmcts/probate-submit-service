@@ -31,47 +31,47 @@ public class CaveatsPaymentTests extends IntegrationTestBase {
     }
 
     @Test
-    public void updatePAAppCreatedCaveatWithSuccessfulPaymentReturns200() {
+    public void updatePaAppCreatedCaveatWithSuccessfulPaymentReturns200() {
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCaseworkerHeaders())
-                .body(paymentCaveatData)
-                .when()
-                .post("/ccd-case-update/" + caveatId)
-                .then()
-                .assertThat()
-                .statusCode(200)
-                .body("caseData", notNullValue())
-                .body("caseInfo.caseId", notNullValue())
-                .body("caseInfo.state", equalTo("CaveatRaised"))
-                .extract().jsonPath().prettify();
+            .relaxedHTTPSValidation()
+            .headers(utils.getCaseworkerHeaders())
+            .body(paymentCaveatData)
+            .when()
+            .post("/ccd-case-update/" + caveatId)
+            .then()
+            .assertThat()
+            .statusCode(200)
+            .body("caseData", notNullValue())
+            .body("caseInfo.caseId", notNullValue())
+            .body("caseInfo.state", equalTo("CaveatRaised"))
+            .extract().jsonPath().prettify();
     }
 
 
     @Test
-    public void updatePAAppCreatedCaveatWithoutPaymentReturns500() {
+    public void updatePaAppCreatedCaveatWithoutPaymentReturns500() {
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCaseworkerHeaders())
-                .body(caveatData)
-                .when()
-                .post("/ccd-case-update/" + caveatId)
-                .then()
-                .assertThat()
-                .statusCode(500);
+            .relaxedHTTPSValidation()
+            .headers(utils.getCaseworkerHeaders())
+            .body(caveatData)
+            .when()
+            .post("/ccd-case-update/" + caveatId)
+            .then()
+            .assertThat()
+            .statusCode(500);
     }
 
 
     @Test
     public void updateCaveatAsCitizenReturns403() {
         RestAssured.given()
-                .relaxedHTTPSValidation()
-                .headers(utils.getCitizenHeaders())
-                .body(paymentCaveatData)
-                .when()
-                .post("/ccd-case-update/" + caveatId)
-                .then()
-                .assertThat()
-                .statusCode(403);
+            .relaxedHTTPSValidation()
+            .headers(utils.getCitizenHeaders())
+            .body(paymentCaveatData)
+            .when()
+            .post("/ccd-case-update/" + caveatId)
+            .then()
+            .assertThat()
+            .statusCode(403);
     }
 }

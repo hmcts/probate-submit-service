@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.probate.security.SecurityDTO;
+import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
@@ -47,34 +47,34 @@ public class CreateCaseSubmissionsProcessor {
     }
 
     private ProbateCaseDetails processCase(String identifier, CaseData caseData) {
-        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        SecurityDto securityDto = securityUtils.getSecurityDto();
         CaseType caseType = CaseType.getCaseType(caseData);
-        checkDoesCaseExist(identifier, CaseType.getCaseType(caseData), securityDTO);
+        checkDoesCaseExist(identifier, CaseType.getCaseType(caseData), securityDto);
         log.info("Case not found with case Id: {}", identifier);
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         registryService.updateRegistry(caseData);
-        return coreCaseDataService.createCase(caseData, caseEvents.getCreateCaseApplicationEventId(), securityDTO);
+        return coreCaseDataService.createCase(caseData, caseEvents.getCreateCaseApplicationEventId(), securityDto);
     }
 
-    private void checkDoesCaseExist(String searchField, CaseType caseType, SecurityDTO securityDTO) {
-        Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService.
-            findCase(searchField, caseType, securityDTO);
+    private void checkDoesCaseExist(String searchField, CaseType caseType, SecurityDto securityDto) {
+        Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
+            .findCase(searchField, caseType, securityDto);
         if (caseResponseOptional.isPresent()) {
             throw new CaseAlreadyExistsException(searchField);
         }
     }
 
     private void assertIdentifierMatchesCase(String identifier, CaseData caseData, CaseType caseType) {
-        if(!caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
+        if (!caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
             Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
             String searchFieldValueInBody = searchFieldValuePair.getRight();
             if (!searchFieldValueInBody.equals(identifier)) {
                 throw new AssertFieldException(ValidationErrorResponse.builder()
-                        .errors(Lists.newArrayList(ValidationError.builder()
-                                .field(searchFieldValuePair.getLeft())
-                                .message("Path variable identifier must match identifier in form")
-                                .build()))
-                        .build());
+                    .errors(Lists.newArrayList(ValidationError.builder()
+                        .field(searchFieldValuePair.getLeft())
+                        .message("Path variable identifier must match identifier in form")
+                        .build()))
+                    .build());
             }
         }
     }

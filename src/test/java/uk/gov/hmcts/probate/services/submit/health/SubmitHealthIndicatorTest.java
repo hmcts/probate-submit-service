@@ -25,20 +25,20 @@ public class SubmitHealthIndicatorTest {
 
     @Mock
     private RestTemplate mockRestTemplate;
-   
+
     @Mock
     private ResponseEntity<String> mockResponseEntity;
-    
+
     private SubmitHealthIndicator submitHealthIndicator;
-    
+
     @Before
     public void setUp() {
-    	submitHealthIndicator = new SubmitHealthIndicator(URL, mockRestTemplate);
+        submitHealthIndicator = new SubmitHealthIndicator(URL, mockRestTemplate);
     }
 
-	@Test
+    @Test
     public void shouldReturnStatusOfUpWhenHttpStatusIsOK() {
-        when(mockRestTemplate.getForEntity(URL + "/health", String.class)).thenReturn(mockResponseEntity);      
+        when(mockRestTemplate.getForEntity(URL + "/health", String.class)).thenReturn(mockResponseEntity);
         when(mockResponseEntity.getStatusCode()).thenReturn(HttpStatus.OK);
         Health health = submitHealthIndicator.health();
 
@@ -46,7 +46,7 @@ public class SubmitHealthIndicatorTest {
         assertThat(health.getDetails().get("url"), is(URL));
     }
 
-	@Test
+    @Test
     public void shouldReturnStatusOfDownWhenHttpStatusIsNotOK() {
         when(mockRestTemplate.getForEntity(URL + "/health", String.class)).thenReturn(mockResponseEntity);
         when(mockResponseEntity.getStatusCode()).thenReturn(HttpStatus.NO_CONTENT);
@@ -62,7 +62,8 @@ public class SubmitHealthIndicatorTest {
     @Test
     public void shouldReturnStatusOfDownWhenResourceAccessExceptionIsThrown() {
         final String message = "EXCEPTION MESSAGE";
-        when(mockRestTemplate.getForEntity(URL + "/health", String.class)).thenThrow(new ResourceAccessException(message));
+        when(mockRestTemplate.getForEntity(URL + "/health", String.class))
+            .thenThrow(new ResourceAccessException(message));
 
         Health health = submitHealthIndicator.health();
 
@@ -74,7 +75,8 @@ public class SubmitHealthIndicatorTest {
 
     @Test
     public void shouldReturnStatusOfDownWhenHttpStatusCodeExceptionIsThrown() {
-        when(mockRestTemplate.getForEntity(URL + "/health", String.class)).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+        when(mockRestTemplate.getForEntity(URL + "/health", String.class))
+            .thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
 
         Health health = submitHealthIndicator.health();
 
@@ -88,7 +90,7 @@ public class SubmitHealthIndicatorTest {
     public void shouldReturnStatusOfDownWhenUnknownHttpStatusCodeExceptionIsThrown() {
         final String statusText = "status text";
         when(mockRestTemplate.getForEntity(URL + "/health", String.class))
-                .thenThrow(new UnknownHttpStatusCodeException(1000, statusText, null, null, null));
+            .thenThrow(new UnknownHttpStatusCodeException(1000, statusText, null, null, null));
 
         Health health = submitHealthIndicator.health();
 

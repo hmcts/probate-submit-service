@@ -23,23 +23,27 @@ public class ProbateExceptionHandlerTest {
     @Before
     public void setUp() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        String json = "{\"exception\":\"uk.gov.hmcts.ccd.endpoint.exceptions.ResourceNotFoundException\",\"timestamp\":\"2019-03-18T12:42:22.384\",\"error\":\"Not Found\",\"message\":\"No field found\",\"path\":\"/citizens/36/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases\",\"details\":null,\"callbackErrors\":null,\"callbackWarnings\":null}";
+        String json =
+            "{\"exception\":\"uk.gov.hmcts.ccd.endpoint.exceptions.ResourceNotFoundException\","
+                + "\"timestamp\":\"2019-03-18T12:42:22.384\",\"error\":\"Not Found\",\"message\":\"No field found\","
+                + "\"path\":\"/citizens/36/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases\","
+                + "\"details\":null,\"callbackErrors\":null,\"callbackWarnings\":null}";
         ApiClientError apiClientError = mapper.readValue(json, ApiClientError.class);
         clientErrorResponse = new ApiClientErrorResponse(apiClientError);
     }
 
     @Test
-    public void handleApiClientExceptionReturnsResponseStatus500FromException(){
+    public void handleApiClientExceptionReturnsResponseStatus500FromException() {
         ResponseEntity responseEntity = exceptionHandler
-                .handleApiClientException(new ApiClientException(500, clientErrorResponse));
+            .handleApiClientException(new ApiClientException(500, clientErrorResponse));
 
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(500);
     }
 
     @Test
-    public void handleApiClientExceptionReturnsResponseStatus400FromException(){
+    public void handleApiClientExceptionReturnsResponseStatus400FromException() {
         ResponseEntity responseEntity = exceptionHandler
-                .handleApiClientException(new ApiClientException(400, clientErrorResponse));
+            .handleApiClientException(new ApiClientException(400, clientErrorResponse));
 
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(400);
     }
@@ -47,7 +51,7 @@ public class ProbateExceptionHandlerTest {
     @Test
     public void handleApiClientExceptionReturns500IfResponseStatusIsUnprocessable() {
         ResponseEntity responseEntity = exceptionHandler
-                .handleApiClientException(new ApiClientException(575, clientErrorResponse));
+            .handleApiClientException(new ApiClientException(575, clientErrorResponse));
 
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(500);
     }

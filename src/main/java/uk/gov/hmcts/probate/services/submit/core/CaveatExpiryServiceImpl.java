@@ -3,7 +3,7 @@ package uk.gov.hmcts.probate.services.submit.core;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.probate.security.SecurityDTO;
+import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CaseResponseBuilder;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CcdElasticSearchQueryBuilder;
@@ -31,55 +31,55 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.CAVEAT_EXPIRED_FOR
 @RequiredArgsConstructor
 public class CaveatExpiryServiceImpl implements CaveatExpiryService {
 
-    private final CoreCaseDataService coreCaseDataService;
-    
-    private final CaseResponseBuilder caseResponseBuilder;
-
-    private final SecurityUtils securityUtils;
-
-    private final CoreCaseDataApi coreCaseDataApi;
-
-    private final CcdElasticSearchQueryBuilder elasticSearchQueryBuilder;
-
     private static final String EVENT_DESCRIPTOR_CAVEAT_EXPIRED = "Caveat Auto Expired";
+    private final CoreCaseDataService coreCaseDataService;
+    private final CaseResponseBuilder caseResponseBuilder;
+    private final SecurityUtils securityUtils;
+    private final CoreCaseDataApi coreCaseDataApi;
+    private final CcdElasticSearchQueryBuilder elasticSearchQueryBuilder;
 
     @Override
     public List<ProbateCaseDetails> expireCaveats(String expiryDate) {
-        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        SecurityDto securityDto = securityUtils.getSecurityDto();
         log.info("Search for expired Caveats for expiryDate: {}", expiryDate);
         String searchString = elasticSearchQueryBuilder.buildQueryForCaveatExpiry(expiryDate);
         List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
-            securityDTO.getAuthorisation(),
-            securityDTO.getServiceAuthorisation(),
+            securityDto.getAuthorisation(),
+            securityDto.getServiceAuthorisation(),
             CaseType.CAVEAT.getName(),
             searchString).getCases();
 
         log.info("Caveats found for expiry: {}", caseDetails.size());
 
-        List<ProbateCaseDetails> expiredCaveats = caseDetails.stream().map(this::createCaseResponse).collect(Collectors.toList());
+        List<ProbateCaseDetails> expiredCaveats =
+            caseDetails.stream().map(this::createCaseResponse).collect(Collectors.toList());
 
         for (ProbateCaseDetails probateCaseDetails : expiredCaveats) {
-            EventId eventIdToStart = getEventIdForCaveatToExpireGivenPreconditionState(probateCaseDetails.getCaseInfo().getState());
-            updateAutoExpiredCaveat(((CaveatData)probateCaseDetails.getCaseData()));
-            updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(), probateCaseDetails.getCaseData(), eventIdToStart,
-                securityDTO, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
+            EventId eventIdToStart =
+                getEventIdForCaveatToExpireGivenPreconditionState(probateCaseDetails.getCaseInfo().getState());
+            updateAutoExpiredCaveat(((CaveatData) probateCaseDetails.getCaseData()));
+            updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(), probateCaseDetails.getCaseData(),
+                eventIdToStart,
+                securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
             log.info("Caveat autoExpired: {}", probateCaseDetails.getCaseInfo().getCaseId());
         }
 
         return expiredCaveats;
     }
 
-    private void updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventIdToStart, SecurityDTO securityDTO, 
+    private void updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventIdToStart,
+                                        SecurityDto securityDto,
                                         String eventDescriptorCaveatExpired) {
         try {
-            coreCaseDataService.updateCaseAsCaseworker(caseId, caseData, eventIdToStart, securityDTO, eventDescriptorCaveatExpired);
+            coreCaseDataService
+                .updateCaseAsCaseworker(caseId, caseData, eventIdToStart, securityDto, eventDescriptorCaveatExpired);
         } catch (RuntimeException e) {
             log.info("Caveat autoExpire failure for case: {}, due to {}", caseId, e.getMessage());
         }
     }
 
     private ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {
-        return caseResponseBuilder.createCaseResponse(caseDetails);    
+        return caseResponseBuilder.createCaseResponse(caseDetails);
     }
 
     private void updateAutoExpiredCaveat(CaveatData caveatData) {

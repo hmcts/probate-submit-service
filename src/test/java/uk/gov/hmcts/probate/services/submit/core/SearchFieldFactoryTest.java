@@ -21,41 +21,43 @@ public class SearchFieldFactoryTest {
     private SearchFieldFactory searchFieldFactory;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         Map<CaseType, String> searchFieldMap = ImmutableMap.<CaseType, String>builder()
-                .put(GRANT_OF_REPRESENTATION, "primaryApplicantEmailAddress")
-                .put(CAVEAT, "applicationId")
-                .build();
+            .put(GRANT_OF_REPRESENTATION, "primaryApplicantEmailAddress")
+            .put(CAVEAT, "applicationId")
+            .build();
         searchFieldFactory = new SearchFieldFactory(searchFieldMap);
     }
 
     @Test
-    public void shouldGetSearchFieldValuePairForGrantOfRepresentation(){
+    public void shouldGetSearchFieldValuePairForGrantOfRepresentation() {
         GrantOfRepresentationData grantOfRepresentationData = new GrantOfRepresentationData();
         grantOfRepresentationData.setPrimaryApplicantEmailAddress(IDENTIFIER);
         Pair<String, String> searchFieldValuePair =
-                searchFieldFactory.getSearchFieldValuePair(CaseType.GRANT_OF_REPRESENTATION, grantOfRepresentationData);
+            searchFieldFactory.getSearchFieldValuePair(CaseType.GRANT_OF_REPRESENTATION, grantOfRepresentationData);
         assertThat(searchFieldValuePair.getLeft(), equalTo("primaryApplicantEmailAddress"));
         assertThat(searchFieldValuePair.getRight(), equalTo(IDENTIFIER));
     }
 
     @Test
-    public void shouldGetSearchFieldValuePairForCaveats(){
+    public void shouldGetSearchFieldValuePairForCaveats() {
         CaveatData caveatData = new CaveatData();
         caveatData.setApplicationId(IDENTIFIER);
         Pair<String, String> searchFieldValuePair =
-                searchFieldFactory.getSearchFieldValuePair(CaseType.CAVEAT, caveatData);
+            searchFieldFactory.getSearchFieldValuePair(CaseType.CAVEAT, caveatData);
         assertThat(searchFieldValuePair.getLeft(), equalTo("applicationId"));
         assertThat(searchFieldValuePair.getRight(), equalTo(IDENTIFIER));
     }
+
     @Test
-    public void shouldGetESSearchFieldValues(){
+    public void shouldGetEsSearchFieldValues() {
         assertThat(searchFieldFactory.getEsSearchFieldName(CaseType.CAVEAT), equalTo("data.applicationId"));
-        assertThat(searchFieldFactory.getEsSearchFieldName(CaseType.GRANT_OF_REPRESENTATION), equalTo("primaryApplicantEmailAddress"));
+        assertThat(searchFieldFactory.getEsSearchFieldName(CaseType.GRANT_OF_REPRESENTATION),
+            equalTo("primaryApplicantEmailAddress"));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowIllegalArgumentExceptionForMismatchingTypeAndData(){
+    public void shouldThrowIllegalArgumentExceptionForMismatchingTypeAndData() {
         CaveatData caveatData = new CaveatData();
         caveatData.setCaveatorEmailAddress(IDENTIFIER);
 
@@ -63,7 +65,7 @@ public class SearchFieldFactoryTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenFieldDoesNotExist(){
+    public void shouldThrowExceptionWhenFieldDoesNotExist() {
         Map<CaseType, String> searchFieldMap = ImmutableMap.<CaseType, String>builder()
             .put(GRANT_OF_REPRESENTATION, "random")
             .build();
@@ -75,12 +77,13 @@ public class SearchFieldFactoryTest {
     }
 
     @Test
-    public void shouldGetInviteFieldName(){
-        assertThat(searchFieldFactory.getSearchInviteFieldName(), equalTo("data.executorsApplying.value.applyingExecutorInvitationId"));
+    public void shouldGetInviteFieldName() {
+        assertThat(searchFieldFactory.getSearchInviteFieldName(),
+            equalTo("data.executorsApplying.value.applyingExecutorInvitationId"));
     }
 
     @Test
-    public void shouldGetApplicantEmailFieldName(){
+    public void shouldGetApplicantEmailFieldName() {
         assertThat(searchFieldFactory.getSearchApplicantEmailFieldName(), equalTo("data.primaryApplicantEmailAddress"));
     }
 }

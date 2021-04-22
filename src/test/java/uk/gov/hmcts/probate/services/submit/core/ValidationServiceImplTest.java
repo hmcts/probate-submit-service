@@ -19,11 +19,11 @@ import uk.gov.hmcts.reform.probate.model.validation.groups.nullcheck.PaNullCheck
 import uk.gov.hmcts.reform.probate.model.validation.groups.submission.IntestacySubmission;
 import uk.gov.hmcts.reform.probate.model.validation.groups.submission.PaSubmission;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -31,17 +31,20 @@ import static org.mockito.Mockito.when;
 
 public class ValidationServiceImplTest {
 
-    private Class[] PA_VALIDATION_GROUPS = {PaNullCheck.class, PaFieldCheck.class, PaCrossFieldCheck.class};
+    private Class[] paValidationGroups = {PaNullCheck.class, PaFieldCheck.class, PaCrossFieldCheck.class};
 
-    private Class[] PA_SUBMISSION_GROUPS = {PaNullCheck.class, PaFieldCheck.class, PaCrossFieldCheck.class, PaSubmission.class};
+    private Class[] paSubmissionGroups = {PaNullCheck.class, PaFieldCheck.class,
+        PaCrossFieldCheck.class, PaSubmission.class};
 
-    private Class[] INTESTACY_VALIDATION_GROUPS = {IntestacyNullCheck.class, IntestacyFieldCheck.class, IntestacyCrossFieldCheck.class};
+    private Class[] intestacyValidationGroups = {IntestacyNullCheck.class, IntestacyFieldCheck.class,
+        IntestacyCrossFieldCheck.class};
 
-    private Class[] INTESTACY_SUBMISSION_GROUPS = {IntestacyNullCheck.class, IntestacyFieldCheck.class, IntestacyCrossFieldCheck.class, IntestacySubmission.class};
+    private Class[] intestacySubmissionGroups = {IntestacyNullCheck.class, IntestacyFieldCheck.class,
+        IntestacyCrossFieldCheck.class, IntestacySubmission.class};
 
-    private Class[] CAVEAT_VALIDATION_GROUPS = {Default.class};
+    private Class[] caveatValidationGroups = {Default.class};
 
-    private Class[] CAVEAT_SUBMISSION_GROUPS = {Default.class};
+    private Class[] caveatSubmissionGroups = {Default.class};
 
 
     private Validator validator;
@@ -66,11 +69,11 @@ public class ValidationServiceImplTest {
             .caseInfo(caseInfo)
             .build();
 
-        when(validator.validate(grantOfRepresentationData, PA_VALIDATION_GROUPS)).thenReturn(Sets.newHashSet());
+        when(validator.validate(grantOfRepresentationData, paValidationGroups)).thenReturn(Sets.newHashSet());
 
         validationService.validate(probateCaseDetails);
 
-        verify(validator, times(1)).validate(grantOfRepresentationData, PA_VALIDATION_GROUPS);
+        verify(validator, times(1)).validate(grantOfRepresentationData, paValidationGroups);
     }
 
     @Test
@@ -85,11 +88,11 @@ public class ValidationServiceImplTest {
             .caseInfo(caseInfo)
             .build();
 
-        when(validator.validate(grantOfRepresentationData, PA_SUBMISSION_GROUPS)).thenReturn(Sets.newHashSet());
+        when(validator.validate(grantOfRepresentationData, paSubmissionGroups)).thenReturn(Sets.newHashSet());
 
         validationService.validateForSubmission(probateCaseDetails);
 
-        verify(validator, times(1)).validate(grantOfRepresentationData, PA_SUBMISSION_GROUPS);
+        verify(validator, times(1)).validate(grantOfRepresentationData, paSubmissionGroups);
     }
 
     @Test(expected = CaseValidationException.class)
@@ -108,11 +111,11 @@ public class ValidationServiceImplTest {
             .caseInfo(caseInfo)
             .build();
 
-        when(validator.validate(grantOfRepresentationData, PA_VALIDATION_GROUPS)).thenReturn(constraintViolations);
+        when(validator.validate(grantOfRepresentationData, paValidationGroups)).thenReturn(constraintViolations);
 
         validationService.validate(probateCaseDetails);
 
-        verify(validator, times(1)).validate(grantOfRepresentationData, PA_VALIDATION_GROUPS);
+        verify(validator, times(1)).validate(grantOfRepresentationData, paValidationGroups);
     }
 
     @Test
@@ -127,11 +130,11 @@ public class ValidationServiceImplTest {
             .caseInfo(caseInfo)
             .build();
 
-        when(validator.validate(grantOfRepresentationData, INTESTACY_VALIDATION_GROUPS)).thenReturn(Sets.newHashSet());
+        when(validator.validate(grantOfRepresentationData, intestacyValidationGroups)).thenReturn(Sets.newHashSet());
 
         validationService.validate(probateCaseDetails);
 
-        verify(validator, times(1)).validate(grantOfRepresentationData, INTESTACY_VALIDATION_GROUPS);
+        verify(validator, times(1)).validate(grantOfRepresentationData, intestacyValidationGroups);
     }
 
     @Test
@@ -146,11 +149,11 @@ public class ValidationServiceImplTest {
             .caseInfo(caseInfo)
             .build();
 
-        when(validator.validate(grantOfRepresentationData, INTESTACY_SUBMISSION_GROUPS)).thenReturn(Sets.newHashSet());
+        when(validator.validate(grantOfRepresentationData, intestacySubmissionGroups)).thenReturn(Sets.newHashSet());
 
         validationService.validateForSubmission(probateCaseDetails);
 
-        verify(validator, times(1)).validate(grantOfRepresentationData, INTESTACY_SUBMISSION_GROUPS);
+        verify(validator, times(1)).validate(grantOfRepresentationData, intestacySubmissionGroups);
     }
 
 
@@ -164,11 +167,11 @@ public class ValidationServiceImplTest {
             .caseInfo(caseInfo)
             .build();
 
-        when(validator.validate(caveatData, CAVEAT_VALIDATION_GROUPS)).thenReturn(Sets.newHashSet());
+        when(validator.validate(caveatData, caveatValidationGroups)).thenReturn(Sets.newHashSet());
 
         validationService.validate(probateCaseDetails);
 
-        verify(validator, times(1)).validate(caveatData, CAVEAT_VALIDATION_GROUPS);
+        verify(validator, times(1)).validate(caveatData, caveatValidationGroups);
     }
 
     @Test
@@ -181,10 +184,10 @@ public class ValidationServiceImplTest {
             .caseInfo(caseInfo)
             .build();
 
-        when(validator.validate(caveatData, CAVEAT_SUBMISSION_GROUPS)).thenReturn(Sets.newHashSet());
+        when(validator.validate(caveatData, caveatSubmissionGroups)).thenReturn(Sets.newHashSet());
 
         validationService.validateForSubmission(probateCaseDetails);
 
-        verify(validator, times(1)).validate(caveatData, CAVEAT_SUBMISSION_GROUPS);
+        verify(validator, times(1)).validate(caveatData, caveatSubmissionGroups);
     }
 }

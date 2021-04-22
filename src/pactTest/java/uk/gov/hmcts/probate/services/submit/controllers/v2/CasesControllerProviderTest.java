@@ -13,9 +13,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.gov.hmcts.probate.security.SecurityDTO;
+import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
-import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
@@ -29,7 +28,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRestPactRunner.class)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {
-        "server.port=8123", "spring.application.name=PACT_TEST"
+    "server.port=8123", "spring.application.name=PACT_TEST"
 })
 public class CasesControllerProviderTest extends ControllerProviderTest {
 
@@ -43,41 +42,41 @@ public class CasesControllerProviderTest extends ControllerProviderTest {
     @MockBean
     private SecurityUtils securityUtils;
 
-    private SecurityDTO securityDTO;
+    private SecurityDto securityDto;
 
     @Before
     public void setUp() {
-        securityDTO = SecurityDTO.builder().build();
-        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        securityDto = SecurityDto.builder().build();
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
 
     }
 
     @State({"provider returns casedata with success",
-            "provider returns casedata with success"})
+        "provider returns casedata with success"})
     public void toReturnCaseDetailsWithSuccess() throws IOException, JSONException {
 
         ProbateCaseDetails caseResponse = getProbateCaseDetails("intestacyGrantOfRepresentation_full.json");
-        when(coreCaseDataService.findCase("jsnow@bbc.co.uk", CaseType.GRANT_OF_REPRESENTATION, securityDTO))
-                .thenReturn(Optional.of(caseResponse));
+        when(coreCaseDataService.findCase("jsnow@bbc.co.uk", CaseType.GRANT_OF_REPRESENTATION, securityDto))
+            .thenReturn(Optional.of(caseResponse));
     }
 
     @State({"an invite has been sent for a case",
-            "provider returns casedata with success"})
+        "provider returns casedata with success"})
     public void toReturnCaseDataByInviteIdWithSuccess() throws IOException, JSONException {
 
-        when(coreCaseDataService.findCaseByInviteId("654321", CaseType.GRANT_OF_REPRESENTATION, securityDTO))
-                .thenReturn(Optional.of(
-                        getProbateCaseDetails("probate_orchestrator_service_invite_search_response.json")));
+        when(coreCaseDataService.findCaseByInviteId("654321", CaseType.GRANT_OF_REPRESENTATION, securityDto))
+            .thenReturn(Optional.of(
+                getProbateCaseDetails("probate_orchestrator_service_invite_search_response.json")));
 
 
     }
 
     @State({"provider returns casedata not found",
-            "provider returns casedata not found"})
+        "provider returns casedata not found"})
     public void toReturnCaseDetailsWithNotFound() {
 
-        when(coreCaseDataService.findCase("jsnow@bbc.co.uk", CaseType.GRANT_OF_REPRESENTATION, securityDTO))
-                .thenReturn(Optional.empty());
+        when(coreCaseDataService.findCase("jsnow@bbc.co.uk", CaseType.GRANT_OF_REPRESENTATION, securityDto))
+            .thenReturn(Optional.empty());
     }
 
 }

@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.gov.hmcts.probate.security.SecurityDTO;
+import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.Registry;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
@@ -69,7 +69,7 @@ public class CreateCaseSubmissionsProcessorTest {
 
     private CaveatData caseData;
 
-    private SecurityDTO securityDTO;
+    private SecurityDto securityDto;
 
     private CaseInfo caseInfo;
 
@@ -77,7 +77,7 @@ public class CreateCaseSubmissionsProcessorTest {
 
     @Before
     public void setUp() {
-        securityDTO = SecurityDTO.builder().build();
+        securityDto = SecurityDto.builder().build();
         caseData = new CaveatData();
         caseData.setCaveatorEmailAddress(APPLICANT_EMAIL);
         caseRequest = ProbateCaseDetails.builder().caseData(caseData).build();
@@ -100,21 +100,21 @@ public class CreateCaseSubmissionsProcessorTest {
 
     @Test
     public void shouldProcessCase() {
-        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
-        when(coreCaseDataService.findCase(APPLICANT_EMAIL, CAVEAT, securityDTO))
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(coreCaseDataService.findCase(APPLICANT_EMAIL, CAVEAT, securityDto))
                 .thenReturn(Optional.empty());
 
         createCaseSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
-        verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, CAVEAT, securityDTO);
+        verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, CAVEAT, securityDto);
         verify(coreCaseDataService, times(1)).createCase(eq(caseData),
-                eq(GOP_CREATE_APPLICATION), eq(securityDTO));
+                eq(GOP_CREATE_APPLICATION), eq(securityDto));
         verify(validationService, times(1)).validate(caseRequest);
     }
 
     @Test(expected = CaseAlreadyExistsException.class)
     public void shouldNotSubmitWhenExistingCase() {
-        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
-        when(coreCaseDataService.findCase(APPLICANT_EMAIL, CAVEAT, securityDTO))
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(coreCaseDataService.findCase(APPLICANT_EMAIL, CAVEAT, securityDto))
                 .thenReturn(Optional.of(caseResponse));
 
         createCaseSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);

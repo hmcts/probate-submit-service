@@ -8,8 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class SubmitHealthConfiguration
-{
+public class SubmitHealthConfiguration {
     @Autowired
     private RestTemplate restTemplate;
 
@@ -22,6 +21,6 @@ public class SubmitHealthConfiguration
     @Bean
     @ConditionalOnProperty(prefix = "services.coreCaseData", name = "enabled", matchIfMissing = true)
     public SubmitHealthIndicator ccdServiceHealthIndicator() {
-    	return new SubmitHealthIndicator(servicesCcdBaseUrl, restTemplate);
+        return new SubmitHealthIndicator(servicesCcdBaseUrl, restTemplate);
     }
 }
