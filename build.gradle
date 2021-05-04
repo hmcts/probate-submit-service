@@ -12,7 +12,7 @@ plugins {
     id 'application'
     id 'pmd'
     id 'org.springframework.boot' version '2.3.4.RELEASE'
-    id 'uk.gov.hmcts.java' version '0.12.2'
+    id 'uk.gov.hmcts.java' version '0.12.9'
     id 'com.github.ben-manes.versions' version '0.38.0'
     id 'com.gorylenko.gradle-git-properties' version '1.4.21'
     id 'info.solidsoft.pitest' version '1.5.2'
