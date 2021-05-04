@@ -17,7 +17,7 @@ plugins {
     id 'com.gorylenko.gradle-git-properties' version '1.4.21'
     id 'info.solidsoft.pitest' version '1.5.2'
     id "io.spring.dependency-management" version "1.0.11.RELEASE"
-    id 'au.com.dius.pact' version '3.5.24'
+    id 'au.com.dius.pact' version '4.2.4'
     id 'jacoco'
 }
 
