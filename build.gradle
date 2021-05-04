@@ -211,7 +211,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: versions.springBoot
     compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.3.1'
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
-    compile("com.fasterxml.jackson.core:jackson-databind:2.11.2") {
+    compile("com.fasterxml.jackson.core:jackson-databind:2.12.3") {
         force = true
     }
     compile group: 'io.github.openfeign', name: 'feign-httpclient', version: versions.feignHttpClient
