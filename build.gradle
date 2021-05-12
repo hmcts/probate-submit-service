@@ -241,7 +241,7 @@ dependencies {
     compile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.6.0'
     compile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
     compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.1'
-    compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '3.0.1'
 
     compileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group:'org.projectlombok', name:'lombok', version: versions.lombok
