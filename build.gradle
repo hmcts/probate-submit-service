@@ -250,7 +250,7 @@ dependencies {
         exclude group: "com.vaadin.external.google", module: "android-json"
     }
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
-    testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.3.5.RELEASE'
+    testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.5.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
     testCompile("com.fasterxml.jackson.core:jackson-databind:2.11.2") {
         force = true
