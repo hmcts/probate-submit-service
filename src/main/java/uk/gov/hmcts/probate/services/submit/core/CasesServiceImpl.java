@@ -117,7 +117,8 @@ public class CasesServiceImpl implements CasesService {
         if (caseResponseOptional.isPresent()) {
             ProbateCaseDetails caseResponse = caseResponseOptional.get();
             CaseState state = caseResponse.getCaseInfo().getState();
-            log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
+            log.info("Found case with case Id: {} at state: {}", caseResponse.getCaseInfo().getCaseId(), 
+                state.getName());
             EventId eventId = eventMap.get(state).apply(caseEvents);
             if (asCaseworker) {
                 return coreCaseDataService
