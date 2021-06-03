@@ -53,24 +53,6 @@ withPipeline("java", product, component) {
   disableLegacyDeployment()
 
     after('test') {
-//        try {
-//            if (env.CHANGE_BRANCH || env.BRANCH_NAME == 'master') {
-//                env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
-//                env.PACT_BROKER_PORT = "443"
-//                env.PACT_BROKER_SCHEME = "https"
-//                env.PACT_BROKER_FULL_URL = "https://pact-broker.platform.hmcts.net"
-//                env.PACT_BRANCH_NAME = env.CHANGE_BRANCH
-//                if (env.BRANCH_NAME == 'master') {
-//                    env.PACT_BRANCH_NAME = 'master'
-//                }
-//                // sh './gradlew pitest'
-//                env.PACT_BROKER_VERSION = sh(returnStdout: true, script: 'git rev-parse --verify --short HEAD')
-//                sh './gradlew pactTask -Dpact.provider.version=${PACT_BROKER_VERSION}'
-//            }
-//        } finally {
-//            archiveArtifacts "build/reports/tests/**/*.*"
-////        archiveArtifacts "build/reports/pitest/**/*.*"
-//        }
 
     junit 'build/test-results/test/**/*.xml'
     archiveArtifacts 'build/reports/tests/test/index.html'
@@ -112,10 +94,6 @@ withPipeline("java", product, component) {
 
     // Vars for Kubernetes
     env.PACT_BROKER_FULL_URL = 'https://pact-broker.platform.hmcts.net'
-    onMaster() {
-        enablePactAs([AppPipelineDsl.PactRoles.CONSUMER])
-    }
-    onPR() {
-        enablePactAs([AppPipelineDsl.PactRoles.CONSUMER])
-    }
+    enablePactAs([AppPipelineDsl.PactRoles.CONSUMER])
+
 }
