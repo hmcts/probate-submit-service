@@ -237,7 +237,7 @@ dependencies {
     compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
     compile group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
 
-    compile group: 'org.pitest', name: 'pitest', version: '1.6.3'
+    compile group: 'org.pitest', name: 'pitest', version: '1.6.7'
     compile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.6.0'
     compile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
     compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.1'
