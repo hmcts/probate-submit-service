@@ -42,12 +42,15 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
   ]
 }
 
+// Configure branches to sync with master branch
+def branchesToSync = ['demo', 'ithc', 'perftest']
+
 withPipeline("java", product, component) {
 
   loadVaultSecrets(secrets)
   enableAksStagingDeployment()
   enableSlackNotifications('#probate-jenkins')
-
+  syncBranchesWithMaster(branchesToSync)
   disableLegacyDeployment()
 
     after('test') {
