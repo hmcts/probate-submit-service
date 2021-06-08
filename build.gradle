@@ -283,7 +283,7 @@ dependencies {
     testFunctionalCompile sourceSets.test.runtimeClasspath
 
     testCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
-    testCompile("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.7.2")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.7.1")
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.1')
     testSmokeCompile sourceSets.main.runtimeClasspath
