@@ -178,7 +178,7 @@ def versions = [
         probateCommons                  : '1.2.0',
         feignHttpClient                 : '10.2.3',
         lombok                          : '1.18.8',
-        probatePactCommonsVersion       : '1.0.1',
+        probatePactCommonsVersion       : '1.0.2',
 ]
 
 dependencyManagement {
@@ -325,7 +325,7 @@ dependencies {
     testPactImplementation('org.junit.jupiter:junit-jupiter-api:5.7.1')
     testPactRuntime group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.7.0'
 
-    testPactCompile group: 'uk.gov.hmcts.reform.probate', name: 'probate-pact-commons', version: versions.probatePactCommonsVersion
+    testPactCompile group: 'com.github.hmcts', name: 'probate-pact-commons', version: versions.probatePactCommonsVersion
 
     testPactCompile sourceSets.main.runtimeClasspath
     testPactCompile sourceSets.test.runtimeClasspath
