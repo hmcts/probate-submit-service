@@ -82,7 +82,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
                 .put("/cases/" + invalidCaseId + "/validations")
                 .then()
                 .assertThat()
-                .statusCode(404)
+                .statusCode(400)
                 .extract().jsonPath().prettify();
     }
 
