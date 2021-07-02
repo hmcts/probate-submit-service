@@ -44,7 +44,7 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
   ]
 }
 
-// Configure branches to sync with master branch
+// Configure branches to sync with master branch..
 def branchesToSync = ['demo', 'ithc', 'perftest']
 
 withPipeline("java", product, component) {
