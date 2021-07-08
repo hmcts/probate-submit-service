@@ -1,8 +1,8 @@
 buildscript {
     dependencies {
         classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.3'
-        classpath("net.serenity-bdd:serenity-gradle-plugin:2.4.24")
-        classpath("net.serenity-bdd:serenity-single-page-report:2.4.24")
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.4.34")
+        classpath("net.serenity-bdd:serenity-single-page-report:2.4.47")
     }
 
 }
@@ -12,8 +12,8 @@ plugins {
     id 'application'
     id 'pmd'
     id 'org.springframework.boot' version '2.3.4.RELEASE'
-    id 'uk.gov.hmcts.java' version '0.12.9'
-    id 'com.github.ben-manes.versions' version '0.38.0'
+    id 'uk.gov.hmcts.java' version '0.12.12'
+    id 'com.github.ben-manes.versions' version '0.39.0'
     id 'com.gorylenko.gradle-git-properties' version '2.3.1'
     id 'info.solidsoft.pitest' version '1.5.2'
     id "io.spring.dependency-management" version "1.0.11.RELEASE"
@@ -190,7 +190,7 @@ dependencyManagement {
         dependency group: 'junit', name: 'junit', version: '4.13.2'
 
         // CVE-2021-29425
-        dependency group: 'commons-io', name: 'commons-io', version: '2.8.0'
+        dependency group: 'commons-io', name: 'commons-io', version: '2.10.0'
 
         //CVE-2021-22112
         dependencySet(group: 'org.springframework.security', version: '5.4.6') {
@@ -201,7 +201,7 @@ dependencyManagement {
         }
 
         //CVE-2021-22118
-        dependencySet(group: 'org.springframework', version: '5.2.9.RELEASE') {
+        dependencySet(group: 'org.springframework', version: '5.3.8') {
             entry 'spring-aop'
             entry 'spring-beans'
             entry 'spring-context'
@@ -230,9 +230,11 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: versions.springBoot
     compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.3.1'
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
-    compile("com.fasterxml.jackson.core:jackson-databind:2.11.2") {
+    compile("com.fasterxml.jackson.core:jackson-databind:2.12.4") {
         force = true
     }
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
     compile group: 'io.github.openfeign', name: 'feign-httpclient', version: versions.feignHttpClient
 
 
@@ -271,9 +273,11 @@ dependencies {
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
     testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.3.5.RELEASE'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
-    testCompile("com.fasterxml.jackson.core:jackson-databind:2.11.2") {
+    testCompile("com.fasterxml.jackson.core:jackson-databind:2.12.4") {
         force = true
     }
+    testCompile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
+    testCompile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
     testCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
     testRuntime group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
     testRuntime group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
@@ -285,10 +289,12 @@ dependencies {
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-single-page-report', version: versions.serenityreporter
     testFunctionalCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-    testFunctionalCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
-    testFunctionalCompile("com.fasterxml.jackson.core:jackson-databind:2.11.2") {
+    testFunctionalCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.4.0'
+    testFunctionalCompile("com.fasterxml.jackson.core:jackson-databind:2.12.4") {
         force = true
     }
+    testFunctionalCompile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
+    testFunctionalCompile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
     testFunctionalCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testFunctionalAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testFunctionalCompile sourceSets.main.runtimeClasspath
@@ -300,19 +306,22 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.2')
     testSmokeCompile sourceSets.main.runtimeClasspath
     testSmokeCompile sourceSets.test.runtimeClasspath
-    testSmokeCompile("com.fasterxml.jackson.core:jackson-databind:2.11.2") {
+    testSmokeCompile("com.fasterxml.jackson.core:jackson-databind:2.12.4") {
         force = true
     }
-
+    testSmokeCompile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
+    testSmokeCompile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
     testContractCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
     testContractCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testContractCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testContractCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
     testContractCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
     testContractCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
-    testContractCompile("com.fasterxml.jackson.core:jackson-databind:2.11.2") {
+    testContractCompile("com.fasterxml.jackson.core:jackson-databind:2.12.4") {
         force = true
     }
+    testContractCompile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
+    testContractCompile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
     testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testContractAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
 
@@ -335,7 +344,7 @@ dependencies {
     testPactCompile("org.junit.jupiter:junit-jupiter-api:5.7.1")
     testPactRuntime("org.junit.jupiter:junit-jupiter-engine:5.7.1")
     testPactImplementation('org.junit.jupiter:junit-jupiter-api:5.7.1')
-    testPactRuntime group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.7.0'
+    testPactRuntime group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.7.2'
 
     testPactCompile group: 'com.github.hmcts', name: 'probate-pact-commons', version: versions.probatePactCommonsVersion
 
