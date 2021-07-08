@@ -335,7 +335,7 @@ dependencies {
     testPactCompile("org.junit.jupiter:junit-jupiter-api:5.7.1")
     testPactRuntime("org.junit.jupiter:junit-jupiter-engine:5.7.1")
     testPactImplementation('org.junit.jupiter:junit-jupiter-api:5.7.1')
-    testPactRuntime group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.7.0'
+    testPactRuntime group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.7.2'
 
     testPactCompile group: 'com.github.hmcts', name: 'probate-pact-commons', version: versions.probatePactCommonsVersion
 
