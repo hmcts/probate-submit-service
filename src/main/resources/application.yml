@@ -30,7 +30,9 @@ spring:
   thymeleaf.encoding: UTF-8
   thymeleaf.content-type: text/html # ;charset=<encoding> is added
   thymeleaf.cache: false # set to false for hot refresh
-
+  config:
+    import: "optional:configtree:/mnt/secrets/probate/"
+    
   messages:
     basename: messages
     cache-seconds: -1
