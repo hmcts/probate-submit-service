@@ -26,7 +26,7 @@ public class CaseContentBuilder {
     private Event createEvent(EventId eventId, String eventDescriptor) {
         return Event.builder()
             .id(eventId.getName())
-            .description(eventDescriptor)
+            .description("hellodescription")
             .summary(eventDescriptor)
             .build();
     }
