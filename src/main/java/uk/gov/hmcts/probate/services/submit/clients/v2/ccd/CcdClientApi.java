@@ -231,7 +231,9 @@ public class CcdClientApi implements CoreCaseDataService {
 
     private CaseDataContent createCaseDataContent(CaseData caseData, EventId eventId,
                                                   StartEventResponse startEventResponse, String eventDescriptor) {
-        return caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse, eventDescriptor);
+        log.info("=============================== createCaseDataContent, changing event descriptor => ");
+        log.info(caseData.toString());
+        return caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse, "probate testing");
     }
 
 }
