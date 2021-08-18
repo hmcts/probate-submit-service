@@ -16,17 +16,24 @@ public class CaseContentBuilder {
 
     public CaseDataContent createCaseDataContent(CaseData caseData, EventId eventId,
                                                  StartEventResponse startEventResponse, String eventDescriptor) {
+        String description = caseData.getDescription();
+        log.info("======== createCaseDataContent ");
+        log.info(description);
+        if (description == null) {
+            description = eventDescriptor;
+        }
+                                                   
         return CaseDataContent.builder()
-            .event(createEvent(eventId, eventDescriptor))
+            .event(createEvent(eventId, eventDescriptor, description))
             .eventToken(startEventResponse.getToken())
             .data(caseData)
             .build();
     }
 
-    private Event createEvent(EventId eventId, String eventDescriptor) {
+    private Event createEvent(EventId eventId, String eventDescriptor, String description) {
         return Event.builder()
             .id(eventId.getName())
-            .description("hellodescription")
+            .description(description)
             .summary(eventDescriptor)
             .build();
     }

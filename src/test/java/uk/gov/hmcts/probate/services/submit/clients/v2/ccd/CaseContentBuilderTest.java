@@ -47,7 +47,7 @@ public class CaseContentBuilderTest {
         assertThat(caseDataContent.getEventToken(), is(EVENT_TOKEN));
         assertThat(caseDataContent.getEvent(), is(notNullValue()));
         assertThat(caseDataContent.getEvent().getId(), is(eventId.getName()));
-        assertThat(caseDataContent.getEvent().getDescription(), is("hellodescription"));
+        assertThat(caseDataContent.getEvent().getDescription(), is(DESCRIPTOR));
         assertThat(caseDataContent.getEvent().getSummary(), is(DESCRIPTOR));
         assertThat(caseDataContent.getData(), is(caseData));
         assertThat(caseDataContent.getSecurityClassification(), is(nullValue()));
