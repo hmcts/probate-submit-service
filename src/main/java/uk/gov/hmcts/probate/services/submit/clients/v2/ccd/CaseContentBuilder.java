@@ -22,7 +22,7 @@ public class CaseContentBuilder {
         if (description == null) {
             log.info("description  is null");
             description = eventDescriptor;
-        } else if (description == "null") {
+        } else if (description.equals("null")) {
             log.info("description is strring null");
             description = eventDescriptor;
         }
