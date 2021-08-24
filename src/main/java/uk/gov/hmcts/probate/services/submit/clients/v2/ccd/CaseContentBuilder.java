@@ -16,28 +16,21 @@ public class CaseContentBuilder {
 
     public CaseDataContent createCaseDataContent(CaseData caseData, EventId eventId,
                                                  StartEventResponse startEventResponse, String eventDescriptor) {
-        String description = caseData.getDescription();
-        log.info("============================== createCaseDataContent description is => ");
-        log.info(description);
-        if (description == null) {
-            log.info("description  is null");
-            description = eventDescriptor;
-        } else if (description.equals("null")) {
-            log.info("description is strring null");
-            description = eventDescriptor;
-        }
-
-        log.info("description to put in the case event ===========> ");
-        log.info(description);
-                                                   
+        Event event = createEvent(eventId, eventDescriptor, caseData.getDescription());
+        caseData.setDescription(null);
         return CaseDataContent.builder()
-            .event(createEvent(eventId, eventDescriptor, description))
+            .event(event)
             .eventToken(startEventResponse.getToken())
             .data(caseData)
             .build();
     }
 
     private Event createEvent(EventId eventId, String eventDescriptor, String description) {
+        if(description ==  null || description.equals("null")){
+            description =  eventDescriptor;
+        }
+        log.info("======= create event description:");
+        log.info(description);
         return Event.builder()
             .id(eventId.getName())
             .description(description)
