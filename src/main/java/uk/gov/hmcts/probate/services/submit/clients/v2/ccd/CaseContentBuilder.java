@@ -26,7 +26,7 @@ public class CaseContentBuilder {
     }
 
     private Event createEvent(EventId eventId, String eventDescriptor, String description) {
-        if(description ==  null || description.equals("null")){
+        if (description ==  null || description.equals("null")) {
             description =  eventDescriptor;
         }
         log.info("======= create event description:");
