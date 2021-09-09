@@ -29,8 +29,6 @@ public class CaseContentBuilder {
         if (description ==  null || description.equals("null")) {
             description =  eventDescriptor;
         }
-        log.info("======= create event description:");
-        log.info(description);
         return Event.builder()
             .id(eventId.getName())
             .description(description)
