@@ -81,7 +81,7 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto))
             .thenReturn(Optional.of(caseResponse));
         when(coreCaseDataService.updateCase(anyString(), any(GrantOfRepresentationData.class),
-            any(EventId.class), any(SecurityDto.class)))
+            any(EventId.class), any(SecurityDto.class), null))
             .thenReturn(caseResponse);
 
     }

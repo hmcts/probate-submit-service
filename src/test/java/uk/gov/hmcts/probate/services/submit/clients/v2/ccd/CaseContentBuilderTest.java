@@ -41,7 +41,7 @@ public class CaseContentBuilderTest {
     public void shouldAddContent() {
 
         CaseDataContent caseDataContent =
-            caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse, DESCRIPTOR);
+            caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse, DESCRIPTOR, DESCRIPTOR);
         assertThat(caseDataContent, is(notNullValue()));
         assertThat(caseDataContent.getCaseReference(), is(nullValue()));
         assertThat(caseDataContent.getEventToken(), is(EVENT_TOKEN));

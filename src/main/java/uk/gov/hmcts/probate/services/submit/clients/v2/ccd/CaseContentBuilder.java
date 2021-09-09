@@ -15,24 +15,23 @@ import uk.gov.hmcts.reform.probate.model.cases.EventId;
 public class CaseContentBuilder {
 
     public CaseDataContent createCaseDataContent(CaseData caseData, EventId eventId,
-                                                 StartEventResponse startEventResponse, String eventDescriptor) {
-        Event event = createEvent(eventId, eventDescriptor, caseData.getDescription());
-        caseData.setDescription(null);
+                                                 StartEventResponse startEventResponse, 
+                                                 String summary, String eventDescription) {
         return CaseDataContent.builder()
-            .event(event)
+            .event(createEvent(eventId, summary, eventDescription))
             .eventToken(startEventResponse.getToken())
             .data(caseData)
             .build();
     }
 
-    private Event createEvent(EventId eventId, String eventDescriptor, String description) {
-        if (description ==  null || description.equals("null")) {
-            description =  eventDescriptor;
+    private Event createEvent(EventId eventId, String summary, String eventDescription) {
+        if (eventDescription == null) {
+            eventDescription = summary;
         }
         return Event.builder()
             .id(eventId.getName())
-            .description(description)
-            .summary(eventDescriptor)
+            .description(eventDescription)
+            .summary(summary)
             .build();
     }
 }

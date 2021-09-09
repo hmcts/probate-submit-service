@@ -19,7 +19,8 @@ public interface CoreCaseDataService {
 
     Optional<ProbateCaseDetails> findCaseById(String caseId, SecurityDto securityDto);
 
-    ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId, SecurityDto securityDto);
+    ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId,
+                                    SecurityDto securityDto, String eventDescription);
 
     ProbateCaseDetails createCase(CaseData caseData, EventId eventId, SecurityDto securityDto);
 
