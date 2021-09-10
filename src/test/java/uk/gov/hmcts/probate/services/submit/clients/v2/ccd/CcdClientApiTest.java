@@ -353,23 +353,23 @@ public class CcdClientApiTest {
     }
 
 
-    // @Test
-    // public void shouldReturnEmptyOptionalWhenReturningNullOnSearch() {
-    //     String queryString = "queryString";
-    //     when(mockInvitationElasticSearchQueryBuilder.buildQuery(APPLICANT_EMAIL, "primaryApplicantEmailAddress"))
-    //         .thenReturn(queryString);
+    @Test
+    public void shouldReturnEmptyOptionalWhenReturningNullOnSearch() {
+        String queryString = "queryString";
+        when(mockInvitationElasticSearchQueryBuilder.buildQuery(APPLICANT_EMAIL, "primaryApplicantEmailAddress"))
+            .thenReturn(queryString);
 
-    //     when(mockCoreCaseDataApi.searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
-    //         eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString)))
-    //         .thenReturn(SearchResult.builder().cases(null).build());
-
-
-    //     Optional<ProbateCaseDetails> optionalCaseResponse =
-    //         ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
+        when(mockCoreCaseDataApi.searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
+            eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString)))
+            .thenReturn(SearchResult.builder().cases(null).build());
 
 
-    //     assertThat(optionalCaseResponse.isPresent(), is(false));
-    // }
+        Optional<ProbateCaseDetails> optionalCaseResponse =
+            ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
+
+
+        assertThat(optionalCaseResponse.isPresent(), is(false));
+    }
 
     @Test
     public void shouldReturnEmptyOptionalWhenReturningNullOnSearchInvitation() {

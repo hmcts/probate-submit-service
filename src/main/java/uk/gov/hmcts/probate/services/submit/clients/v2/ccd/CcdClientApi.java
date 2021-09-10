@@ -196,10 +196,13 @@ public class CcdClientApi implements CoreCaseDataService {
             securityDto.getServiceAuthorisation(),
             caseType.getName(),
             searchString).getCases();
-            
-        log.info(caseDetails.toString());
+
+       
         if (caseDetails == null) {
+            log.info("Case details is null, set optional empty");
             return Optional.empty();
+        }else{
+            log.info(caseDetails.toString());
         }
         if (caseDetails.size() > 1) {
             throw new IllegalStateException("Multiple cases exist with applicant email provided!");
