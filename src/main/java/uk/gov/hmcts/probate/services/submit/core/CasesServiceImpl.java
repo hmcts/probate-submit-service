@@ -97,6 +97,7 @@ public class CasesServiceImpl implements CasesService {
                                         Boolean asCaseworker) {
         log.info("saveDraft 2 - Saving draft for case type: {}",
             probateCaseDetails.getCaseData().getClass().getSimpleName());
+        log.info("==== probate case details => {}", probateCaseDetails.toString());
         CaseData caseData = probateCaseDetails.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
         if (!caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
@@ -107,6 +108,7 @@ public class CasesServiceImpl implements CasesService {
         SecurityDto securityDto = securityUtils.getSecurityDto();
         Optional<ProbateCaseDetails> caseInfoOptional =
             coreCaseDataService.findCase(searchField, caseType, securityDto);
+        log.info("====== caseInfoOptional {}", caseInfoOptional.toString());
         return saveCase(securityDto, caseType, caseData, caseInfoOptional, asCaseworker,
         probateCaseDetails.getCaseInfo().getEventDescription());
 

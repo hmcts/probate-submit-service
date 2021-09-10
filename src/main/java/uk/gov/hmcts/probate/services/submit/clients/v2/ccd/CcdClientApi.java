@@ -196,6 +196,8 @@ public class CcdClientApi implements CoreCaseDataService {
             securityDto.getServiceAuthorisation(),
             caseType.getName(),
             searchString).getCases();
+            
+        log.info(caseDetails.toString());
         if (caseDetails == null) {
             return Optional.empty();
         }
