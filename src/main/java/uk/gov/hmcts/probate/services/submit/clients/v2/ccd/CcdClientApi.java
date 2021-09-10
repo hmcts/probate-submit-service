@@ -72,6 +72,7 @@ public class CcdClientApi implements CoreCaseDataService {
             false,
             caseDataContent
         );
+        log.info(caseDetails.toString());
         return createCaseResponse(caseDetails);
     }
 
@@ -118,7 +119,7 @@ public class CcdClientApi implements CoreCaseDataService {
     @Override
     public ProbateCaseDetails createCase(CaseData caseData, EventId eventId, SecurityDto securityDto) {
         CaseType caseType = CaseType.getCaseType(caseData);
-        log.info("Create case for caseType: {}, caseType: {}, eventId: {}",
+        log.info("================================= Create case for caseType: {}, caseType: {}, eventId: {}",
             caseType.getName(), eventId.getName());
         log.info("Retrieve event token from CCD for Citizen, caseType: {}, eventId: {}",
             caseType.getName(), eventId.getName());
@@ -132,7 +133,7 @@ public class CcdClientApi implements CoreCaseDataService {
         );
         CaseDataContent caseDataContent =
             createCaseDataContent(caseData, eventId, startEventResponse, EVENT_SUMMARY, EVENT_SUMMARY);
-        log.info("Submit event to CCD for Citizen, caseType: {}", caseType.getName());
+        log.info("============================== Submit event to CCD for Citizen, caseType: {}", caseType.getName());
         CaseDetails caseDetails = coreCaseDataApi.submitForCitizen(
             securityDto.getAuthorisation(),
             securityDto.getServiceAuthorisation(),
@@ -142,6 +143,7 @@ public class CcdClientApi implements CoreCaseDataService {
             false,
             caseDataContent
         );
+        log.info(caseDetails.toString());
         return createCaseResponse(caseDetails);
     }
 
@@ -186,7 +188,7 @@ public class CcdClientApi implements CoreCaseDataService {
 
     @Override
     public Optional<ProbateCaseDetails> findCase(String searchValue, CaseType caseType, SecurityDto securityDto) {
-        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+        log.info("=================== Search for case in CCD for Citizen, caseType: {}", caseType.getName());
         String searchString =
             elasticSearchQueryBuilder.buildQuery(searchValue, searchFieldFactory.getEsSearchFieldName(caseType));
         List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(

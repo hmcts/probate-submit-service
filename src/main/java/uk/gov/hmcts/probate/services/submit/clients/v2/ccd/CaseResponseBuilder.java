@@ -17,7 +17,7 @@ public class CaseResponseBuilder {
 
     public ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {
         CaseInfo caseInfo = getCaseInfo(caseDetails);
-
+        log.info("========================== createCaseResponse: {}", caseInfo.toString());
         return ProbateCaseDetails.builder()
             .caseData(caseDetailsToCaseDataMapper.map(caseDetails))
             .caseInfo(caseInfo)
