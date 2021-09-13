@@ -205,7 +205,7 @@ public class CcdClientApi implements CoreCaseDataService {
         if (caseDetails == null) {
             log.info("Case details is null, set optional empty");
             return Optional.empty();
-        }else{
+        } else {
             log.info(caseDetails.toString());
         }
         if (caseDetails.size() > 1) {
