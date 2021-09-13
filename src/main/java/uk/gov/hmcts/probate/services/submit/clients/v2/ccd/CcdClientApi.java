@@ -189,8 +189,12 @@ public class CcdClientApi implements CoreCaseDataService {
     @Override
     public Optional<ProbateCaseDetails> findCase(String searchValue, CaseType caseType, SecurityDto securityDto) {
         log.info("=================== Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+        
         String searchString =
             elasticSearchQueryBuilder.buildQuery(searchValue, searchFieldFactory.getEsSearchFieldName(caseType));
+            
+        log.info("==== search string {}", searchString);
+
         List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
             securityDto.getAuthorisation(),
             securityDto.getServiceAuthorisation(),
