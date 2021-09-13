@@ -146,7 +146,7 @@ public class CcdClientApi implements CoreCaseDataService {
     @Override
     public Optional<ProbateCaseDetails> findCaseByInviteId(String inviteId, CaseType caseType,
                                                            SecurityDto securityDto) {
-        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+        log.info("findCaseByInviteId Search for case in CCD for Citizen, caseType: {}", caseType.getName());
 
         String searchString =
             elasticSearchQueryBuilder.buildQuery(inviteId, searchFieldFactory.getSearchInviteFieldName());
@@ -168,7 +168,7 @@ public class CcdClientApi implements CoreCaseDataService {
     @Override
     public Optional<ProbateCaseDetails> findCaseByApplicantEmail(String searchField, CaseType caseType,
                                                                  SecurityDto securityDto) {
-        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+        log.info("findCaseByApplicantEmail Search for case in CCD for Citizen, caseType: {}", caseType.getName());
         String searchString =
             elasticSearchQueryBuilder.buildQuery(searchField, searchFieldFactory.getSearchApplicantEmailFieldName());
         List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
@@ -208,13 +208,15 @@ public class CcdClientApi implements CoreCaseDataService {
 
     @Override
     public List<ProbateCaseDetails> findCases(CaseType caseType, SecurityDto securityDto) {
-        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+        log.info("======= FindCases Search for case in CCD for Citizen, caseType: {}", caseType.getName());
         String searchString = elasticSearchQueryBuilder.buildFindAllCasesQuery();
+        log.info("searchString => {}", searchString);
         List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
             securityDto.getAuthorisation(),
             securityDto.getServiceAuthorisation(),
             caseType.getName(),
             searchString).getCases();
+        log.info("Case details => {}", caseDetails.toString());
         return caseDetails.stream().map(this::createCaseResponse).collect(Collectors.toList());
     }
 
