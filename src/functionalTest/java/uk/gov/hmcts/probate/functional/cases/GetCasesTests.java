@@ -2,7 +2,7 @@ package uk.gov.hmcts.probate.functional.cases;
 
 import io.restassured.RestAssured;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 import uk.gov.hmcts.probate.functional.TestRetryRule;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
+import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;

@@ -1,8 +1,8 @@
 buildscript {
     dependencies {
         classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.3'
-        classpath("net.serenity-bdd:serenity-gradle-plugin:2.4.24")
-        classpath("net.serenity-bdd:serenity-single-page-report:2.4.24")
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.4.34")
+        classpath("net.serenity-bdd:serenity-single-page-report:2.4.47")
     }
 
 }
@@ -11,13 +11,13 @@ buildscript {
 plugins {
     id 'application'
     id 'pmd'
-    id 'org.springframework.boot' version '2.5.4'
+    id 'org.springframework.boot' version '2.3.4.RELEASE'
     id 'uk.gov.hmcts.java' version '0.12.12'
     id 'com.github.ben-manes.versions' version '0.39.0'
     id 'com.gorylenko.gradle-git-properties' version '2.3.1'
-    id 'info.solidsoft.pitest' version '1.6.0'
+    id 'info.solidsoft.pitest' version '1.5.2'
     id "io.spring.dependency-management" version "1.0.11.RELEASE"
-    id 'au.com.dius.pact' version '4.2.9'
+    id 'au.com.dius.pact' version '4.2.7'
     id 'jacoco'
 }
 
@@ -130,7 +130,7 @@ task smoke(type: Test) {
 }
 
 task fortifyScan(type: JavaExec)  {
-    mainClass = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+    main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
     classpath += sourceSets.test.runtimeClasspath
     jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
 }
@@ -147,8 +147,8 @@ pmd {
 jacocoTestReport {
     executionData(test)
     reports {
-        xml.required = true
-        csv.required = false
+        xml.enabled = true
+        csv.enabled = false
         xml.destination = file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
@@ -170,25 +170,27 @@ repositories {
 }
 
 def versions = [
-        logging                         : '5.1.7',
-        serviceAuthProviderClient       : '4.0.0',
-        authCheckerLib                  : '2.1.4',
-        ccdClient                       : '4.7.6',
-        springCloudStarterNetflixHystrix: '3.0.3',
-        springBoot                      : '2.5.4',
-        springfoxSwagger                : '3.0.0',
-        springCloudWiremock             : '3.0.3',
-        serenity                        : '2.5.8',
+        logging                         : '5.1.1',
+        serviceAuthProviderClient       : '3.0.0',
+        authCheckerLib                  : '2.1.2',
+        ccdClient                       : '4.7.5',
+        springCloudStarterNetflixHystrix: '2.1.3.RELEASE',
+        springBoot                      : '2.3.4.RELEASE',
+        springfoxSwagger                : '2.9.2',
+        springCloudWiremock             : '1.2.4.RELEASE',
+        serenity                        : '2.0.23',
+        serenityreporter                : '2.1.4',
         pact_version                    : '4.1.7',
         probateCommons                  : '1.2.4',
-        feignHttpClient                 : '11.6',
-        lombok                          : '1.18.20',
+        feignHttpClient                 : '10.2.3',
+        lombok                          : '1.18.8',
         probatePactCommonsVersion       : '1.0.2',
-        junitJupiter                    : '5.8.0-M1'
 ]
 
 dependencyManagement {
     dependencies {
+        dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.68'
+        // CVE-2018-10237 - Unbounded memory allocation
 
         //CVE-2020-15250
         dependency group: 'junit', name: 'junit', version: '4.13.2'
@@ -196,12 +198,25 @@ dependencyManagement {
         // CVE-2021-29425
         dependency group: 'commons-io', name: 'commons-io', version: '2.10.0'
 
-        // CVE-2019-10086
-        dependency group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
-        
-        //CVE-2020-8908
-        dependency group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
-        
+        //CVE-2021-22112
+        dependencySet(group: 'org.springframework.security', version: '5.4.6') {
+            entry 'spring-security-config'
+            entry 'spring-security-core'
+            entry 'spring-security-crypto'
+            entry 'spring-security-web'
+        }
+
+        //CVE-2021-22118
+        dependencySet(group: 'org.springframework', version: '5.2.9.RELEASE') {
+            entry 'spring-aop'
+            entry 'spring-beans'
+            entry 'spring-context'
+            entry 'spring-core'
+            entry 'spring-expression'
+            entry 'spring-jcl'
+            entry 'spring-web'
+            entry 'spring-webmvc'
+        }
     }
 }
 
@@ -209,108 +224,149 @@ configurations.all {
     resolutionStrategy {
         eachDependency { DependencyResolveDetails details ->
             if (details.requested.group in ['org.apache.tomcat.embed']) {
-                details.useVersion '9.0.53'
+                details.useVersion '9.0.50'
             }
         }
     }
 }
 
 dependencies {
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: versions.springBoot
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: versions.springBoot
-    implementation group: 'org.springframework.retry', name: 'spring-retry', version: '1.3.1'
-    compileOnly group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: versions.springBoot
-    implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: versions.feignHttpClient
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloudStarterNetflixHystrix
-    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: versions.springfoxSwagger
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: versions.springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: versions.springBoot
+    compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.3.1'
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+    compile("com.fasterxml.jackson.core:jackson-databind:2.12.4") {
+        force = true
+    }
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
+    compile group: 'io.github.openfeign', name: 'feign-httpclient', version: versions.feignHttpClient
 
-    implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.logging
-    implementation group: 'uk.gov.hmcts.reform', name: 'logging-spring', version: versions.logging
-    implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
-    implementation group: 'uk.gov.hmcts.reform', name: 'logging-httpcomponents', version: versions.logging
-    implementation group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
-    implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
-    implementation group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: versions.ccdClient
-    implementation group: 'com.github.hmcts', name: 'probate-commons', version: versions.probateCommons
 
-    implementation group: 'org.pitest', name: 'pitest', version: '1.6.9'
-    implementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.6.0'
-    implementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloudStarterNetflixHystrix
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
+
+    compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.logging
+    compile group: 'uk.gov.hmcts.reform', name: 'logging-spring', version: versions.logging
+    compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
+    compile group: 'uk.gov.hmcts.reform', name: 'logging-httpcomponents', version: versions.logging
+    compile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
+    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
+    compile group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: versions.ccdClient
+    compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.0.4'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    compile group: 'com.github.hmcts', name: 'probate-commons', version: versions.probateCommons
+
+    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
+    compile group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
+
+    compile group: 'org.pitest', name: 'pitest', version: '1.6.7'
+    compile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.6.0'
+    compile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '3.0.1'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '3.0.1'
 
     compileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group:'org.projectlombok', name:'lombok', version: versions.lombok
 
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test' , version: versions.springBoot
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
-    testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.5.1'
-    testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
-    testImplementation 'com.github.hmcts:fortify-client:1.2.1:all'
-    testImplementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
-    testRuntimeOnly group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
-    testRuntimeOnly group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
-    testImplementation group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
+    testCompile("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "com.vaadin.external.google", module: "android-json"
+    }
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
+    testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.3.5.RELEASE'
+    testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
+    testCompile("com.fasterxml.jackson.core:jackson-databind:2.12.4") {
+        force = true
+    }
+    testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
+    testCompile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
+    testCompile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
+    testCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
+    testRuntime group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
+    testRuntime group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
+    testCompile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
 
-    testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
-    testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
-    testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
-    testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-    testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-single-page-report', version: versions.serenity
-    testFunctionalImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-    testFunctionalImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.4.0'
+    testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
+    testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
+    testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
+    testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+    testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-single-page-report', version: versions.serenityreporter
+    testFunctionalCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    testFunctionalCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.4.0'
+    testFunctionalCompile("com.fasterxml.jackson.core:jackson-databind:2.12.4") {
+        force = true
+    }
+    testFunctionalCompile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
+    testFunctionalCompile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
     testFunctionalCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testFunctionalAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
-    testFunctionalImplementation sourceSets.main.runtimeClasspath
-    testFunctionalImplementation sourceSets.test.runtimeClasspath
+    testFunctionalCompile sourceSets.main.runtimeClasspath
+    testFunctionalCompile sourceSets.test.runtimeClasspath
 
-    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.4.0'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junitJupiter
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junitJupiter
-    testSmokeImplementation sourceSets.main.runtimeClasspath
-    testSmokeImplementation sourceSets.test.runtimeClasspath
-    testContractImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
-    testContractImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
-    testContractImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
-    testContractImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-    testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-    testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.4.0'
-    testContractImplementation("com.fasterxml.jackson.core:jackson-databind:2.12.4") 
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
+    testCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.2')
+    testSmokeCompile sourceSets.main.runtimeClasspath
+    testSmokeCompile sourceSets.test.runtimeClasspath
+    testSmokeCompile("com.fasterxml.jackson.core:jackson-databind:2.12.4") {
+        force = true
+    }
+    testSmokeCompile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
+    testSmokeCompile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
+    testContractCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
+    testContractCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
+    testContractCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
+    testContractCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+    testContractCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+    testContractCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
+    testContractCompile("com.fasterxml.jackson.core:jackson-databind:2.12.4") {
+        force = true
+    }
+    testContractCompile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
+    testContractCompile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
     testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testContractAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
 
-    testContractImplementation sourceSets.main.runtimeClasspath
-    testContractImplementation sourceSets.test.runtimeClasspath
+    testContractCompile sourceSets.main.runtimeClasspath
+    testContractCompile sourceSets.test.runtimeClasspath
 
-    testPactImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
-    testPactImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
-    testPactImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
-    testPactImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-    testPactImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-    testPactImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
-    testPactImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
-    testPactImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
-    testPactImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
-    testPactRuntimeOnly group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
-    testPactImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junitJupiter
-    testPactRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junitJupiter
-    testPactRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.8.0-M1'
-    testPactImplementation group: 'com.github.hmcts', name: 'probate-pact-commons', version: versions.probatePactCommonsVersion
-    testPactImplementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+    testPactCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
+    testPactCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
+    testPactCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
+    testPactCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+    testPactCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+    testPactCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
+    testPactCompile group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
+    testPactCompile group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
+    testPactCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
+    testPactCompile group: 'au.com.dius.pact.consumer', name: 'java8', version: versions.pact_version
+    testPactCompile group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
+    testPactRuntime group: 'au.com.dius.pact.consumer', name: 'java8',  version: versions.pact_version
+    testPactRuntime group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
+    testPactCompile("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testPactRuntime("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+    testPactImplementation('org.junit.jupiter:junit-jupiter-api:5.7.1')
+    testPactRuntime group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.7.2'
 
-    testPactImplementation sourceSets.main.runtimeClasspath
-    testPactImplementation sourceSets.test.runtimeClasspath
+    testPactCompile group: 'com.github.hmcts', name: 'probate-pact-commons', version: versions.probatePactCommonsVersion
+
+    testPactCompile sourceSets.main.runtimeClasspath
+    testPactCompile sourceSets.test.runtimeClasspath
 }
 
 tasks.withType(JavaCompile) {
     options.compilerArgs << '-parameters'
 }
 
-ext['rest-assured.version'] = '4.4.0'
+ext['rest-assured.version'] = '4.2.0'
 
 bootJar {
-    archiveFileName = 'submit-service.jar'
+    archiveName = 'submit-service.jar'
     manifest {
 
         attributes 'Implementation-Title': project.name,
