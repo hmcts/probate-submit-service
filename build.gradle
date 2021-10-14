@@ -304,8 +304,8 @@ dependencies {
     testFunctionalImplementation sourceSets.main.runtimeClasspath
     testFunctionalImplementation sourceSets.test.runtimeClasspath
 
-    testFunctionalImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
-    testFunctionalImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.2')
     testSmokeImplementation sourceSets.main.runtimeClasspath
