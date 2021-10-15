@@ -361,6 +361,7 @@ tasks.withType(JavaCompile) {
 }
 
 ext['rest-assured.version'] = '4.2.0'
+ext['junit-jupiter.version'] = '5.8.1'
 
 bootJar {
     archiveFileName = 'submit-service.jar'
