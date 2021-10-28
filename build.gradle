@@ -209,7 +209,7 @@ configurations.all {
     resolutionStrategy {
         eachDependency { DependencyResolveDetails details ->
             if (details.requested.group in ['org.apache.tomcat.embed']) {
-                details.useVersion '9.0.53'
+                details.useVersion '9.0.54'
             }
         }
     }
