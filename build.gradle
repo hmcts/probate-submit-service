@@ -211,6 +211,10 @@ configurations.all {
             if (details.requested.group in ['org.apache.tomcat.embed']) {
                 details.useVersion '9.0.54'
             }
+
+            if (details.requested.group in ['org.apache.logging.log4j']) {
+                details.useVersion '2.15.0'
+            }
         }
     }
 }
