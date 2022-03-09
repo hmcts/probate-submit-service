@@ -88,11 +88,27 @@ withPipeline("java", product, component) {
   }
 
     after('functionalTest:preview') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+      publishHTML target: [
+              allowMissing         : true,
+              alwaysLinkToLastBuild: true,
+              keepAll              : true,
+              reportDir            : "target/site/serenity/",
+              reportFiles          : "index.html",
+              reportName           : "Functional Tests Report"
+      ]
     }
 
     after('functionalTest:aat') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+      publishHTML target: [
+              allowMissing         : true,
+              alwaysLinkToLastBuild: true,
+              keepAll              : true,
+              reportDir            : "target/site/serenity/",
+              reportFiles          : "index.html",
+              reportName           : "Functional Tests Report"
+      ]
     }
 
     // Vars for Kubernetes
