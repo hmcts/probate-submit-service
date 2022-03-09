@@ -5,11 +5,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -114,12 +111,5 @@ public class SecurityConfigurationTest {
             .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
             .header(AUTHORIZATION, "Bearer jddslfjsdlfj"))
             .andExpect(authenticated());
-    }
-
-    @TestConfiguration
-    @EnableWebSecurity
-    @ComponentScan("uk.gov.hmcts.probate")
-    public class Configuration {
-
     }
 }
