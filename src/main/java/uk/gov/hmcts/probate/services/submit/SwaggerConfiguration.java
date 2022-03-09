@@ -1,59 +1,33 @@
 package uk.gov.hmcts.probate.services.submit;
 
-import com.google.common.base.Predicate;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.headers.Header;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.StringSchema;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.RequestHandler;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.schema.ModelRef;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
 
-import java.util.Arrays;
 
 @Configuration
 public class SwaggerConfiguration {
 
     @Bean
-    public Docket draftsApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("drafts")
-                .globalOperationParameters(Arrays.asList(
-                        new ParameterBuilder()
-                                .name("Authorization")
-                                .description("User authorization header")
-                                .required(true)
-                                .parameterType("header")
-                                .modelRef(new ModelRef("string"))
-                                .build(),
-                        new ParameterBuilder()
-                                .name("ServiceAuthorization")
-                                .description("Service authorization header")
-                                .required(true)
-                                .parameterType("header")
-                                .modelRef(new ModelRef("string"))
-                                .build())
-                )
-                .alternateTypeRules()
-                .useDefaultResponseMessages(false)
-                .apiInfo(draftsApiInfo())
-                .select()
-                .apis(packagesLike("uk.gov.hmcts.probate.services.submit.controllers.v2"))
-                .paths(PathSelectors.any())
-                .build();
+    public OpenAPI draftsApi() {
+        return new OpenAPI()
+            .components(new Components()
+                .addHeaders("Authorization", new Header().description("User authorization header")
+                .required(true)
+                .schema(new StringSchema()))
+            .addHeaders("ServiceAuthorization", new Header().description("Service authorization header")
+            .required(true)
+            .schema(new StringSchema())))
+            .info(draftsApiInfo());
     }
 
-    private ApiInfo draftsApiInfo() {
-        return new ApiInfoBuilder()
+    private Info draftsApiInfo() {
+        return new Info()
                 .title("Submit Service API documentation")
-                .description("Submit Service API documentation")
-                .build();
-    }
-
-    private static Predicate<RequestHandler> packagesLike(final String pkg) {
-        return input -> input.declaringClass().getPackage().getName().equals(pkg);
+                .description("Submit Service API documentation");
     }
 }
