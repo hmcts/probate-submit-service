@@ -87,7 +87,8 @@ public class PaymentServiceImpl implements PaymentsService {
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         CaseData caseData = probateCaseDetails.getCaseData();
         registryService.updateRegistry(caseData);
-        return coreCaseDataService.updateCase(caseId, caseData, eventId, securityDto);
+        return coreCaseDataService.updateCase(caseId, caseData, eventId,
+            securityDto, "update case with payment details");
     }
 
     private ProbateCaseDetails updateCase(String caseId, ProbateCaseDetails updateRequest,

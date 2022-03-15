@@ -15,7 +15,7 @@ public interface CasesService {
 
     ProbateCaseDetails getCaseByInvitationId(String invitationId, CaseType caseType);
 
-    ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails);
+    ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails, String eventDescription);
 
     ProbateCaseDetails initiateCase(ProbateCaseDetails caseRequest);
 

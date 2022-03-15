@@ -14,3 +14,8 @@ nbactions.xml
 nb-configuration.xml
 out/
 bin/
+.DS_Store
+gradle-wrapper.jar
+gradlew.bat
+*.hprof
+

@@ -31,6 +31,26 @@
     javaMailProperties.mail.smtp.auth: false
     javaMailProperties.mail.smtp.ssl.enable: false
 
+  idam:
+    client:
+      redirect_uri: ${IDAM_API_REDIRECT_URL:http://localhost:8080/authenticated}
+      id: divorce
+      secret: ${AUTH2_CLIENT_SECRET:dummysecret}
+    api:
+      url: ${IDAM_API_BASEURL:http://localhost:4503}
+      redirect-url: ${IDAM_API_REDIRECT_URL:http://localhost:8080/authenticated}
+    caseworker:
+      username: ${IDAM_CASEWORKER_USERNAME:dummycaseworker@test.com}
+      password: ${IDAM_CASEWORKER_PASSWORD:dummy}
+    s2s-auth:
+      microservice: ${AUTH_PROVIDER_SERVICE_CLIENT_MICROSERVICE:divorce_ccd_submission}
+      totp_secret: ${AUTH_PROVIDER_SERVICE_CLIENT_KEY:AZBYCXDWEVFUGTHS}
+      url: ${AUTH_PROVIDER_SERVICE_CLIENT_BASEURL:http://localhost:4502}
+      port: ${AUTH_PROVIDER_SERVICE_CLIENT_PORT:4502}
+      health:
+        context-path: ${AUTH_PROVIDER_SERVICE_CLIENT_HEALTH_CONTEXT_PATH:/health}
+
+
 # THYMELEAF (ThymeleafAutoConfiguration)
   spring:
     application:

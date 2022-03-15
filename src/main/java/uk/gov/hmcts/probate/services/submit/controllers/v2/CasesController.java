@@ -106,9 +106,12 @@ public class CasesController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> saveCase(@PathVariable("applicationId") String applicationId,
+                                                       @RequestParam(name = "eventDescription",
+                                                          defaultValue = "Probate Application") String eventDescription,
                                                        @RequestBody ProbateCaseDetails caseRequest) {
         log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
-        return new ResponseEntity(casesService.saveCase(applicationId.toLowerCase(), caseRequest), OK);
+        return new ResponseEntity(casesService.saveCase(applicationId.toLowerCase(),
+            caseRequest, eventDescription), OK);
     }
 
     @PostMapping(path = "/cases/initiate", consumes = MediaType.APPLICATION_JSON_VALUE,

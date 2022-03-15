@@ -1,10 +1,10 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
-import au.com.dius.pact.provider.junit.Provider;
-import au.com.dius.pact.provider.junit.State;
 import au.com.dius.pact.provider.junit.target.HttpTarget;
-import au.com.dius.pact.provider.junit.target.Target;
-import au.com.dius.pact.provider.junit.target.TestTarget;
+import au.com.dius.pact.provider.junitsupport.Provider;
+import au.com.dius.pact.provider.junitsupport.State;
+import au.com.dius.pact.provider.junitsupport.target.Target;
+import au.com.dius.pact.provider.junitsupport.target.TestTarget;
 import au.com.dius.pact.provider.spring.SpringRestPactRunner;
 import org.json.JSONException;
 import org.junit.Before;
@@ -81,7 +81,7 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto))
             .thenReturn(Optional.of(caseResponse));
         when(coreCaseDataService.updateCase(anyString(), any(GrantOfRepresentationData.class),
-            any(EventId.class), any(SecurityDto.class)))
+            any(EventId.class), any(SecurityDto.class), anyString()))
             .thenReturn(caseResponse);
 
     }

@@ -2,6 +2,8 @@
 //
 @Library("Infrastructure")
 
+import uk.gov.hmcts.contino.AppPipelineDsl
+
 def type = "java"
 String product = "probate"
 String component = "submit-service"
@@ -42,33 +44,18 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
   ]
 }
 
+// Configure branches to sync with master branch..
+def branchesToSync = ['demo', 'ithc', 'perftest']
+
 withPipeline("java", product, component) {
 
   loadVaultSecrets(secrets)
   enableAksStagingDeployment()
   enableSlackNotifications('#probate-jenkins')
-
+  syncBranchesWithMaster(branchesToSync)
   disableLegacyDeployment()
 
     after('test') {
-//        try {
-//            if (env.CHANGE_BRANCH || env.BRANCH_NAME == 'master') {
-//                env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
-//                env.PACT_BROKER_PORT = "443"
-//                env.PACT_BROKER_SCHEME = "https"
-//                env.PACT_BROKER_FULL_URL = "https://pact-broker.platform.hmcts.net"
-//                env.PACT_BRANCH_NAME = env.CHANGE_BRANCH
-//                if (env.BRANCH_NAME == 'master') {
-//                    env.PACT_BRANCH_NAME = 'master'
-//                }
-//                // sh './gradlew pitest'
-//                env.PACT_BROKER_VERSION = sh(returnStdout: true, script: 'git rev-parse --verify --short HEAD')
-//                sh './gradlew pactTask -Dpact.provider.version=${PACT_BROKER_VERSION}'
-//            }
-//        } finally {
-//            archiveArtifacts "build/reports/tests/**/*.*"
-////        archiveArtifacts "build/reports/pitest/**/*.*"
-//        }
 
     junit 'build/test-results/test/**/*.xml'
     archiveArtifacts 'build/reports/tests/test/index.html'
@@ -101,10 +88,34 @@ withPipeline("java", product, component) {
   }
 
     after('functionalTest:preview') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+      publishHTML target: [
+              allowMissing         : true,
+              alwaysLinkToLastBuild: true,
+              keepAll              : true,
+              reportDir            : "target/site/serenity/",
+              reportFiles          : "index.html",
+              reportName           : "Functional Tests Report"
+      ]
     }
 
     after('functionalTest:aat') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+      publishHTML target: [
+              allowMissing         : true,
+              alwaysLinkToLastBuild: true,
+              keepAll              : true,
+              reportDir            : "target/site/serenity/",
+              reportFiles          : "index.html",
+              reportName           : "Functional Tests Report"
+      ]
+    }
+
+    // Vars for Kubernetes
+    env.PACT_BROKER_FULL_URL = 'https://pact-broker.platform.hmcts.net'
+    enablePactAs([AppPipelineDsl.PactRoles.CONSUMER])
+
+    onPR() {
+      enablePactAs([AppPipelineDsl.PactRoles.CONSUMER])
     }
 }

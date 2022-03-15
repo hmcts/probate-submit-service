@@ -164,7 +164,8 @@ public class CcdClientApiTest {
         when(mockCoreCaseDataApi
             .submitForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
-        when(caseContentBuilder.createCaseDataContent(caseData, CREATE_DRAFT, startEventResponse, PROBATE_DESCRIPTOR))
+        when(caseContentBuilder.createCaseDataContent(caseData, CREATE_DRAFT, startEventResponse,
+            PROBATE_DESCRIPTOR, "create case"))
             .thenReturn(caseDataContent);
         ProbateCaseDetails caseResponse = ccdClientApi.createCase(caseData, CREATE_DRAFT, securityDto);
 
@@ -191,11 +192,12 @@ public class CcdClientApiTest {
             .submitEventForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent)))
             .thenReturn(caseDetails);
-        when(caseContentBuilder.createCaseDataContent(caseData, UPDATE_DRAFT, startEventResponse, PROBATE_DESCRIPTOR))
+        when(caseContentBuilder.createCaseDataContent(caseData, UPDATE_DRAFT, startEventResponse,
+            PROBATE_DESCRIPTOR, PROBATE_DESCRIPTOR))
             .thenReturn(caseDataContent);
 
         ProbateCaseDetails caseResponse =
-            ccdClientApi.updateCase(CASE_ID.toString(), caseData, UPDATE_DRAFT, securityDto);
+            ccdClientApi.updateCase(CASE_ID.toString(), caseData, UPDATE_DRAFT, securityDto, PROBATE_DESCRIPTOR);
 
         assertThat(caseResponse, is(notNullValue()));
         assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
@@ -220,7 +222,8 @@ public class CcdClientApiTest {
             .submitEventForCaseWorker(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent)))
             .thenReturn(caseDetails);
-        when(caseContentBuilder.createCaseDataContent(caseData, UPDATE_DRAFT, startEventResponse, PROBATE_DESCRIPTOR))
+        when(caseContentBuilder.createCaseDataContent(caseData, UPDATE_DRAFT, startEventResponse,
+            PROBATE_DESCRIPTOR, PROBATE_DESCRIPTOR))
             .thenReturn(caseDataContent);
 
         ProbateCaseDetails caseResponse =

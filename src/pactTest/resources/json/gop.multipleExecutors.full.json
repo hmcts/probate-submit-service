@@ -1,0 +1,312 @@
+{
+  "caseData": {
+    "type": "GrantOfRepresentation",
+    "caseType": "gop",
+    "payments": [
+      {
+        "id": "950243f2-c713-4f1b-990d-83eb508bab91",
+        "value": {
+          "amount": "21700",
+          "method": "card",
+          "status": "Success",
+          "reference": "RC-1599-4876-0252-6208"
+        }
+      }
+    ],
+    "softStop": "No",
+    "ihtFormId": "NA",
+    "declaration": {
+      "accept": "I confirm that I will administer the estate of the person who died according to law, and that my application is truthful.",
+      "confirm": "We confirm that we will administer the estate of Deceased fn Deceased ln, according to law. We will:",
+      "requests": "If the probate registry (court) asks us to do so, we will:",
+      "understand": "We understand that:",
+      "confirmItem1": "collect the whole estate",
+      "confirmItem2": "keep full details (an inventory) of the estate",
+      "confirmItem3": "keep a full account of how the estate has been administered",
+      "requestsItem1": "provide the full details of the estate and how it has been administered",
+      "requestsItem2": "return the grant of probate to the court",
+      "submitWarning": "Once everyone has agreed the legal statement and made their declaration, this information can&rsquo;t be changed.",
+      "understandItem1": "our application will be rejected if we do not answer any questions about the information we have given",
+      "understandItem2": "criminal proceedings for fraud may be brought against us if we are found to have been deliberately untruthful or dishonest"
+    },
+    "ihtNetValue": "100000000",
+    "ihtGrossValue": "200000000",
+    "legalStatement": {
+      "intro": "This statement is based on the information Applicant fn Applicant ln has given in their application. It will be stored as a public record.",
+      "deceased": "Deceased fn Deceased ln was born on 1 January 1950 and died on 1 January 2020, domiciled in England and Wales.",
+      "applicant": "We, Applicant fn Applicant ln of Wells Cathedral Wells BA5 2PA United Kingdom, Exec4 Name of Wells Cathedral Wells BA5 2PA United Kingdom, Exec5 Name of Wells Cathedral Wells BA5 2PA United Kingdom and Exec6 Name of Wells Cathedral Wells BA5 2PA United Kingdom, make the following statement:",
+      "executorsApplying": [
+        {
+          "id": "298c241e-4840-4f82-92bd-4898183992c7",
+          "value": {
+            "name": "Applicant fn Applicant ln, an executor named in the will, is applying for probate.",
+            "sign": "Applicant fn Applicant ln will send to the probate registry what we have seen and believe to be the true and original last will and testament of Deceased fn Deceased ln."
+          }
+        },
+        {
+          "id": "e66db7ce-1723-4b68-9459-8b9205fa45bd",
+          "value": {
+            "name": "Exec4 Name, an executor named in the will, is applying for probate.",
+            "sign": ""
+          }
+        },
+        {
+          "id": "707e185c-7e67-401d-9b62-3c4433c16929",
+          "value": {
+            "name": "Exec5 Name, an executor named in the will, is applying for probate.",
+            "sign": ""
+          }
+        },
+        {
+          "id": "228ee9fe-fe4d-49b3-a091-3d5a2be1f7d7",
+          "value": {
+            "name": "Exec6 Name, an executor named in the will, is applying for probate.",
+            "sign": ""
+          }
+        }
+      ],
+      "deceasedEstateLand": "To the best of our knowledge, information and belief, there was no land vested in Deceased fn Deceased ln which was settled previously to the death (and not by the will) of Deceased fn Deceased ln and which remained settled land notwithstanding such death.",
+      "deceasedOtherNames": "",
+      "deceasedEstateValue": "The gross value for the estate amounts to &pound;2000000.00 and the net value for the estate amounts to &pound;1000000.00.",
+      "executorsNotApplying": [
+        {
+          "id": "e307252d-215c-442a-ad27-309de10faae7",
+          "value": {
+            "executor": "Exec2 Name, an executor named in the will, is not making this application because they died before Deceased fn Deceased ln died."
+          }
+        },
+        {
+          "id": "af761fac-12d2-472f-86e6-0161a8d8be3f",
+          "value": {
+            "executor": "Exec3 Name, an executor named in the will, is not making this application because they died after Deceased fn Deceased ln died."
+          }
+        },
+        {
+          "id": "6671e11c-cb72-4f44-9fc3-113a93a2ee5b",
+          "value": {
+            "executor": "Exec7 Name, an executor named in the will, is not making this application but reserves power to do so at a later date. They have been notified in writing."
+          }
+        },
+        {
+          "id": "87c8e241-1cb1-401a-99fd-105b27e483ef",
+          "value": {
+            "executor": "Exec8 Name, an executor named in the will, is not making this application now and gives up the right to do so in the future."
+          }
+        }
+      ]
+    },
+    "applicationType": "Personal",
+    "deceasedAddress": {
+      "Country": "United Kingdom",
+      "PostCode": "BA5 2PA",
+      "PostTown": "Wells",
+      "AddressLine1": "Wells Cathedral"
+    },
+    "deceasedSurname": "Deceased ln",
+    "registryAddress": "Line 1 Ox\nLine 2 Ox\nLine 3 Ox\nPostCode Ox\n",
+    "willHasCodicils": "No",
+    "ihtNetValueField": "1000000",
+    "registryLocation": "ctsc",
+    "welshDeclaration": {
+      "accept": "Rwy&rsquo;n cadarnhau y byddaf yn gweinyddu ystad yr unigolyn sydd wedi marw yn unol &acirc;&rsquo;r gyfraith, a bod fy  nghais yn gywir.",
+      "confirm": "Rydym yn cadarnhau y byddwn yn gweinyddu ystad Deceased fn Deceased ln, yn unol &acirc;&rsquo;r gyfraith. Byddwn yn:",
+      "requests": "Os bydd y gofrestrfa brofiant (y llys) yn gofyn inni byddwn yn:",
+      "understand": "Rydym yn deall:",
+      "confirmItem1": "casglu&rsquo;r ystad i gyd",
+      "confirmItem2": "cadw manylion llawn (rhestr) yr ystad",
+      "confirmItem3": "cadw cofnod llawn o&rsquo;r ffordd y mae&rsquo;r ystad wedi cael ei gweinyddu",
+      "requestsItem1": "darparu manylion llawn yr ystad a&rsquo;r ffordd y cafodd ei gweinyddu",
+      "requestsItem2": "dychwelyd y grant profiant i&rsquo;r llys",
+      "submitWarning": "Unwaith y bydd pawb wedi cytuno i&rsquo;r datganiad cyfreithiol ac wedi gwneud eu datganiad, ni ellir newid yr wybodaeth hon.",
+      "understandItem1": "y bydd ein cais yn cael ei wrthod os na fyddwn yn ateb unrhyw gwestiynau am yr wybodaeth rydym wedi&rsquo;i rhoi",
+      "understandItem2": "y gellir dwyn achos troseddol yn ein herbyn am dwyll os penderfynir ein bod heb ddweud y gwir neu wedi bod yn anonest yn fwriadol"
+    },
+    "deceasedForenames": "Deceased fn",
+    "executorsAllAlive": "No",
+    "executorsApplying": [
+      {
+        "id": "71cf841d-ecb6-4f91-86cb-8f28e2140a5b",
+        "value": {
+          "applyingExecutorName": "Exec4 Name",
+          "applyingExecutorEmail": "bruno.cypress@outree.org",
+          "applyingExecutorAgreed": "Yes",
+          "applyingExecutorAddress": {
+            "Country": "United Kingdom",
+            "PostCode": "BA5 2PA",
+            "PostTown": "Wells",
+            "AddressLine1": "Wells Cathedral"
+          },
+          "applyingExecutorPhoneNumber": "07769351102",
+          "applyingExecutorInvitationId": "inviteId"
+        }
+      },
+      {
+        "id": "e765ad1c-e831-4360-97c4-341cb3191bf4",
+        "value": {
+          "applyingExecutorName": "Exec5 Name",
+          "applyingExecutorEmail": "bruno.cypress@outree.org",
+          "applyingExecutorAgreed": "Yes",
+          "applyingExecutorAddress": {
+            "Country": "United Kingdom",
+            "PostCode": "BA5 2PA",
+            "PostTown": "Wells",
+            "AddressLine1": "Wells Cathedral"
+          },
+          "applyingExecutorPhoneNumber": "07769351102",
+          "applyingExecutorInvitationId": "deceased-fn-deceased-ln"
+        }
+      },
+      {
+        "id": "c63bd78b-c472-45d5-b942-b59a781467c2",
+        "value": {
+          "applyingExecutorName": "Exec6 Name",
+          "applyingExecutorEmail": "bruno.cypress@outree.org",
+          "applyingExecutorAgreed": "Yes",
+          "applyingExecutorAddress": {
+            "Country": "United Kingdom",
+            "PostCode": "BA5 2PA",
+            "PostTown": "Wells",
+            "AddressLine1": "Wells Cathedral"
+          },
+          "applyingExecutorPhoneNumber": "07769351102",
+          "applyingExecutorInvitationId": "deceased-fn-deceased-ln"
+        }
+      }
+    ],
+    "numberOfExecutors": 8,
+    "executorsHaveAlias": "No",
+    "extraCopiesOfGrant": 4,
+    "ihtGrossValueField": "2000000",
+    "ihtReferenceNumber": "IHT123412341234",
+    "numberOfApplicants": 8,
+    "boDocumentsUploaded": [],
+    "deceasedDateOfBirth": "1950-01-01",
+    "deceasedDateOfDeath": "2020-01-01",
+    "declarationCheckbox": "Yes",
+    "welshLegalStatement": {
+      "intro": "Mae&rsquo;r datganiad hwn wedi&rsquo;i seilio ar yr wybodaeth y mae Applicant fn Applicant ln wedi&rsquo;i rhoi yn eu cais. Bydd yn cael ei storio fel cofnod cyhoeddus.",
+      "deceased": "Deceased fn Deceased ln ar undefined a bu farw ar undefined, ac roedd fel arfer yn preswylio yng Nghymru a Lloegr.",
+      "applicant": "Rydym ni, Applicant fn Applicant ln o Wells Cathedral Wells BA5 2PA United Kingdom, Exec4 Name o Wells Cathedral Wells BA5 2PA United Kingdom, Exec5 Name o Wells Cathedral Wells BA5 2PA United Kingdom a/ac Exec6 Name o Wells Cathedral Wells BA5 2PA United Kingdom, yn gwneud y datganiad canlynol:",
+      "executorsApplying": [
+        {
+          "id": "b4c0e385-193e-4195-9657-a1091df50b28",
+          "value": {
+            "name": "Mae Applicant fn Applicant ln, ysgutor a enwir yn yr ewyllys, yn gwneud cais am brofiant.",
+            "sign": "Bydd Applicant fn Applicant ln yn anfon i&rsquo;r Gofrestrfa Brofiant yr hyn yr ydym wedi&rsquo;i weld a&rsquo;i gredu i fod yn ewyllys a thestament gwir a gwreiddiol olaf Deceased fn Deceased ln."
+          }
+        },
+        {
+          "id": "0e3878a7-23cd-49e9-aa3a-febb5582d9a0",
+          "value": {
+            "name": "Mae Exec4 Name, ysgutor a enwir yn yr ewyllys fel , yn gwneud cais am brofiant.",
+            "sign": ""
+          }
+        },
+        {
+          "id": "fab1b8e4-8fba-413a-9593-ec7584259130",
+          "value": {
+            "name": "Mae Exec5 Name, ysgutor a enwir yn yr ewyllys fel , yn gwneud cais am brofiant.",
+            "sign": ""
+          }
+        },
+        {
+          "id": "952c4b8b-0fec-4e65-94d1-d71a5d8f8c44",
+          "value": {
+            "name": "Mae Exec6 Name, ysgutor a enwir yn yr ewyllys fel , yn gwneud cais am brofiant.",
+            "sign": ""
+          }
+        }
+      ],
+      "deceasedEstateLand": "Hyd eithaf ein gwybodaeth a&rsquo;n cred, nid oedd unrhyw dir wedi&rsquo;i freinio yn Deceased fn Deceased ln a setlwyd cyn marwolaeth (ac nid drwy ewyllys) Deceased fn Deceased ln ac a oedd dal yn dir a setlwyd er gwaethaf y farwolaeth honno.",
+      "deceasedOtherNames": "",
+      "deceasedEstateValue": "Mae gwerth gros yr ystad yn &pound;2000000.00 ac mae gwerth net yr ystad yn &pound;1000000.00.",
+      "executorsNotApplying": [
+        {
+          "id": "cb62d566-b252-4b8d-abd8-da6eedc26c26",
+          "value": {
+            "executor": "Nid yw Exec2 Name, ysgutor a enwir yn yr ewyllys, yn gwneud y cais hwn oherwydd bu iddynt farw cyn i Deceased fn Deceased ln farw."
+          }
+        },
+        {
+          "id": "ab928d3e-ceb0-452b-9808-9ec6449b88e3",
+          "value": {
+            "executor": "Nid yw Exec3 Name, ysgutor a enwir yn yr ewyllys, yn gwneud y cais hwn oherwydd bu iddynt farw ar &ocirc;l i Deceased fn Deceased ln farw."
+          }
+        },
+        {
+          "id": "aa787470-904a-4af8-9475-664ef6794455",
+          "value": {
+            "executor": "Nid yw Exec7 Name, ysgutor a enwir yn yr ewyllys, yn gwneud y cais hwn ond maent yn cadw&rsquo;r hawl i wneud hynny ar ddyddiad diweddarach. Maent wedi cael eu hysbysu am hyn yn ysgrifenedig."
+          }
+        },
+        {
+          "id": "33437563-3933-4e36-b737-69ecc1d47ef9",
+          "value": {
+            "executor": "Nid yw Exec8 Name, ysgutor a enwir yn yr ewyllys, yn gwneud y cais hwn nawr ac maent yn rhoi fyny yr hawl i wneud hynny yn y dyfodol."
+          }
+        }
+      ]
+    },
+    "executorsNotApplying": [
+      {
+        "id": "f803c7f0-d123-476d-acd5-7c736b3d76af",
+        "value": {
+          "notApplyingExecutorName": "Exec2 Name",
+          "notApplyingExecutorIsDead": "Yes",
+          "notApplyingExecutorReason": "DiedBefore",
+          "notApplyingExecutorDiedBefore": "Yes"
+        }
+      },
+      {
+        "id": "d4a3ce1d-8ff1-4eda-a23d-1067d97c7762",
+        "value": {
+          "notApplyingExecutorName": "Exec3 Name",
+          "notApplyingExecutorIsDead": "Yes",
+          "notApplyingExecutorReason": "DiedAfter",
+          "notApplyingExecutorDiedBefore": "No"
+        }
+      },
+      {
+        "id": "e6a61565-6dbe-4d7e-9a2f-da1b01a57d61",
+        "value": {
+          "notApplyingExecutorName": "Exec7 Name",
+          "notApplyingExecutorIsDead": "No",
+          "notApplyingExecutorReason": "PowerReserved",
+          "notApplyingExecutorNotified": "Yes"
+        }
+      },
+      {
+        "id": "44705146-e48b-45d8-a038-7f5fdff70021",
+        "value": {
+          "notApplyingExecutorName": "Exec8 Name",
+          "notApplyingExecutorIsDead": "No",
+          "notApplyingExecutorReason": "Renunciation"
+        }
+      }
+    ],
+    "legalDeclarationJson": "{\"declarations\":[{\"headers\":[\"In the High Court of Justice\",\"Family Division\",\"(Probate)\"],\"sections\":[{\"headingType\":\"large\",\"title\":\"Legal statement\",\"declarationItems\":[{\"title\":\"We, Applicant fn Applicant ln of Wells Cathedral Wells BA5 2PA United Kingdom, Exec4 Name of Wells Cathedral Wells BA5 2PA United Kingdom, Exec5 Name of Wells Cathedral Wells BA5 2PA United Kingdom and Exec6 Name of Wells Cathedral Wells BA5 2PA United Kingdom, make the following statement:\"}]},{\"headingType\":\"small\",\"title\":\"The person who died\",\"declarationItems\":[{\"title\":\"Deceased fn Deceased ln was born on 1 January 1950 and died on 1 January 2020, domiciled in England and Wales. \"}]},{\"headingType\":\"small\",\"title\":\"The estate of the person who died\",\"declarationItems\":[{\"title\":\"The gross value for the estate amounts to £2000000.00 and the net value for the estate amounts to £1000000.00.\"},{\"title\":\"To the best of our knowledge, information and belief, there was no land vested in Deceased fn Deceased ln which was settled previously to the death (and not by the will) of Deceased fn Deceased ln and which remained settled land notwithstanding such death.\"}]},{\"headingType\":\"small\",\"title\":\"Executors applying for probate\",\"declarationItems\":[{\"title\":\"Applicant fn Applicant ln, an executor named in the will, is applying for probate.\"},{\"title\":\"Applicant fn Applicant ln will send to the probate registry what we have seen and believe to be the true and original last will and testament of Deceased fn Deceased ln.\"},{\"title\":\"Exec4 Name, an executor named in the will, is applying for probate.\"},{\"title\":\"Exec5 Name, an executor named in the will, is applying for probate.\"},{\"title\":\"Exec6 Name, an executor named in the will, is applying for probate.\"}]},{\"headingType\":\"small\",\"title\":\"Executors not applying for probate\",\"declarationItems\":[{\"title\":\"Exec2 Name, an executor named in the will, is not making this application because they died before Deceased fn Deceased ln died.\"},{\"title\":\"Exec3 Name, an executor named in the will, is not making this application because they died after Deceased fn Deceased ln died.\"},{\"title\":\"Exec7 Name, an executor named in the will, is not making this application but reserves power to do so at a later date. They have been notified in writing.\"},{\"title\":\"Exec8 Name, an executor named in the will, is not making this application now and gives up the right to do so in the future.\"}]},{\"headingType\":\"large\",\"title\":\"Declaration\",\"declarationItems\":[{\"title\":\"We confirm that we will administer the estate of Deceased fn Deceased ln, according to law. We will:\",\"values\":[\"collect the whole estate\",\"keep full details (an inventory) of the estate\",\"keep a full account of how the estate has been administered\"]},{\"title\":\"If the probate registry (court) asks us to do so, we will:\",\"values\":[\"provide the full details of the estate and how it has been administered\",\"return the grant of probate to the court\"]},{\"title\":\"We understand that:\",\"values\":[\"our application will be rejected if we do not answer any questions about the information we have given\",\"criminal proceedings for fraud may be brought against us if we are found to have been deliberately untruthful or dishonest\"]}]}]}],\"dateCreated\":\"9/7/2020, 2:54:36 PM\",\"deceased\":\"Deceased fn Deceased ln\"}",
+    "outsideUKGrantCopies": 0,
+    "registryEmailAddress": "ctsc@email.com",
+    "deceasedAliasNameList": [],
+    "deceasedAnyOtherNames": "No",
+    "ihtFormCompletedOnline": "Yes",
+    "otherExecutorsApplying": "Yes",
+    "registrySequenceNumber": 3,
+    "checkAnswersSummaryJson": "{\"sections\":[{\"title\":\"About the person who died\",\"type\":\"govuk-heading-m\",\"questionAndAnswers\":[{\"question\":\"Do you require a bilingual grant in English and Welsh?\",\"answers\":[\"No\"]},{\"question\":\"First name and any middle names\",\"answers\":[\"Deceased fn\"]},{\"question\":\"Last name\",\"answers\":[\"Deceased ln\"]},{\"question\":\"Did Deceased fn Deceased ln have assets in another name?\",\"answers\":[\"No\"]},{\"question\":\"Did Deceased fn Deceased ln get married or enter into a civil partnership after the will was signed?\",\"answers\":[\"No\"]},{\"question\":\"What was their date of birth?\",\"answers\":[\"1 January 1950\"]},{\"question\":\"What was the date that they died?\",\"answers\":[\"1 January 2020\"]},{\"question\":\"What was the permanent address at the time of their death?\",\"answers\":[\"Wells Cathedral Wells BA5 2PA United Kingdom\"]},{\"question\":\"Were any updates (‘codicils’) made to the will?\",\"answers\":[\"No\"]}]},{\"title\":\"Uploaded documents\",\"type\":\"govuk-heading-m\",\"questionAndAnswers\":[{\"question\":\"Death Certificate\",\"answers\":[\"No documents have been uploaded\"]}]},{\"title\":\"Inheritance tax\",\"type\":\"govuk-heading-m\",\"questionAndAnswers\":[{\"question\":\"How was the Inheritance Tax (IHT) form submitted?\",\"answers\":[\"Through the HMRC online service\"]},{\"question\":\"Inheritance Tax identifier (IHT)\",\"answers\":[\"IHT123412341234\"]},{\"question\":\"Gross value of the estate in £\",\"answers\":[\"2000000\"]},{\"question\":\"Net value of the estate in £\",\"answers\":[\"1000000\"]}]},{\"title\":\"The executors\",\"type\":\"govuk-heading-m\",\"questionAndAnswers\":[{\"question\":\"How many past and present executors are named on the will and any updates (‘codicils’)?\",\"answers\":[\"8\"]},{\"question\":\"Are all the executors alive?\",\"answers\":[\"No\"]},{\"question\":\"Which executors have died?\",\"answers\":[\"Exec2 Name\",\"Exec3 Name\"]},{\"question\":\"Did Exec2 Name die before the person who died?\",\"answers\":[\"Yes\"]},{\"question\":\"Did Exec3 Name die before the person who died?\",\"answers\":[\"No\"]}]},{\"title\":\"About you\",\"type\":\"govuk-heading-s\",\"questionAndAnswers\":[{\"question\":\"First name and any middle names\",\"answers\":[\"Applicant fn\"]},{\"question\":\"Last name\",\"answers\":[\"Applicant ln\"]},{\"question\":\"Is your name ‘Applicant fn Applicant ln’ exactly what appears on the will?\",\"answers\":[\"Yes\"]},{\"question\":\"Phone number\",\"answers\":[\"1234512345123\"]},{\"question\":\"What is your address?\",\"answers\":[\"Wells Cathedral Wells BA5 2PA United Kingdom\"]}]},{\"title\":\"Other executors applying for probate\",\"type\":\"govuk-heading-s\",\"questionAndAnswers\":[{\"question\":\"Will any of the other executors be dealing with the estate?\",\"answers\":[\"Yes\"]},{\"question\":\"Which executors will be dealing with the estate?\",\"answers\":[\"Exec4 Name\",\"Exec5 Name\",\"Exec6 Name\"]}]},{\"title\":\"Second executor applying for probate\",\"type\":\"govuk-heading-s\",\"questionAndAnswers\":[{\"question\":\"Name on will\",\"answers\":[\"Exec4 Name\"]},{\"question\":\"Address\",\"answers\":[\"Wells Cathedral Wells BA5 2PA United Kingdom\"]},{\"question\":\"Mobile number\",\"answers\":[\"07769351102\"]},{\"question\":\"Email address\",\"answers\":[\"bruno.cypress@outree.org\"]}]},{\"title\":\"Third executor applying for probate\",\"type\":\"govuk-heading-s\",\"questionAndAnswers\":[{\"question\":\"Name on will\",\"answers\":[\"Exec5 Name\"]},{\"question\":\"Address\",\"answers\":[\"Wells Cathedral Wells BA5 2PA United Kingdom\"]},{\"question\":\"Mobile number\",\"answers\":[\"07769351102\"]},{\"question\":\"Email address\",\"answers\":[\"bruno.cypress@outree.org\"]}]},{\"title\":\"Fourth executor applying for probate\",\"type\":\"govuk-heading-s\",\"questionAndAnswers\":[{\"question\":\"Name on will\",\"answers\":[\"Exec6 Name\"]},{\"question\":\"Address\",\"answers\":[\"Wells Cathedral Wells BA5 2PA United Kingdom\"]},{\"question\":\"Mobile number\",\"answers\":[\"07769351102\"]},{\"question\":\"Email address\",\"answers\":[\"bruno.cypress@outree.org\"]}]},{\"title\":\"Executors not applying for probate\",\"type\":\"govuk-heading-s\",\"questionAndAnswers\":[{\"question\":\"Why isn’t Exec7 Name applying for probate?\",\"answers\":[\"This executor doesn’t want to apply now, but may do in the future (this is also known as power reserved)\"]},{\"question\":\"Have you notified Exec7 Name in writing that you are applying?\",\"answers\":[\"Yes\"]},{\"question\":\"Why isn’t Exec8 Name applying for probate?\",\"answers\":[\"This executor doesn’t want to apply now, and gives up the right to do so in the future (this is also known as renunciation, and the executor will need to fill in a form)\"]}]}],\"mainParagraph\":\"Check the information below carefully. This will form a record of your application for probate. It will also be stored as a public record, and will be able to be viewed online.\",\"pageTitle\":\"Check your answers\"}",
+    "languagePreferenceWelsh": "No",
+    "primaryApplicantAddress": {
+      "Country": "United Kingdom",
+      "PostCode": "BA5 2PA",
+      "PostTown": "Wells",
+      "AddressLine1": "Wells Cathedral"
+    },
+    "primaryApplicantSurname": "Applicant ln",
+    "applicationSubmittedDate": "2020-09-07",
+    "primaryApplicantForenames": "Applicant fn",
+    "primaryApplicantPhoneNumber": "1234512345123",
+    "primaryApplicantEmailAddress": "testusername@test.com",
+    "primaryApplicantSameWillName": "Yes",
+    "probateNotificationsGenerated": [],
+    "deceasedMarriedAfterWillOrCodicilDate": "No"
+  }
+}

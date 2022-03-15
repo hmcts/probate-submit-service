@@ -238,7 +238,7 @@ public class CasesControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class));
+        verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class), anyString());
     }
 
     @Test
@@ -271,7 +271,7 @@ public class CasesControllerTest {
     public void shouldGiveStatusOf500WhenAssertFieldExceptionThrown() throws Exception {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
-        when(casesService.saveCase(anyString(), any(ProbateCaseDetails.class)))
+        when(casesService.saveCase(anyString(), any(ProbateCaseDetails.class), anyString()))
             .thenThrow(new AssertFieldException(ValidationErrorResponse.builder().build()));
 
         mockMvc.perform(post(CASES_URL + "/" + EMAIL_ADDRESS)
@@ -279,6 +279,6 @@ public class CasesControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isInternalServerError());
 
-        verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class));
+        verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class), anyString());
     }
 }

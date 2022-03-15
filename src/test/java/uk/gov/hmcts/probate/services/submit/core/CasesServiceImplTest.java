@@ -181,14 +181,16 @@ public class CasesServiceImplTest {
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(coreCaseDataService.findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto))
             .thenReturn(caseResponseOptional);
-        when(coreCaseDataService.updateCase(CASE_ID, caseData, UPDATE_DRAFT, securityDto)).thenReturn(caseRequest);
+        when(coreCaseDataService.updateCase(CASE_ID, caseData, UPDATE_DRAFT,
+            securityDto, "event description")).thenReturn(caseRequest);
 
-        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest);
+        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest, "event description");
 
         assertThat(caseResponse.getCaseData(), is(caseData));
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto);
-        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData, UPDATE_DRAFT, securityDto);
+        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData, UPDATE_DRAFT, securityDto,
+            "event description");
     }
 
     @Test
@@ -229,7 +231,7 @@ public class CasesServiceImplTest {
             .thenReturn(Optional.empty());
         when(coreCaseDataService.createCase(caseData, CREATE_DRAFT, securityDto)).thenReturn(caseRequest);
 
-        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest);
+        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest, "event description");
 
         assertThat(caseResponse.getCaseData(), is(caseData));
         verify(securityUtils, times(1)).getSecurityDto();

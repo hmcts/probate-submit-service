@@ -49,6 +49,7 @@ public class PaymentServiceImplTest {
     private static final String CASE_ID = "12323213323";
     private static final CaseState STATE = CaseState.PA_APP_CREATED;
     private static final String APPLICANT_EMAIL = "test@test.com";
+    private static final String EVENT_DESCRIPTION = "update case with payment details";
 
     @Mock
     private CoreCaseDataService mockCoreCaseDataService;
@@ -150,7 +151,7 @@ public class PaymentServiceImplTest {
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCaseById(CASE_ID, securityDto);
         verify(mockCoreCaseDataService, never()).updateCase(eq(CASE_ID), eq(caseData),
-            eq(GOP_CREATE_CASE), eq(securityDto));
+            eq(GOP_CREATE_CASE), eq(securityDto), eq(EVENT_DESCRIPTION));
     }
 
     @Test
@@ -159,7 +160,7 @@ public class PaymentServiceImplTest {
         when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto))
             .thenReturn(Optional.of(caseResponse));
         when(mockCoreCaseDataService.updateCase(eq(CASE_ID), eq(caseData),
-            eq(GOP_CREATE_CASE), eq(securityDto)))
+            eq(GOP_CREATE_CASE), eq(securityDto), eq(EVENT_DESCRIPTION)))
             .thenReturn(caseResponse);
 
         ProbateCaseDetails actualCaseResponse = paymentService.createCase(APPLICANT_EMAIL, caseResponse);
@@ -168,7 +169,7 @@ public class PaymentServiceImplTest {
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
-            eq(GOP_CREATE_CASE), eq(securityDto));
+            eq(GOP_CREATE_CASE), eq(securityDto), eq(EVENT_DESCRIPTION));
     }
 
     @Test
@@ -178,7 +179,7 @@ public class PaymentServiceImplTest {
         when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto))
             .thenReturn(Optional.of(caseResponse));
         when(mockCoreCaseDataService.updateCase(eq(CASE_ID), eq(caseData),
-            eq(GOP_PAYMENT_FAILED), eq(securityDto)))
+            eq(GOP_PAYMENT_FAILED), eq(securityDto), eq(EVENT_DESCRIPTION)))
             .thenReturn(caseResponse);
 
         ProbateCaseDetails actualCaseResponse = paymentService.createCase(APPLICANT_EMAIL, caseResponse);
@@ -187,7 +188,7 @@ public class PaymentServiceImplTest {
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
-            eq(GOP_PAYMENT_FAILED), eq(securityDto));
+            eq(GOP_PAYMENT_FAILED), eq(securityDto), eq(EVENT_DESCRIPTION));
     }
 
     @Test
@@ -198,7 +199,7 @@ public class PaymentServiceImplTest {
         when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto))
             .thenReturn(Optional.of(caseResponse));
         when(mockCoreCaseDataService.updateCase(eq(CASE_ID), eq(caseData),
-            eq(GOP_PAYMENT_FAILED_AGAIN), eq(securityDto)))
+            eq(GOP_PAYMENT_FAILED_AGAIN), eq(securityDto), eq(EVENT_DESCRIPTION)))
             .thenReturn(caseResponse);
 
         ProbateCaseDetails actualCaseResponse = paymentService.createCase(APPLICANT_EMAIL, caseResponse);
@@ -207,7 +208,7 @@ public class PaymentServiceImplTest {
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
-            eq(GOP_PAYMENT_FAILED_AGAIN), eq(securityDto));
+            eq(GOP_PAYMENT_FAILED_AGAIN), eq(securityDto), eq(EVENT_DESCRIPTION));
     }
 
     @Test
@@ -218,7 +219,7 @@ public class PaymentServiceImplTest {
         when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto))
             .thenReturn(Optional.of(caseResponse));
         when(mockCoreCaseDataService.updateCase(eq(CASE_ID), eq(caseData),
-            eq(GOP_PAYMENT_FAILED_TO_SUCCESS), eq(securityDto)))
+            eq(GOP_PAYMENT_FAILED_TO_SUCCESS), eq(securityDto), eq(EVENT_DESCRIPTION)))
             .thenReturn(caseResponse);
 
         ProbateCaseDetails actualCaseResponse = paymentService.createCase(APPLICANT_EMAIL, caseResponse);
@@ -227,6 +228,6 @@ public class PaymentServiceImplTest {
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
-            eq(GOP_PAYMENT_FAILED_TO_SUCCESS), eq(securityDto));
+            eq(GOP_PAYMENT_FAILED_TO_SUCCESS), eq(securityDto), eq(EVENT_DESCRIPTION));
     }
 }

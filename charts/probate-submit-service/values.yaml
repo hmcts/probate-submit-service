@@ -26,8 +26,10 @@ java:
   keyVaults:
     probate:
       secrets:
-        - s2s-probate-backend
-        - AppInsightsInstrumentationKey
+        - name: s2s-probate-backend
+          alias: S2S_AUTH_TOTP_SECRET
+        - name: AppInsightsInstrumentationKey
+          alias: azure.application-insights.instrumentation-key
   image: hmctspublic.azurecr.io/probate/probate-submit-service:latest
 
 

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CcdClientApi implements CoreCaseDataService {
 
-    private static final String EVENT_DESCRIPTOR = "Probate application";
+    private static final String EVENT_SUMMARY = "Probate application";
 
     private final CoreCaseDataApi coreCaseDataApi;
 
@@ -42,7 +42,7 @@ public class CcdClientApi implements CoreCaseDataService {
 
     @Override
     public ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId,
-                                         SecurityDto securityDto) {
+                                         SecurityDto securityDto, String eventDescription) {
         CaseType caseType = CaseType.getCaseType(caseData);
         log.info("Update case for caseType: {}, caseId: {}, eventId: {}",
             caseType.getName(), caseId, eventId.getName());
@@ -58,7 +58,7 @@ public class CcdClientApi implements CoreCaseDataService {
             eventId.getName()
         );
         CaseDataContent caseDataContent =
-            createCaseDataContent(caseData, eventId, startEventResponse, EVENT_DESCRIPTOR);
+            createCaseDataContent(caseData, eventId, startEventResponse, EVENT_SUMMARY, eventDescription);
         log.info("Submit event to CCD for Citizen, caseType: {}, caseId: {}",
             caseType.getName(), caseId);
         CaseDetails caseDetails = coreCaseDataApi.submitEventForCitizen(
@@ -77,7 +77,7 @@ public class CcdClientApi implements CoreCaseDataService {
     @Override
     public ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
                                                      SecurityDto securityDto) {
-        return updateCaseAsCaseworker(caseId, caseData, eventId, securityDto, EVENT_DESCRIPTOR);
+        return updateCaseAsCaseworker(caseId, caseData, eventId, securityDto, EVENT_SUMMARY);
     }
 
     @Override
@@ -97,7 +97,8 @@ public class CcdClientApi implements CoreCaseDataService {
             caseId,
             eventId.getName()
         );
-        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse, eventDescriptor);
+        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse,
+            eventDescriptor,  eventDescriptor);
         log.info("Submit event to CCD for Caseworker, caseType: {}, caseId: {}",
             caseType.getName(), caseId);
         CaseDetails caseDetails = coreCaseDataApi.submitEventForCaseWorker(
@@ -129,7 +130,7 @@ public class CcdClientApi implements CoreCaseDataService {
             eventId.getName()
         );
         CaseDataContent caseDataContent =
-            createCaseDataContent(caseData, eventId, startEventResponse, EVENT_DESCRIPTOR);
+            createCaseDataContent(caseData, eventId, startEventResponse, EVENT_SUMMARY, "create case");
         log.info("Submit event to CCD for Citizen, caseType: {}", caseType.getName());
         CaseDetails caseDetails = coreCaseDataApi.submitForCitizen(
             securityDto.getAuthorisation(),
@@ -230,8 +231,10 @@ public class CcdClientApi implements CoreCaseDataService {
     }
 
     private CaseDataContent createCaseDataContent(CaseData caseData, EventId eventId,
-                                                  StartEventResponse startEventResponse, String eventDescriptor) {
-        return caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse, eventDescriptor);
+                                                  StartEventResponse startEventResponse,
+                                                  String eventSummary, String eventDescription) {
+        return caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse,
+            eventSummary, eventDescription);
     }
 
 }
