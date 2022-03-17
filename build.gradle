@@ -176,7 +176,7 @@ def versions = [
         springCloudWiremock             : '3.0.3',
         serenity                        : '2.5.8',
         pact_version                    : '4.1.7',
-        probateCommons                  : '1.1.0.2_DTSPB-247-local-test',
+        probateCommons                  : '1.3.5.DTSPB-247-resend-email',
         feignHttpClient                 : '11.6',
         lombok                          : '1.18.20',
         probatePactCommonsVersion       : '1.0.2',
