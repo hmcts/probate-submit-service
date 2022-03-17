@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
-@EnableFeignClients
+@EnableFeignClients(basePackages = {"uk.gov.hmcts.reform.idam"})
 @SpringBootApplication()
 public class SubmitApplication {
     public static void main(String[] args) {
