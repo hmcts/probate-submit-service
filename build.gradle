@@ -197,6 +197,13 @@ dependencyManagement {
 
         //CVE-2020-8908
         dependency group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
+
+        //CVE-2020-36518
+        dependencySet(group: 'com.fasterxml.jackson.core', version: '2.13.2.1') {
+            entry 'jackson-databind'
+            entry 'jackson-core'
+            entry 'jackson-annotations'
+        }
     }
 }
 
