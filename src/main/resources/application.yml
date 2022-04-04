@@ -189,3 +189,7 @@ feign:
         readTimeout: 30000
         loggerLevel: full
         errorDecoder: uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CcdClientApiErrorDecoder
+
+springdoc:
+  packagesToScan: uk.gov.hmcts.probate
+  pathsToMatch: /**
