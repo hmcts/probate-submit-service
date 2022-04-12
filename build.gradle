@@ -10,7 +10,7 @@ buildscript {
 plugins {
     id 'application'
     id 'pmd'
-    id 'org.springframework.boot' version '2.6.3'
+    id 'org.springframework.boot' version '2.6.6'
     id 'uk.gov.hmcts.java' version '0.12.12'
     id 'com.github.ben-manes.versions' version '0.39.0'
     id 'com.gorylenko.gradle-git-properties' version '2.3.1'
@@ -171,7 +171,7 @@ def versions = [
         authCheckerLib                  : '2.1.4',
         ccdClient                       : '4.7.6',
         springCloudStarterNetflixHystrix: '3.0.3',
-        springBoot                      : '2.6.3',
+        springBoot                      : '2.6.6',
         springDocUi                     : '1.6.6',
         springCloudWiremock             : '3.1.1',
         serenity                        : '2.5.8',
@@ -197,6 +197,7 @@ dependencyManagement {
 
         //CVE-2020-8908
         dependency group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
+
     }
 }
 
