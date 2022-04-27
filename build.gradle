@@ -171,7 +171,7 @@ def versions = [
         authCheckerLib                  : '2.1.4',
         ccdClient                       : '4.7.6',
         springCloudStarterNetflixHystrix: '3.0.3',
-        springBoot                      : '2.6.6',
+        springBoot                      : '2.6.7',
         springDocUi                     : '1.6.6',
         springCloudWiremock             : '3.1.1',
         serenity                        : '2.5.8',
