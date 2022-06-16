@@ -1,11 +1,11 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientError;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientErrorResponse;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientException;
@@ -14,13 +14,13 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class ProbateExceptionHandlerTest {
 
     private ProbateExceptionHandler exceptionHandler = new ProbateExceptionHandler();
     private ApiClientErrorResponse clientErrorResponse;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String json =

@@ -1,8 +1,8 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
 import org.assertj.core.util.Sets;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseValidationException;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
@@ -25,6 +25,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,7 +52,7 @@ public class ValidationServiceImplTest {
 
     private ValidationServiceImpl validationService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         validator = Mockito.mock(Validator.class);
         validationService = new ValidationServiceImpl(validator);
@@ -95,7 +96,7 @@ public class ValidationServiceImplTest {
         verify(validator, times(1)).validate(grantOfRepresentationData, paSubmissionGroups);
     }
 
-    @Test(expected = CaseValidationException.class)
+    @Test
     public void shouldThrowCaseValidationExceptionOnValidateWhenConstraintViolationsExist() {
         ConstraintViolation<GrantOfRepresentationData> constraintViolation = Mockito.mock(ConstraintViolation.class);
         Set<ConstraintViolation<GrantOfRepresentationData>> constraintViolations = new HashSet<>();
@@ -113,7 +114,9 @@ public class ValidationServiceImplTest {
 
         when(validator.validate(grantOfRepresentationData, paValidationGroups)).thenReturn(constraintViolations);
 
-        validationService.validate(probateCaseDetails);
+        assertThrows(CaseValidationException.class, () -> {
+            validationService.validate(probateCaseDetails);
+        });
 
         verify(validator, times(1)).validate(grantOfRepresentationData, paValidationGroups);
     }

@@ -2,9 +2,8 @@ package uk.gov.hmcts.probate.services.submit.core.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CaseDetailsToCaseDataMapper;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
@@ -13,13 +12,13 @@ import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepr
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CaseDetailsToCaseDataMapperTest {
 
     private CaseDetailsToCaseDataMapper caseDetailsToCaseDataMapper;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         caseDetailsToCaseDataMapper = new CaseDetailsToCaseDataMapper(new ObjectMapper());
     }
@@ -36,7 +35,7 @@ public class CaseDetailsToCaseDataMapperTest {
 
         CaseData caseData = caseDetailsToCaseDataMapper.map(caseDetails);
 
-        assertThat(caseData, Matchers.instanceOf(GrantOfRepresentationData.class));
+        assertEquals(GrantOfRepresentationData.class, caseData.getClass());
     }
 
     @Test
@@ -50,6 +49,6 @@ public class CaseDetailsToCaseDataMapperTest {
         CaseDetails caseDetails = CaseDetails.builder().caseTypeId("GrantOfRepresentation").data(map).build();
 
         CaseData caseData = caseDetailsToCaseDataMapper.map(caseDetails);
-        assertThat(caseData, Matchers.instanceOf(GrantOfRepresentationData.class));
+        assertEquals(GrantOfRepresentationData.class, caseData.getClass());
     }
 }

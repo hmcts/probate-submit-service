@@ -1,12 +1,12 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
 import org.assertj.core.util.Lists;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CaseResponseBuilder;
@@ -25,10 +25,10 @@ import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,7 +42,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.CAVEAT_APPLY_FOR_W
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.CAVEAT_EXPIRED_FOR_AWAITING_RESOLUTION;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.CAVEAT_EXPIRED_FOR_CAVEAT_NOT_MATCHED;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class CaveatExpiryServiceImplTest {
     private static final String EXPIRY_DATE = "2020-12-31";
     private static final String SEARCH_QUERY = "Search query";
@@ -61,7 +61,7 @@ public class CaveatExpiryServiceImplTest {
     @InjectMocks
     private CaveatExpiryServiceImpl caveatExpiryService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
     }
 
@@ -80,8 +80,8 @@ public class CaveatExpiryServiceImplTest {
 
         List<ProbateCaseDetails> expiredCaveats = caveatExpiryService.expireCaveats(EXPIRY_DATE);
 
-        assertThat(expiredCaveats, is(notNullValue()));
-        assertThat(expiredCaveats.size(), is(0));
+        assertNotNull(expiredCaveats);
+        assertEquals(0, expiredCaveats.size());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
     }
@@ -114,10 +114,10 @@ public class CaveatExpiryServiceImplTest {
 
         List<ProbateCaseDetails> expiredCaveats = caveatExpiryService.expireCaveats(EXPIRY_DATE);
 
-        assertThat(expiredCaveats, is(notNullValue()));
-        assertThat(expiredCaveats.size(), is(1));
-        assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName(), containsString("CaveatData"));
-        assertThat(((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry(), is(true));
+        assertNotNull(expiredCaveats);
+        assertEquals(1, expiredCaveats.size());
+        assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName()).contains("CaveatData");
+        assertEquals(true, ((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
@@ -152,10 +152,11 @@ public class CaveatExpiryServiceImplTest {
 
         List<ProbateCaseDetails> expiredCaveats = caveatExpiryService.expireCaveats(EXPIRY_DATE);
 
-        assertThat(expiredCaveats, is(notNullValue()));
-        assertThat(expiredCaveats.size(), is(1));
-        assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName(), containsString("CaveatData"));
-        assertThat(((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry(), is(true));
+        assertNotNull(expiredCaveats);
+        assertEquals(1, expiredCaveats.size());
+        assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName()).contains("CaveatData");
+        assertEquals(true, ((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry());
+
         verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
@@ -190,10 +191,10 @@ public class CaveatExpiryServiceImplTest {
 
         List<ProbateCaseDetails> expiredCaveats = caveatExpiryService.expireCaveats(EXPIRY_DATE);
 
-        assertThat(expiredCaveats, is(notNullValue()));
-        assertThat(expiredCaveats.size(), is(1));
-        assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName(), containsString("CaveatData"));
-        assertThat(((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry(), is(true));
+        assertNotNull(expiredCaveats);
+        assertEquals(1, expiredCaveats.size());
+        assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName()).contains("CaveatData");
+        assertEquals(true, ((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
@@ -228,10 +229,10 @@ public class CaveatExpiryServiceImplTest {
 
         List<ProbateCaseDetails> expiredCaveats = caveatExpiryService.expireCaveats(EXPIRY_DATE);
 
-        assertThat(expiredCaveats, is(notNullValue()));
-        assertThat(expiredCaveats.size(), is(1));
-        assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName(), containsString("CaveatData"));
-        assertThat(((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry(), is(true));
+        assertNotNull(expiredCaveats);
+        assertEquals(1, expiredCaveats.size());
+        assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName()).contains("CaveatData");
+        assertEquals(true, ((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
@@ -270,15 +271,15 @@ public class CaveatExpiryServiceImplTest {
 
         List<ProbateCaseDetails> expiredCaveats = caveatExpiryService.expireCaveats(EXPIRY_DATE);
 
-        assertThat(expiredCaveats, is(notNullValue()));
-        assertThat(expiredCaveats.size(), is(1));
-        assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName(), containsString("CaveatData"));
-        assertThat(((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry(), is(true));
+        assertNotNull(expiredCaveats);
+        assertEquals(1, expiredCaveats.size());
+        assertThat(expiredCaveats.get(0).getCaseData().getClass().getSimpleName()).contains("CaveatData");
+        assertEquals(true, ((CaveatData) expiredCaveats.get(0).getCaseData()).getAutoClosedExpiry());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldThrowExceptionWhenExpiringCaveatInInvalidState() {
         CaseState caseState = CAVEAT_RAISED;
 
@@ -304,6 +305,8 @@ public class CaveatExpiryServiceImplTest {
             CaseType.CAVEAT.getName(),
             SEARCH_QUERY)).thenReturn(searchResult);
 
-        caveatExpiryService.expireCaveats(EXPIRY_DATE);
+        assertThrows(IllegalStateException.class, () -> {
+            caveatExpiryService.expireCaveats(EXPIRY_DATE);
+        });
     }
 }

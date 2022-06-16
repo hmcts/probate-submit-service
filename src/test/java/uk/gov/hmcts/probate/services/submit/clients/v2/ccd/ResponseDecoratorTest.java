@@ -3,10 +3,10 @@ package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 import feign.Request;
 import feign.Response;
 import feign.Util;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.HttpMethod;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientError;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientErrorResponse;
 
@@ -17,8 +17,10 @@ import java.util.Map;
 
 import static feign.Util.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class ResponseDecoratorTest {
 
     private Map<String, Collection<String>> headers = new LinkedHashMap<>();
@@ -51,8 +53,8 @@ public class ResponseDecoratorTest {
         ResponseDecorator responseDecorator = new ResponseDecorator(response);
         String body = responseDecorator.bodyToString();
 
-        assertThat(response.body()).isNull();
-        assertThat(body).isEqualTo("");
+        assertNull(response.body());
+        assertEquals("", body);
     }
 
     @Test
@@ -72,9 +74,9 @@ public class ResponseDecoratorTest {
         ApiClientErrorResponse errorResponse = (ApiClientErrorResponse) responseDecorator.mapBodyToErrorResponse();
 
         ApiClientError apiClientError = errorResponse.getError();
-        assertThat(apiClientError.getStatus()).isEqualTo(500);
-        assertThat(apiClientError.getError()).isEqualTo("Not Found");
-        assertThat(apiClientError.getException()).isEqualTo("ResourceNotFound");
+        assertEquals(500, apiClientError.getStatus());
+        assertEquals("Not Found", apiClientError.getError());
+        assertEquals("ResourceNotFound", apiClientError.getException());
     }
 
     @Test
@@ -91,8 +93,8 @@ public class ResponseDecoratorTest {
         ApiClientErrorResponse errorResponse = (ApiClientErrorResponse) responseDecorator.mapBodyToErrorResponse();
         ApiClientError apiClientError = errorResponse.getError();
 
-        assertThat(apiClientError.getStatus()).isNull();
-        assertThat(apiClientError.getError()).isNull();
-        assertThat(apiClientError.getException()).isNull();
+        assertNull(apiClientError.getStatus());
+        assertNull(apiClientError.getError());
+        assertNull(apiClientError.getException());
     }
 }

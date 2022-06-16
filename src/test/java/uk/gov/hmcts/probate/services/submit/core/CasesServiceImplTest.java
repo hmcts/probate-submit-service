@@ -1,11 +1,11 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
@@ -20,9 +20,7 @@ import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepr
 
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,7 +36,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_APPLICA
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.UPDATE_GOP_PAYMENT_FAILED;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class CasesServiceImplTest {
 
     private static final String EMAIL_ADDRESS = "test@test.com";
@@ -68,7 +66,7 @@ public class CasesServiceImplTest {
     @Mock
     private EventFactory eventFactory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         when(eventFactory.getCaseEvents(GRANT_OF_REPRESENTATION)).thenReturn(CaseEvents.builder()
             .createCaseApplicationEventId(GOP_CREATE_APPLICATION)
@@ -93,7 +91,7 @@ public class CasesServiceImplTest {
 
         ProbateCaseDetails caseResponse = casesService.getCase(EMAIL_ADDRESS, CASE_TYPE);
 
-        assertThat(caseResponse, equalTo(caseResponseOptional.get()));
+        assertEquals(caseResponseOptional.get().getCaseData(), caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, CASE_TYPE, securityDto);
     }
@@ -108,7 +106,7 @@ public class CasesServiceImplTest {
 
         ProbateCaseDetails caseResponse = casesService.getCaseByApplicantEmail(EMAIL_ADDRESS, CASE_TYPE);
 
-        assertThat(caseResponse, equalTo(caseResponseOptional.get()));
+        assertEquals(caseResponseOptional.get().getCaseData(), caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCaseByApplicantEmail(EMAIL_ADDRESS, CASE_TYPE, securityDto);
     }
@@ -123,7 +121,7 @@ public class CasesServiceImplTest {
 
         ProbateCaseDetails caseResponse = casesService.getCaseByInvitationId(INVITATION_ID, CASE_TYPE);
 
-        assertThat(caseResponse, equalTo(caseResponseOptional.get()));
+        assertEquals(caseResponseOptional.get().getCaseData(), caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCaseByInviteId(INVITATION_ID, CASE_TYPE, securityDto);
     }
@@ -149,7 +147,7 @@ public class CasesServiceImplTest {
 
         ProbateCaseDetails caseResponse = casesService.getCaseById(CASE_ID);
 
-        assertThat(caseResponse, equalTo(caseResponseOptional.get()));
+        assertEquals(caseResponseOptional.get().getCaseData(), caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCaseById(CASE_ID, securityDto);
     }
@@ -163,7 +161,7 @@ public class CasesServiceImplTest {
 
         ProbateCaseDetails caseResponse = casesService.getCaseById(CASE_ID);
 
-        assertThat(caseResponse, equalTo(caseResponseOptional.get()));
+        assertEquals(caseResponseOptional.get().getCaseData(), caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCaseById(CASE_ID, securityDto);
     }
@@ -186,7 +184,7 @@ public class CasesServiceImplTest {
 
         ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest, "event description");
 
-        assertThat(caseResponse.getCaseData(), is(caseData));
+        assertEquals(caseData, caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto);
         verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData, UPDATE_DRAFT, securityDto,
@@ -211,7 +209,7 @@ public class CasesServiceImplTest {
 
         ProbateCaseDetails caseResponse = casesService.saveCaseAsCaseworker(EMAIL_ADDRESS, caseRequest);
 
-        assertThat(caseResponse.getCaseData(), is(caseData));
+        assertEquals(caseData, caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(CASE_ID, caseData, UPDATE_DRAFT, securityDto);
@@ -233,7 +231,7 @@ public class CasesServiceImplTest {
 
         ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest, "event description");
 
-        assertThat(caseResponse.getCaseData(), is(caseData));
+        assertEquals(caseData, caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto);
         verify(coreCaseDataService, times(1)).createCase(caseData, CREATE_DRAFT, securityDto);
@@ -252,7 +250,7 @@ public class CasesServiceImplTest {
 
         ProbateCaseDetails caseResponse = casesService.initiateCase(caseRequest);
 
-        assertThat(caseResponse.getCaseData(), is(caseData));
+        assertEquals(caseData, caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).createCase(caseData, CREATE_DRAFT, securityDto);
     }

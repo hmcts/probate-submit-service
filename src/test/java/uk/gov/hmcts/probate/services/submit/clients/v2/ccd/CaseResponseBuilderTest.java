@@ -1,10 +1,10 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
@@ -12,13 +12,12 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class CaseResponseBuilderTest {
 
     private CaseResponseBuilder caseResponseBuilder;
@@ -30,11 +29,11 @@ public class CaseResponseBuilderTest {
     private CaseDetails caseDetails;
     @Mock
     private CaseData caseData;
-    
+
     private static final Long CASE_ID = 12345678909L;
     private static final String STATE_NAME = "CaseCreated";
 
-    @Before
+    @BeforeEach
     public void setup() {
         caseResponseBuilder = new CaseResponseBuilder(caseDetailsToCaseDataMapper);
 
@@ -51,21 +50,21 @@ public class CaseResponseBuilderTest {
         when(caseDetails.getCreatedDate()).thenReturn(localDateTime);
 
         ProbateCaseDetails probateCaseDetails = caseResponseBuilder.createCaseResponse(caseDetails);
-        assertThat(probateCaseDetails, is(notNullValue()));
-        assertThat(probateCaseDetails.getCaseInfo(), is(notNullValue()));
-        assertThat(probateCaseDetails.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
-        assertThat(probateCaseDetails.getCaseInfo().getState().getName(), is(STATE_NAME));
-        assertThat(probateCaseDetails.getCaseInfo().getCaseCreatedDate(), is(localDate));
+        assertNotNull(probateCaseDetails);
+        assertNotNull(probateCaseDetails.getCaseInfo());
+        assertEquals(CASE_ID.toString(), probateCaseDetails.getCaseInfo().getCaseId());
+        assertEquals(STATE_NAME, probateCaseDetails.getCaseInfo().getState().getName());
+        assertEquals(localDate, probateCaseDetails.getCaseInfo().getCaseCreatedDate());
     }
-    
+
     @Test
     public void shouldCreateResponseWithoutDate() {
         ProbateCaseDetails probateCaseDetails = caseResponseBuilder.createCaseResponse(caseDetails);
-        assertThat(probateCaseDetails, is(notNullValue()));
-        assertThat(probateCaseDetails.getCaseInfo(), is(notNullValue()));
-        assertThat(probateCaseDetails.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
-        assertThat(probateCaseDetails.getCaseInfo().getState().getName(), is(STATE_NAME));
-        assertThat(probateCaseDetails.getCaseInfo().getCaseCreatedDate(), is(nullValue()));
+        assertNotNull(probateCaseDetails);
+        assertNotNull(probateCaseDetails.getCaseInfo());
+        assertEquals(CASE_ID.toString(), probateCaseDetails.getCaseInfo().getCaseId());
+        assertEquals(STATE_NAME, probateCaseDetails.getCaseInfo().getState().getName());
+        assertNull(probateCaseDetails.getCaseInfo().getCaseCreatedDate());
     }
 
 }

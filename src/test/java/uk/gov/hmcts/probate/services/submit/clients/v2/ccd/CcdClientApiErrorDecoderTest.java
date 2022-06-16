@@ -3,12 +3,10 @@ package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 import feign.Request;
 import feign.Response;
 import feign.Util;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.HttpMethod;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientException;
 
 import java.util.Collection;
@@ -16,11 +14,10 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CcdClientApiErrorDecoderTest {
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
+@ExtendWith(SpringExtension.class)
+public class CcdClientApiErrorDecoderTest {
 
     private Map<String, Collection<String>> headers = new LinkedHashMap<>();
 
@@ -28,8 +25,6 @@ public class CcdClientApiErrorDecoderTest {
 
     @Test
     public void throwsApiClientException() throws Throwable {
-        thrown.expect(ApiClientException.class);
-
         Response response = Response.builder()
             .status(500)
             .reason("Internal server error")
@@ -37,7 +32,9 @@ public class CcdClientApiErrorDecoderTest {
             .headers(headers)
             .build();
 
-        throw errorDecoder.decode("Service#foo()", response);
+        assertThrows(ApiClientException.class, () -> {
+            throw errorDecoder.decode("Service#foo()", response);
+        });
     }
 
 }

@@ -1,13 +1,13 @@
 package uk.gov.hmcts.probate.security;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.test.context.TestSecurityContextHolder;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.NoSecurityContextException;
 import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.ServiceAndUserDetails;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
@@ -15,14 +15,13 @@ import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class SecurityUtilsTest {
 
     private static final String SERVICE_AUTH_TOKEN = "SERVICEAUTH123456";
@@ -45,10 +44,10 @@ public class SecurityUtilsTest {
 
         SecurityDto securityDto = securityUtils.getSecurityDto();
 
-        assertThat(securityDto, is(notNullValue()));
-        assertThat(securityDto.getAuthorisation(), is("Bearer " + AUTH_TOKEN));
-        assertThat(securityDto.getServiceAuthorisation(), is(SERVICE_AUTH_TOKEN));
-        assertThat(securityDto.getUserId(), is(USER_ID));
+        assertNotNull(securityDto);
+        assertEquals("Bearer " + AUTH_TOKEN, securityDto.getAuthorisation());
+        assertEquals(SERVICE_AUTH_TOKEN, securityDto.getServiceAuthorisation());
+        assertEquals(USER_ID, securityDto.getUserId());
         TestSecurityContextHolder.clearContext();
     }
 
@@ -58,18 +57,22 @@ public class SecurityUtilsTest {
 
         HttpHeaders httpHeaders = securityUtils.authorizationHeaders();
 
-        assertThat(httpHeaders.get("ServiceAuthorization"), equalTo(Arrays.asList(SERVICE_AUTH_TOKEN)));
+        assertEquals(Arrays.asList(SERVICE_AUTH_TOKEN), httpHeaders.get("ServiceAuthorization"));
     }
 
-    @Test(expected = NoSecurityContextException.class)
+    @Test
     public void shouldThrowNoSecurityContextExceptionWhenNoContextSetOnGetUserId() {
-        securityUtils.getUserId();
-        TestSecurityContextHolder.clearContext();
+        assertThrows(NoSecurityContextException.class, () -> {
+            securityUtils.getUserId();
+            TestSecurityContextHolder.clearContext();
+        });
     }
 
-    @Test(expected = NoSecurityContextException.class)
+    @Test
     public void shouldThrowNoSecurityContextExceptionWhenNoContextSetOnGetUserToken() {
-        securityUtils.getUserToken();
-        TestSecurityContextHolder.clearContext();
+        assertThrows(NoSecurityContextException.class, () -> {
+            securityUtils.getUserToken();
+            TestSecurityContextHolder.clearContext();
+        });
     }
 }

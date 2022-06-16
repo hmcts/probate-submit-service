@@ -2,15 +2,13 @@ package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
 import com.google.common.collect.ImmutableMap;
 import org.assertj.core.util.Lists;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
 import uk.gov.hmcts.reform.ccd.client.CaseAccessApi;
@@ -35,9 +33,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -45,7 +43,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 import static uk.gov.hmcts.reform.probate.model.cases.JurisdictionId.PROBATE;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class CcdClientApiTest {
 
     public static final String INVITATION_ID = "12334345";
@@ -61,8 +59,7 @@ public class CcdClientApiTest {
     private static final EventId CREATE_DRAFT = EventId.GOP_CREATE_DRAFT;
     private static final EventId UPDATE_DRAFT = EventId.GOP_UPDATE_DRAFT;
     private static final String PROBATE_DESCRIPTOR = "Probate application";
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+
     @Mock
     private CoreCaseDataApi mockCoreCaseDataApi;
     @Mock
@@ -95,7 +92,7 @@ public class CcdClientApiTest {
     @Captor
     private ArgumentCaptor<UserId> userIdCaptor;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         ccdClientApi = new CcdClientApi(mockCoreCaseDataApi, mockCaseAccessApi, caseContentBuilder, caseResponseBuilder,
             searchFieldFactory, mockInvitationElasticSearchQueryBuilder);
@@ -169,9 +166,9 @@ public class CcdClientApiTest {
             .thenReturn(caseDataContent);
         ProbateCaseDetails caseResponse = ccdClientApi.createCase(caseData, CREATE_DRAFT, securityDto);
 
-        assertThat(caseResponse, is(notNullValue()));
-        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
-        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
+        assertNotNull(caseResponse);
+        assertEquals(CASE_ID.toString(), caseResponse.getCaseInfo().getCaseId());
+        assertEquals(STATE, caseResponse.getCaseInfo().getState());
         verify(mockCoreCaseDataApi, times(1))
             .startForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
                 GRANT_OF_REPRESENTATION.getName(), CREATE_DRAFT.getName());
@@ -199,9 +196,9 @@ public class CcdClientApiTest {
         ProbateCaseDetails caseResponse =
             ccdClientApi.updateCase(CASE_ID.toString(), caseData, UPDATE_DRAFT, securityDto, PROBATE_DESCRIPTOR);
 
-        assertThat(caseResponse, is(notNullValue()));
-        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
-        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
+        assertNotNull(caseResponse);
+        assertEquals(CASE_ID.toString(), caseResponse.getCaseInfo().getCaseId());
+        assertEquals(STATE, caseResponse.getCaseInfo().getState());
         verify(mockCoreCaseDataApi, times(1))
             .startEventForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
                 GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), UPDATE_DRAFT.getName());
@@ -229,9 +226,9 @@ public class CcdClientApiTest {
         ProbateCaseDetails caseResponse =
             ccdClientApi.updateCaseAsCaseworker(CASE_ID.toString(), caseData, UPDATE_DRAFT, securityDto);
 
-        assertThat(caseResponse, is(notNullValue()));
-        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
-        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
+        assertNotNull(caseResponse);
+        assertEquals(CASE_ID.toString(), caseResponse.getCaseInfo().getCaseId());
+        assertEquals(STATE, caseResponse.getCaseInfo().getState());
         verify(mockCoreCaseDataApi, times(1))
             .startEventForCaseWorker(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
                 GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), UPDATE_DRAFT.getName());
@@ -255,9 +252,9 @@ public class CcdClientApiTest {
             ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
 
         ProbateCaseDetails caseResponse = optionalCaseResponse.get();
-        assertThat(caseResponse, is(notNullValue()));
-        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
-        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
+        assertNotNull(caseResponse);
+        assertEquals(CASE_ID.toString(), caseResponse.getCaseInfo().getCaseId());
+        assertEquals(STATE, caseResponse.getCaseInfo().getState());
         verify(mockCoreCaseDataApi, times(1)).searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
             eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString));
     }
@@ -278,9 +275,9 @@ public class CcdClientApiTest {
             ccdClientApi.findCaseByApplicantEmail(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
 
         ProbateCaseDetails caseResponse = optionalCaseResponse.get();
-        assertThat(caseResponse, is(notNullValue()));
-        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
-        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
+        assertNotNull(caseResponse);
+        assertEquals(CASE_ID.toString(), caseResponse.getCaseInfo().getCaseId());
+        assertEquals(STATE, caseResponse.getCaseInfo().getState());
         verify(mockCoreCaseDataApi, times(1)).searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
             eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString));
     }
@@ -298,9 +295,9 @@ public class CcdClientApiTest {
         List<ProbateCaseDetails> results = ccdClientApi.findCases(GRANT_OF_REPRESENTATION, securityDto);
 
         CaseInfo caseInfo = results.stream().findFirst().get().getCaseInfo();
-        assertThat(results, is(notNullValue()));
-        assertThat(caseInfo.getCaseId(), is(CASE_ID.toString()));
-        assertThat(caseInfo.getState(), is(STATE));
+        assertNotNull(results);
+        assertEquals(CASE_ID.toString(), caseInfo.getCaseId());
+        assertEquals(STATE, caseInfo.getState());
         verify(mockCoreCaseDataApi, times(1)).searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
             eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString));
     }
@@ -313,9 +310,9 @@ public class CcdClientApiTest {
         Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCaseById(CASE_ID.toString(), securityDto);
 
         ProbateCaseDetails caseResponse = optionalCaseResponse.get();
-        assertThat(caseResponse, is(notNullValue()));
-        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
-        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
+        assertNotNull(caseResponse);
+        assertEquals(CASE_ID.toString(), caseResponse.getCaseInfo().getCaseId());
+        assertEquals(STATE, caseResponse.getCaseInfo().getState());
         verify(mockCoreCaseDataApi, times(1))
             .getCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(CASE_ID.toString()));
     }
@@ -327,7 +324,7 @@ public class CcdClientApiTest {
 
         Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCaseById(CASE_ID.toString(), securityDto);
 
-        assertThat(optionalCaseResponse.isPresent(), is(false));
+        assertEquals(false, optionalCaseResponse.isPresent());
         verify(mockCoreCaseDataApi, times(1))
             .getCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(CASE_ID.toString()));
     }
@@ -347,9 +344,9 @@ public class CcdClientApiTest {
             ccdClientApi.findCaseByInviteId(INVITATION_ID, GRANT_OF_REPRESENTATION, securityDto);
 
         ProbateCaseDetails caseResponse = optionalCaseResponse.get();
-        assertThat(caseResponse, is(notNullValue()));
-        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
-        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
+        assertNotNull(caseResponse);
+        assertEquals(CASE_ID.toString(), caseResponse.getCaseInfo().getCaseId());
+        assertEquals(STATE, caseResponse.getCaseInfo().getState());
         verify(mockCoreCaseDataApi, times(1))
             .searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(GRANT_OF_REPRESENTATION.getName()),
                 eq(INVIATION_QUERY));
@@ -371,7 +368,7 @@ public class CcdClientApiTest {
             ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
 
 
-        assertThat(optionalCaseResponse.isPresent(), is(false));
+        assertEquals(false, optionalCaseResponse.isPresent());
     }
 
     @Test
@@ -388,13 +385,11 @@ public class CcdClientApiTest {
         Optional<ProbateCaseDetails> optionalCaseResponse =
             ccdClientApi.findCaseByInviteId(invitationId, GRANT_OF_REPRESENTATION, securityDto);
 
-        assertThat(optionalCaseResponse.isPresent(), is(false));
+        assertEquals(false, optionalCaseResponse.isPresent());
     }
 
     @Test
     public void shouldThrowIllegalStateExceptionWhenFindingMoreThanOneCase() {
-        exception.expect(IllegalStateException.class);
-        exception.expectMessage("Multiple cases exist with applicant email provided!");
 
         String queryString = "queryString";
         when(mockInvitationElasticSearchQueryBuilder.buildQuery(APPLICANT_EMAIL, "primaryApplicantEmailAddress"))
@@ -405,6 +400,10 @@ public class CcdClientApiTest {
             .thenReturn(SearchResult.builder().cases(Lists.newArrayList(caseDetails, caseDetails)).build());
 
 
-        ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
+        IllegalStateException iae = assertThrows(IllegalStateException.class, () -> {
+            ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
+        });
+
+        assertEquals("Multiple cases exist with applicant email provided!", iae.getMessage());
     }
 }

@@ -1,18 +1,17 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.probate.model.cases.RegistryLocation;
 import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class RegistryServiceTest {
 
@@ -31,15 +30,15 @@ public class RegistryServiceTest {
             .build();
 
         registryService.updateRegistry(grantOfRepresentationData);
-        assertThat(grantOfRepresentationData.getRegistryLocation(), is(RegistryLocation.CTSC));
-        assertThat(grantOfRepresentationData.getRegistryAddress(), is(CTSC_ADDRESS));
-        assertThat(grantOfRepresentationData.getRegistryEmailAddress(), is(CTSC_EMAIL));
+        assertEquals(RegistryLocation.CTSC, grantOfRepresentationData.getRegistryLocation());
+        assertEquals(CTSC_ADDRESS, grantOfRepresentationData.getRegistryAddress());
+        assertEquals(CTSC_EMAIL, grantOfRepresentationData.getRegistryEmailAddress());
 
         CaveatData caveatData = CaveatData.builder()
             .build();
         registryService.updateRegistry(caveatData);
 
-        assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CTSC));
+        assertEquals(RegistryLocation.CTSC, caveatData.getRegistryLocation());
     }
 
     @Test
@@ -49,15 +48,15 @@ public class RegistryServiceTest {
                 .build();
 
         registryService.updateRegistry(grantOfRepresentationData);
-        assertThat(grantOfRepresentationData.getRegistryLocation(), is(RegistryLocation.CARDIFF));
-        assertThat(grantOfRepresentationData.getRegistryAddress(), is(CTSC_ADDRESS));
-        assertThat(grantOfRepresentationData.getRegistryEmailAddress(), is(CTSC_EMAIL));
+        assertEquals(RegistryLocation.CARDIFF, grantOfRepresentationData.getRegistryLocation());
+        assertEquals(CTSC_ADDRESS, grantOfRepresentationData.getRegistryAddress());
+        assertEquals(CTSC_EMAIL, grantOfRepresentationData.getRegistryEmailAddress());
 
         CaveatData caveatData = CaveatData.builder().languagePreferenceWelsh(Boolean.TRUE)
             .build();
         registryService.updateRegistry(caveatData);
 
-        assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CARDIFF));
+        assertEquals(RegistryLocation.CARDIFF, caveatData.getRegistryLocation());
     }
 
     @Test
@@ -67,15 +66,15 @@ public class RegistryServiceTest {
                 .registryLocation(RegistryLocation.CTSC).build();
 
         registryService.updateRegistry(grantOfRepresentationData);
-        assertThat(grantOfRepresentationData.getRegistryLocation(), is(RegistryLocation.CARDIFF));
-        assertThat(grantOfRepresentationData.getRegistryAddress(), is(CTSC_ADDRESS));
-        assertThat(grantOfRepresentationData.getRegistryEmailAddress(), is(CTSC_EMAIL));
+        assertEquals(RegistryLocation.CARDIFF, grantOfRepresentationData.getRegistryLocation());
+        assertEquals(CTSC_ADDRESS, grantOfRepresentationData.getRegistryAddress());
+        assertEquals(CTSC_EMAIL, grantOfRepresentationData.getRegistryEmailAddress());
 
         CaveatData caveatData =
             CaveatData.builder().registryLocation(RegistryLocation.CTSC).languagePreferenceWelsh(Boolean.TRUE).build();
         registryService.updateRegistry(caveatData);
 
-        assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CARDIFF));
+        assertEquals(RegistryLocation.CARDIFF, caveatData.getRegistryLocation());
     }
 
     @Test
@@ -85,7 +84,7 @@ public class RegistryServiceTest {
                 .registryLocation(RegistryLocation.BIRMINGHAM).build();
 
         registryService.updateRegistry(grantOfRepresentationData);
-        assertThat(grantOfRepresentationData.getRegistryLocation(), is(RegistryLocation.BIRMINGHAM));
+        assertEquals(RegistryLocation.BIRMINGHAM, grantOfRepresentationData.getRegistryLocation());
 
 
         CaveatData caveatData =
@@ -93,7 +92,7 @@ public class RegistryServiceTest {
                 .build();
         registryService.updateRegistry(caveatData);
 
-        assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.MANCHESTER));
+        assertEquals(RegistryLocation.MANCHESTER, caveatData.getRegistryLocation());
     }
 
     @Test
@@ -104,16 +103,16 @@ public class RegistryServiceTest {
                 .build();
 
         registryService.updateRegistry(grantOfRepresentationData);
-        assertThat(grantOfRepresentationData.getRegistryLocation(), is(RegistryLocation.CTSC));
-        assertThat(grantOfRepresentationData.getRegistryAddress(), is(CTSC_ADDRESS));
-        assertThat(grantOfRepresentationData.getRegistryEmailAddress(), is(CTSC_EMAIL));
+        assertEquals(RegistryLocation.CTSC, grantOfRepresentationData.getRegistryLocation());
+        assertEquals(CTSC_ADDRESS, grantOfRepresentationData.getRegistryAddress());
+        assertEquals(CTSC_EMAIL, grantOfRepresentationData.getRegistryEmailAddress());
 
         CaveatData caveatData =
             CaveatData.builder().registryLocation(RegistryLocation.CARDIFF).languagePreferenceWelsh(Boolean.FALSE)
                 .build();
         registryService.updateRegistry(caveatData);
 
-        assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CTSC));
+        assertEquals(RegistryLocation.CTSC, caveatData.getRegistryLocation());
     }
 
 }

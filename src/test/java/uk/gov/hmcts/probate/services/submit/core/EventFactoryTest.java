@@ -1,15 +1,15 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
 import com.google.common.collect.ImmutableMap;
-import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.CAVEAT;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_APPLICATION;
@@ -26,7 +26,7 @@ public class EventFactoryTest {
 
     private CaseEvents caseEvents;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         caseEvents = CaseEvents.builder()
                 .createCaseApplicationEventId(GOP_CREATE_APPLICATION)
@@ -49,11 +49,13 @@ public class EventFactoryTest {
     public void shouldGetCaseEvents() {
         CaseEvents actualCaseEvents = eventFactory.getCaseEvents(GRANT_OF_REPRESENTATION);
 
-        assertThat(actualCaseEvents, Matchers.equalTo(caseEvents));
+        assertEquals(caseEvents, actualCaseEvents);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldThrowIllegalArgumentExceptionWhenConfigDoesNotExistForType() {
-        eventFactory.getCaseEvents(CAVEAT);
+        assertThrows(IllegalArgumentException.class, () -> {
+            eventFactory.getCaseEvents(CAVEAT);
+        });
     }
 }

@@ -1,16 +1,15 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.Registry;
-import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
@@ -23,6 +22,7 @@ import uk.gov.hmcts.reform.probate.model.client.AssertFieldException;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -34,7 +34,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_AGAIN;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_TO_SUCCESS;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class CreateCaseSubmissionsProcessorTest {
 
     private static final String APPLICANT_EMAIL = "test@test.com";
@@ -75,7 +75,7 @@ public class CreateCaseSubmissionsProcessorTest {
 
     private ProbateCaseDetails caseResponse;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         securityDto = SecurityDto.builder().build();
         caseData = new CaveatData();
@@ -111,21 +111,22 @@ public class CreateCaseSubmissionsProcessorTest {
         verify(validationService, times(1)).validate(caseRequest);
     }
 
-    @Test(expected = CaseAlreadyExistsException.class)
+    @Test
     public void shouldNotSubmitWhenExistingCase() {
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, CAVEAT, securityDto))
                 .thenReturn(Optional.of(caseResponse));
 
-        createCaseSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
     }
 
 
-    @Test(expected = AssertFieldException.class)
+    @Test
     public void shouldThrowAssertFieldExceptionWhenIdentifierDoesNotMatchBody() {
         when(searchFieldFactory.getSearchFieldValuePair(CaseType.CAVEAT, caseData))
             .thenReturn(ImmutablePair.of("caveatorEmailAddress", "sdfsdfsd"));
 
-        createCaseSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
+        assertThrows(AssertFieldException.class, () -> {
+            createCaseSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
+        });
     }
 }

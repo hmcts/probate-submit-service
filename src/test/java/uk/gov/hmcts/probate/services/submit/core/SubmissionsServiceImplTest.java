@@ -1,10 +1,10 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
 import uk.gov.hmcts.probate.services.submit.services.SubmissionsService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class SubmissionsServiceImplTest {
 
     public static final String EMAIL_ADDRESS = "email address";
@@ -31,7 +31,7 @@ public class SubmissionsServiceImplTest {
 
     private ProbateCaseDetails probateCaseDetails;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         probateCaseDetails = ProbateCaseDetails.builder().caseData(GrantOfRepresentationData.builder().build())
                 .caseInfo(CaseInfo.builder().build()).build();

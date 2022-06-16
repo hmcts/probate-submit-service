@@ -1,12 +1,12 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
 import com.google.common.collect.Lists;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
@@ -28,8 +28,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -43,7 +42,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_TO_SUCCESS;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_DRAFT;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class PaymentServiceImplTest {
 
     private static final String CASE_ID = "12323213323";
@@ -86,7 +85,7 @@ public class PaymentServiceImplTest {
 
     private ProbateCaseDetails probateCaseDetailsRequest;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         payment = new CasePayment();
         payment.setSiteId("site-id-123");
@@ -130,7 +129,7 @@ public class PaymentServiceImplTest {
 
         ProbateCaseDetails actualCaseResponse = paymentService.updateCaseByCaseId(CASE_ID, probateCaseDetailsRequest);
 
-        assertThat(actualCaseResponse, equalTo(actualCaseResponse));
+        assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCaseById(CASE_ID, securityDto);
         verify(mockCoreCaseDataService).updateCaseAsCaseworker(eq(CASE_ID), eq(caseData),
@@ -147,7 +146,7 @@ public class PaymentServiceImplTest {
 
         ProbateCaseDetails actualCaseResponse = paymentService.updateCaseByCaseId(CASE_ID, probateCaseDetailsRequest);
 
-        assertThat(actualCaseResponse, equalTo(actualCaseResponse));
+        assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCaseById(CASE_ID, securityDto);
         verify(mockCoreCaseDataService, never()).updateCase(eq(CASE_ID), eq(caseData),
@@ -165,7 +164,7 @@ public class PaymentServiceImplTest {
 
         ProbateCaseDetails actualCaseResponse = paymentService.createCase(APPLICANT_EMAIL, caseResponse);
 
-        assertThat(actualCaseResponse, equalTo(actualCaseResponse));
+        assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
@@ -184,7 +183,7 @@ public class PaymentServiceImplTest {
 
         ProbateCaseDetails actualCaseResponse = paymentService.createCase(APPLICANT_EMAIL, caseResponse);
 
-        assertThat(actualCaseResponse, equalTo(actualCaseResponse));
+        assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
@@ -204,7 +203,7 @@ public class PaymentServiceImplTest {
 
         ProbateCaseDetails actualCaseResponse = paymentService.createCase(APPLICANT_EMAIL, caseResponse);
 
-        assertThat(actualCaseResponse, equalTo(actualCaseResponse));
+        assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
@@ -224,7 +223,7 @@ public class PaymentServiceImplTest {
 
         ProbateCaseDetails actualCaseResponse = paymentService.createCase(APPLICANT_EMAIL, caseResponse);
 
-        assertThat(actualCaseResponse, equalTo(actualCaseResponse));
+        assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),

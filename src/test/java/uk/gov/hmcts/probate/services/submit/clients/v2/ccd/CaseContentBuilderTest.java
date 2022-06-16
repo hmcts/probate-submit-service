@@ -1,22 +1,21 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class CaseContentBuilderTest {
 
     private static final String DESCRIPTOR = "Descriptor";
@@ -28,7 +27,7 @@ public class CaseContentBuilderTest {
     private StartEventResponse startEventResponse;
     private EventId eventId;
 
-    @Before
+    @BeforeEach
     public void setup() {
         caseContentBuilder = new CaseContentBuilder();
         eventId = EventId.GOP_CREATE_APPLICATION;
@@ -42,15 +41,16 @@ public class CaseContentBuilderTest {
 
         CaseDataContent caseDataContent =
             caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse, DESCRIPTOR, DESCRIPTOR);
-        assertThat(caseDataContent, is(notNullValue()));
-        assertThat(caseDataContent.getCaseReference(), is(nullValue()));
-        assertThat(caseDataContent.getEventToken(), is(EVENT_TOKEN));
-        assertThat(caseDataContent.getEvent(), is(notNullValue()));
-        assertThat(caseDataContent.getEvent().getId(), is(eventId.getName()));
-        assertThat(caseDataContent.getEvent().getDescription(), is(DESCRIPTOR));
-        assertThat(caseDataContent.getEvent().getSummary(), is(DESCRIPTOR));
-        assertThat(caseDataContent.getData(), is(caseData));
-        assertThat(caseDataContent.getSecurityClassification(), is(nullValue()));
+        assertNotNull(caseDataContent);
+        assertNull(caseDataContent.getCaseReference());
+
+        assertEquals(EVENT_TOKEN, caseDataContent.getEventToken());
+        assertNotNull(caseDataContent.getEvent());
+        assertEquals(eventId.getName(), caseDataContent.getEvent().getId());
+        assertEquals(DESCRIPTOR, caseDataContent.getEvent().getDescription());
+        assertEquals(DESCRIPTOR, caseDataContent.getEvent().getSummary());
+        assertEquals(caseData, caseDataContent.getData());
+        assertNull(caseDataContent.getSecurityClassification());
 
     }
 }
