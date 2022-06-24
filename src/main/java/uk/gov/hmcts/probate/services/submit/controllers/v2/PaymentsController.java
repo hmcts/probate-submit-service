@@ -1,8 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Tag;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -19,8 +17,7 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
-@Api(tags = {"PaymentsController"})
-@SwaggerDefinition(tags = {@Tag(name = "PaymentsController", description = "Payments API")})
+@Tag(name = "PaymentsController", description = "Payments API")
 @RestController
 @RequiredArgsConstructor
 public class PaymentsController {

@@ -1,11 +1,9 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -29,8 +27,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
-@Api(tags = {"CasesController"})
-@SwaggerDefinition(tags = {@Tag(name = "CasesController", description = "Cases API")})
+@Tag(name = "CasesController", description = "Cases API")
 @RestController
 @RequiredArgsConstructor
 public class CasesController {
@@ -38,10 +35,10 @@ public class CasesController {
     private final CasesService casesService;
     private final CaveatExpiryService caveatExpiryService;
 
-    @ApiOperation(value = "Get case to CCD using session identifier", notes = "Get case to CCD")
+    @Operation(summary = "Get case to CCD using session identifier", description = "Get case to CCD")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
-        @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
+        @ApiResponse(responseCode = "200", description = "Case retrieval from CCD successful"),
+        @ApiResponse(responseCode = "400", description = "Case retrieval from CCD successful")
     })
     @GetMapping(path = "/cases/{applicationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -51,10 +48,10 @@ public class CasesController {
         return ResponseEntity.ok(casesService.getCase(applicationId.toLowerCase(), caseType));
     }
 
-    @ApiOperation(value = "Get case to CCD using case Id", notes = "Get case to CCD")
+    @Operation(summary = "Get case to CCD using case Id", description = "Get case to CCD")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
-        @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
+        @ApiResponse(responseCode = "200", description = "Case retrieval from CCD successful"),
+        @ApiResponse(responseCode = "400", description = "Case retrieval from CCD successful")
     })
     @GetMapping(path = "/cases", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -63,10 +60,10 @@ public class CasesController {
         return ResponseEntity.ok(casesService.getCaseById(caseId.toLowerCase()));
     }
 
-    @ApiOperation(value = "Get case to CCD using applicant email", notes = "Get case to CCD")
+    @Operation(summary = "Get case to CCD using applicant email", description = "Get case to CCD")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
-        @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
+        @ApiResponse(responseCode = "200", description = "Case retrieval from CCD successful"),
+        @ApiResponse(responseCode = "400", description = "Case retrieval from CCD successful")
     })
     @GetMapping(path = "/cases/applicantEmail/{applicantEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -77,10 +74,10 @@ public class CasesController {
         return ResponseEntity.ok(casesService.getCaseByApplicantEmail(applicantEmail, caseType));
     }
 
-    @ApiOperation(value = "Get all cases from CCD using session identifier", notes = "Get all cases from CCD")
+    @Operation(summary = "Get all cases from CCD using session identifier", description = "Get all cases from CCD")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Cases retrieval from CCD successful"),
-        @ApiResponse(code = 400, message = "Cases retrieval from CCD successful")
+        @ApiResponse(responseCode = "200", description = "Cases retrieval from CCD successful"),
+        @ApiResponse(responseCode = "400", description = "Cases retrieval from CCD successful")
     })
     @GetMapping(path = "/cases/all", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -89,10 +86,10 @@ public class CasesController {
         return ResponseEntity.ok(casesService.getAllCases(caseType));
     }
 
-    @ApiOperation(value = "Get case by Invitation Id from CCD", notes = "Get case bu invite id from CCD")
+    @Operation(summary = "Get case by Invitation Id from CCD", description = "Get case bu invite id from CCD")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
-        @ApiResponse(code = 400, message = "Case retrieval from CCD unsuccessful")
+        @ApiResponse(responseCode = "200", description = "Case retrieval from CCD successful"),
+        @ApiResponse(responseCode = "400", description = "Case retrieval from CCD unsuccessful")
     })
     @GetMapping(path = "/cases/invitation/{invitationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -142,10 +139,10 @@ public class CasesController {
         return new ResponseEntity(casesService.validate(applicationId, caseType), OK);
     }
 
-    @ApiOperation(value = "Caveat expire from CCD by expiryDate", notes = "Get expired caveats from CCD")
+    @Operation(summary = "Caveat expire from CCD by expiryDate", description = "Get expired caveats from CCD")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Caveat search from CCD successful"),
-        @ApiResponse(code = 400, message = "Caveat search from CCD not successful")
+        @ApiResponse(responseCode = "200", description = "Caveat search from CCD successful"),
+        @ApiResponse(responseCode = "400", description = "Caveat search from CCD not successful")
     })
     @GetMapping(path = "/cases/caveats/expire", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
