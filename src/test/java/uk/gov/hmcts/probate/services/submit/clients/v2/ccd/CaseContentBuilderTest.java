@@ -45,7 +45,7 @@ public class CaseContentBuilderTest {
 
     @ParameterizedTest
     @MethodSource("eventDescription")
-    public void shouldAddContent(final String eventDescription) {
+    void shouldAddContent(final String eventDescription) {
 
         CaseDataContent caseDataContent =
                 caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse, DESCRIPTOR,
@@ -60,6 +60,5 @@ public class CaseContentBuilderTest {
         assertEquals(DESCRIPTOR, caseDataContent.getEvent().getSummary());
         assertEquals(caseData, caseDataContent.getData());
         assertNull(caseDataContent.getSecurityClassification());
-
     }
 }

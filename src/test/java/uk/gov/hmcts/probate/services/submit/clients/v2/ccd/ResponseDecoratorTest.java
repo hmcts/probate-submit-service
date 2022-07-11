@@ -60,7 +60,7 @@ public class ResponseDecoratorTest {
     }
 
     @Test
-    public void bodyToStringShouldReturnEmptyStringIfResponseBodyIsNotNull() {
+    void bodyToStringShouldReturnEmptyStringIfResponseBodyIsNotNull() {
         Response response = Response.builder()
                 .status(405)
                 .reason("Bad Request")
