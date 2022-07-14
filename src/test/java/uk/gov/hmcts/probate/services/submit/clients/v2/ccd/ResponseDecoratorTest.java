@@ -62,7 +62,7 @@ public class ResponseDecoratorTest {
     @Test
     void bodyToStringShouldReturnEmptyStringIfResponseBodyIsNotNull() {
         Response response = Response.builder()
-                .status(405)
+                .status(400)
                 .reason("Bad Request")
                 .request(Request.create(HttpMethod.GET.toString(), "/api", Collections.emptyMap(), null, Util.UTF_8))
                 .headers(headers)
