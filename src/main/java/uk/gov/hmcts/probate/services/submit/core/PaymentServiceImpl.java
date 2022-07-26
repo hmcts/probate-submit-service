@@ -18,11 +18,9 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CasePayment;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
-import uk.gov.hmcts.reform.probate.model.cases.CollectionMember;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -136,13 +134,5 @@ public class PaymentServiceImpl implements PaymentsService {
             Optional.ofNullable(PAYMENT_EVENT_MAP.get(Pair.of(caseState, payment.getStatus())));
         return optionalFunction
             .orElseThrow(() -> new CaseStatePreconditionException(caseState, payment.getStatus()));
-    }
-
-    private CaseData createCaseData(ProbateCaseDetails caseResponse, CasePayment payment) {
-        CaseData caseData = caseResponse.getCaseData();
-        CollectionMember<CasePayment> collectionMember = new CollectionMember<CasePayment>();
-        collectionMember.setValue(payment);
-        caseData.setPayments(Arrays.asList(collectionMember));
-        return caseData;
     }
 }

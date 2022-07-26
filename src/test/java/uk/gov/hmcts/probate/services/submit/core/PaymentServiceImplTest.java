@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
+import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
+import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.PaymentStatus;
@@ -29,6 +31,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -228,5 +231,36 @@ public class PaymentServiceImplTest {
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
             eq(GOP_PAYMENT_FAILED_TO_SUCCESS), eq(securityDto), eq(EVENT_DESCRIPTION));
+    }
+
+    @Test
+    void shouldThrowCaseNotFoundException() {
+        when(mockSecurityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(mockCoreCaseDataService.findCaseById(CASE_ID, securityDto))
+                .thenReturn(Optional.of(caseResponse));
+
+        assertThrows(CaseNotFoundException.class, () -> {
+            paymentService.updateCaseByCaseId(null, probateCaseDetailsRequest);
+        });
+
+        verify(mockSecurityUtils).getSecurityDto();
+
+    }
+
+    @Test
+    void shouldThrowCaseStatePreconditionException() {
+        caseResponse.getCaseInfo().setState(null);
+        when(mockSecurityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto))
+                .thenReturn(Optional.of(caseResponse));
+
+        CaseStatePreconditionException exception = assertThrows(CaseStatePreconditionException.class, () -> {
+            paymentService.createCase(APPLICANT_EMAIL, caseResponse);
+        });
+
+        assertEquals("Event ID not present for case state: null and payment status: SUCCESS combination",
+                exception.getMessage());
+        verify(mockSecurityUtils).getSecurityDto();
+        verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
     }
 }

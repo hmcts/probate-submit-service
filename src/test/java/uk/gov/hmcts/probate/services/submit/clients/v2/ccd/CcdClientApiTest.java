@@ -406,4 +406,41 @@ public class CcdClientApiTest {
 
         assertEquals("Multiple cases exist with applicant email provided!", iae.getMessage());
     }
+
+    @Test
+    void shouldThrowExceptionWhenFindMoreThanOneCaseByInviteId() {
+
+        String queryString = "queryString";
+        when(mockInvitationElasticSearchQueryBuilder.buildQuery(INVITATION_ID, inviteField))
+                .thenReturn(INVIATION_QUERY);
+
+        when(mockCoreCaseDataApi.searchCases(AUTHORIZATION, SERVICE_AUTHORIZATION,
+                GRANT_OF_REPRESENTATION.getName(), INVIATION_QUERY))
+                .thenReturn(SearchResult.builder().cases(Lists.newArrayList(caseDetails, caseDetails)).build());
+
+
+        IllegalStateException iae = assertThrows(IllegalStateException.class, () -> {
+            ccdClientApi.findCaseByInviteId(INVITATION_ID, GRANT_OF_REPRESENTATION, securityDto);
+        });
+
+        assertEquals("Multiple cases exist with invite id provided!", iae.getMessage());
+    }
+
+    @Test
+    void shouldReturnEmptyOptionalWhenReturningNullOnSearchEmail() {
+        String queryString = "queryString";
+        when(mockInvitationElasticSearchQueryBuilder.buildQuery(APPLICANT_EMAIL, "primaryApplicantEmailAddress"))
+                .thenReturn(queryString);
+
+        when(mockCoreCaseDataApi.searchCases(AUTHORIZATION, SERVICE_AUTHORIZATION,
+                GRANT_OF_REPRESENTATION.getName(), queryString))
+                .thenReturn(SearchResult.builder().cases(null).build());
+
+
+        Optional<ProbateCaseDetails> optionalCaseResponse =
+                ccdClientApi.findCaseByApplicantEmail(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
+
+
+        assertEquals(false, optionalCaseResponse.isPresent());
+    }
 }

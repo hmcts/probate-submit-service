@@ -1,5 +1,7 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,11 +18,13 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -253,5 +257,22 @@ public class CasesServiceImplTest {
         assertEquals(caseData, caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).createCase(caseData, CREATE_DRAFT, securityDto);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenEmailNotMatchedInCaveat() {
+        CaveatData caseData = new CaveatData();
+        caseData.setCaveatorEmailAddress(EMAIL_ADDRESS);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(CaseState.DRAFT);
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+        Pair<String, String> searchFieldValuePair = ImmutablePair.of("caveatEmailAddress", "abc@test.com");
+        when(searchFieldFactory.getSearchFieldValuePair(CaseType.CAVEAT, caseData)).thenReturn(searchFieldValuePair);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                casesService.saveCase(EMAIL_ADDRESS, caseRequest, "event description"));
+
+        assertEquals("Applicant email on path must match case data", exception.getMessage());
     }
 }

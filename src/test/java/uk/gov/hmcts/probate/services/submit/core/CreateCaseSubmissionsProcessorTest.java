@@ -10,6 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.Registry;
+import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
@@ -22,6 +23,7 @@ import uk.gov.hmcts.reform.probate.model.client.AssertFieldException;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -119,7 +121,6 @@ public class CreateCaseSubmissionsProcessorTest {
 
     }
 
-
     @Test
     public void shouldThrowAssertFieldExceptionWhenIdentifierDoesNotMatchBody() {
         when(searchFieldFactory.getSearchFieldValuePair(CaseType.CAVEAT, caseData))
@@ -128,5 +129,18 @@ public class CreateCaseSubmissionsProcessorTest {
         assertThrows(AssertFieldException.class, () -> {
             createCaseSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
         });
+    }
+
+    @Test
+    void shouldThrowCaseAlreadyExistsException() {
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(coreCaseDataService.findCase(APPLICANT_EMAIL, CAVEAT, securityDto))
+                .thenReturn(Optional.of(caseResponse));
+
+        CaseAlreadyExistsException exception = assertThrows(CaseAlreadyExistsException.class, () -> {
+            createCaseSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
+        });
+
+        assertEquals("Case already exists for Identifier: " + APPLICANT_EMAIL, exception.getMessage());
     }
 }

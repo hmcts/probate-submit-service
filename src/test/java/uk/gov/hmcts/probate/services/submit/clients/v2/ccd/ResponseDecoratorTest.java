@@ -10,6 +10,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientError;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientErrorResponse;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -54,6 +56,27 @@ public class ResponseDecoratorTest {
         String body = responseDecorator.bodyToString();
 
         assertNull(response.body());
+        assertEquals("", body);
+    }
+
+    @Test
+    void bodyToStringShouldReturnEmptyStringIfResponseBodyIsNotNull() {
+        Response response = Response.builder()
+                .status(400)
+                .reason("Bad Request")
+                .request(Request.create(HttpMethod.GET.toString(), "/api", Collections.emptyMap(), null, Util.UTF_8))
+                .headers(headers)
+                .body(new InputStream() {
+                    @Override
+                    public int read() throws IOException {
+                        throw new IOException();
+                    }
+                }, 1)
+                .build();
+
+        ResponseDecorator responseDecorator = new ResponseDecorator(response);
+        String body = responseDecorator.bodyToString();
+
         assertEquals("", body);
     }
 

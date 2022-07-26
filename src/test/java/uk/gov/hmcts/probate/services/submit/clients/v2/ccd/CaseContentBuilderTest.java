@@ -1,14 +1,17 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -36,11 +39,17 @@ public class CaseContentBuilderTest {
 
     }
 
-    @Test
-    public void shouldAddContent() {
+    private static Stream<String> eventDescription() {
+        return Stream.of(DESCRIPTOR, null, "null");
+    }
+
+    @ParameterizedTest
+    @MethodSource("eventDescription")
+    void shouldAddContent(final String eventDescription) {
 
         CaseDataContent caseDataContent =
-            caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse, DESCRIPTOR, DESCRIPTOR);
+                caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse, DESCRIPTOR,
+                        eventDescription);
         assertNotNull(caseDataContent);
         assertNull(caseDataContent.getCaseReference());
 
@@ -51,6 +60,5 @@ public class CaseContentBuilderTest {
         assertEquals(DESCRIPTOR, caseDataContent.getEvent().getSummary());
         assertEquals(caseData, caseDataContent.getData());
         assertNull(caseDataContent.getSecurityClassification());
-
     }
 }
