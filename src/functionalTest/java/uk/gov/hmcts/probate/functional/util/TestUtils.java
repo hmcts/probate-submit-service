@@ -6,7 +6,6 @@ import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,14 +61,16 @@ public class TestUtils {
     public String createTestCase(String caseData) {
         caseData = caseData.replace(EMAIL_PLACEHOLDER, citizenEmail);
 
-        Response response = RestAssured.given()
+        JsonPath jsonPath  = RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(getCitizenHeaders())
             .body(caseData)
             .when()
-            .post("/cases/initiate");
-
-        JsonPath jsonPath = JsonPath.from(response.getBody().asString());
+            .post("/cases/initiate")
+            .then()
+            .assertThat()
+            .statusCode(200)
+            .extract().jsonPath();
         return jsonPath.get("caseInfo.caseId");
     }
 
@@ -77,14 +78,16 @@ public class TestUtils {
         String applicationId = RandomStringUtils.randomNumeric(16).toLowerCase();
         caseData = caseData.replace(APPLICATION_ID, applicationId);
 
-        Response response = RestAssured.given()
+        JsonPath jsonPath = RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(getCitizenHeaders())
             .body(caseData)
             .when()
-            .post("/submissions/" + applicationId);
-
-        JsonPath jsonPath = JsonPath.from(response.getBody().asString());
+            .post("/submissions/" + applicationId)
+            .then()
+            .assertThat()
+            .statusCode(200)
+            .extract().jsonPath();
         return jsonPath.get("probateCaseDetails.caseInfo.caseId");
     }
 
