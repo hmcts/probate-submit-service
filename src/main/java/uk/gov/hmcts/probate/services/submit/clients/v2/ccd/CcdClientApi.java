@@ -117,7 +117,7 @@ public class CcdClientApi implements CoreCaseDataService {
     @Override
     public ProbateCaseDetails createCase(CaseData caseData, EventId eventId, SecurityDto securityDto) {
         CaseType caseType = CaseType.getCaseType(caseData);
-        log.info("Create case for caseType: {}, caseType: {}, eventId: {}",
+        log.info("Create case for caseType: {}, eventId: {}",
             caseType.getName(), eventId.getName());
         log.info("Retrieve event token from CCD for Citizen, caseType: {}, eventId: {}",
             caseType.getName(), eventId.getName());
