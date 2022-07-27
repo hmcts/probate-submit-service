@@ -181,7 +181,7 @@ def versions = [
         springCloudWiremock             : '3.1.1',
         serenity                        : '2.5.8',
         pact_version                    : '4.1.7',
-        probateCommons                  : '1.3.19',
+        probateCommons                  : '1.4.0',
         feignHttpClient                 : '11.6',
         lombok                          : '1.18.20',
         probatePactCommonsVersion       : '1.0.2',
@@ -221,6 +221,7 @@ configurations.all {
 }
 
 dependencies {
+    implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: versions.springBoot
