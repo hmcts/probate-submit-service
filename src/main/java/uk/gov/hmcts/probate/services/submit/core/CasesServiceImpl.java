@@ -142,7 +142,10 @@ public class CasesServiceImpl implements CasesService {
         CaseType caseType = CaseType.getCaseType(caseData);
         SecurityDto securityDto = securityUtils.getSecurityDto();
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
-        return coreCaseDataService.createCase(caseData, caseEvents.getCreateDraftEventId(), securityDto);
+        final EventId eventId =
+            CaseType.CAVEAT == caseType 
+                ? caseEvents.getCreateCaseApplicationEventId() : caseEvents.getCreateDraftEventId();
+        return coreCaseDataService.createCase(caseData, eventId, securityDto);
 
     }
 

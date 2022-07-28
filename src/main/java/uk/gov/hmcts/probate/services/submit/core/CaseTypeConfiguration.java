@@ -46,7 +46,6 @@ public class CaseTypeConfiguration {
             .put(CAVEAT, CaseEvents.builder()
                 .createCaseApplicationEventId(CAVEAT_APPLY_FOR_CAVEAT)
                 .createCaseEventId(GOP_CREATE_CASE)
-                .createDraftEventId(CAVEAT_APPLY_FOR_CAVEAT)
                 .paymentFailedAgainEventId(GOP_PAYMENT_FAILED_AGAIN)
                 .paymentFailedEventId(GOP_PAYMENT_FAILED)
                 .paymentFailedToSuccessEventId(GOP_PAYMENT_FAILED_TO_SUCCESS)
