@@ -146,7 +146,6 @@ public class CasesServiceImpl implements CasesService {
             CaseType.CAVEAT == caseType 
                 ? caseEvents.getCreateCaseApplicationEventId() : caseEvents.getCreateDraftEventId();
         return coreCaseDataService.createCase(caseData, eventId, securityDto);
-
     }
 
     @Override
