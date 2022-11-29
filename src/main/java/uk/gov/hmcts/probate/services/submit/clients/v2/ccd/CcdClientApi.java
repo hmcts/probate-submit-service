@@ -205,12 +205,13 @@ public class CcdClientApi implements CoreCaseDataService {
     @Override
     public List<ProbateCaseDetails> findCases(CaseType caseType, SecurityDto securityDto) {
         log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
-        String searchString = elasticSearchQueryBuilder.buildFindAllCasesQuery();
-        List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
-            securityDto.getAuthorisation(),
-            securityDto.getServiceAuthorisation(),
-            caseType.getName(),
-            searchString).getCases();
+        List<CaseDetails> caseDetails = coreCaseDataApi.searchForCitizen(
+                securityDto.getAuthorisation(),
+                securityDto.getServiceAuthorisation(),
+                securityDto.getUserId(),
+                JurisdictionId.PROBATE.name(),
+                caseType.getName(),
+                new java.util.HashMap<String, String>());
         return caseDetails.stream().map(this::createCaseResponse).collect(Collectors.toList());
     }
 
