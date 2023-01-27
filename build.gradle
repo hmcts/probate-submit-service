@@ -100,6 +100,22 @@ sourceSets {
         }
         resources.srcDir file('src/pactTest/resources')
     }
+    integrationTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/integrationTest/java')
+        }
+        resources.srcDir file('src/integrationTest/resources')
+    }
+}
+
+task integration(type: Test) {
+    description = "Runs integration tests"
+    group = "Verification"
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    useJUnitPlatform()
 }
 
 task functional(type: Test) {
@@ -110,7 +126,6 @@ task functional(type: Test) {
 }
 
 functional.finalizedBy(aggregate)
-
 
 test {
     maxHeapSize = "1024m"
@@ -139,20 +154,22 @@ task fortifyScan(type: JavaExec)  {
 pmd {
     toolVersion = "6.3.0"
     ignoreFailures = true
-    sourceSets = [sourceSets.main, sourceSets.test, sourceSets.testFunctional, sourceSets.testSmoke]
+    sourceSets = [sourceSets.main, sourceSets.test, sourceSets.testFunctional, sourceSets.testSmoke, sourceSets.integrationTest]
     reportsDir = file("$project.buildDir/reports/pmd")
     ruleSetFiles = files("config/pmd/ruleset.xml")
 }
 
 
 jacocoTestReport {
-    executionData(test)
+    executionData(test, integration)
     reports {
         xml.required = true
         csv.required = false
         xml.destination = file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
+
+check.dependsOn(integration)
 
 pitest {
     targetClasses = ['uk.gov.hmcts.probate.*']
@@ -306,6 +323,9 @@ dependencies {
 
     testPactImplementation sourceSets.main.runtimeClasspath
     testPactImplementation sourceSets.test.runtimeClasspath
+
+    integrationTestImplementation sourceSets.main.runtimeClasspath
+    integrationTestImplementation sourceSets.test.runtimeClasspath
 }
 
 tasks.withType(JavaCompile) {

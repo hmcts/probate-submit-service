@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class SubmissionsControllerTest {
+public class SubmissionsControllerIT {
 
     private static final String SUBMISSIONS_URL = "/submissions";
     private static final String EMAIL_ADDRESS = "test@test.com";

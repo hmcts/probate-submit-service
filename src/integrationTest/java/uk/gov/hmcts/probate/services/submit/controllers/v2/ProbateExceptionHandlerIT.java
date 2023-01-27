@@ -15,7 +15,7 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-public class ProbateExceptionHandlerTest {
+public class ProbateExceptionHandlerIT {
 
     private ProbateExceptionHandler exceptionHandler = new ProbateExceptionHandler();
     private ApiClientErrorResponse clientErrorResponse;

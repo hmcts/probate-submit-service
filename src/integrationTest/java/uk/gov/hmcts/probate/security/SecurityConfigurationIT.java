@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
 @SpringBootTest
-public class SecurityConfigurationTest {
+public class SecurityConfigurationIT {
 
     private static final String PRINCIPAL = "probate_backend";
 

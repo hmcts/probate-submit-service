@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PaymentsControllerTest {
+public class PaymentsControllerIT {
 
     private static final String PAYMENTS_URL = "/payments";
     private static final String UPDATE_CASE_URL = "/ccd-case-update";

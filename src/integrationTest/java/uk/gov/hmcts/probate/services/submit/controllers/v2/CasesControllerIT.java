@@ -52,7 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CasesControllerTest {
+public class CasesControllerIT {
 
     private static final String CASES_URL = "/cases";
     private static final String CASES_BY_APPLICANT_EMAIL_URL = "/cases/applicantEmail";

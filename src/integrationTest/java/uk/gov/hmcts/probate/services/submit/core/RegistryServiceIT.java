@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class RegistryServiceTest {
+public class RegistryServiceIT {
 
     private static final String CTSC_EMAIL = "ctsc@email.com";
     private static final String CTSC_ADDRESS = "Line 1 Ox\n"
