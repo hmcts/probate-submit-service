@@ -194,7 +194,7 @@ def versions = [
         ccdClient                       : '4.7.6',
         springCloudStarterNetflixHystrix: '3.0.3',
         springBoot                      : '2.7.4',
-        springDocUi                     : '1.6.6',
+        springDocUi                     : '1.6.14',
         springCloudWiremock             : '3.1.1',
         serenity                        : '2.5.8',
         pact_version                    : '4.1.7',
