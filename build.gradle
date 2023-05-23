@@ -198,7 +198,7 @@ def versions = [
         springCloudWiremock             : '3.1.1',
         serenity                        : '2.5.8',
         pact_version                    : '4.1.7',
-        probateCommons                  : 'DTSPB-3577-v1.4.11',
+        probateCommons                  : '1.4.12',
         feignHttpClient                 : '11.6',
         lombok                          : '1.18.26',
         probatePactCommonsVersion       : '1.0.2',
