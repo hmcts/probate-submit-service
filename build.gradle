@@ -203,7 +203,7 @@ def versions = [
         pact_version                    : '4.1.7',
         probateCommons                  : '1.4.15',
         feignHttpClient                 : '11.6',
-        lombok                          : '1.18.26',
+        lombok                          : '1.18.30',
         probatePactCommonsVersion       : '1.0.2',
         junitJupiter                    : '5.8.0-M1'
 ]
