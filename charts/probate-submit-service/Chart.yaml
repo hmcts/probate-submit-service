@@ -2,11 +2,11 @@ apiVersion: v2
 description: A Helm chart for the HMCTS probate-submit product
 name: probate-submit-service
 home: https://github.com/hmcts/probate-submit-service
-version: 0.2.26
+version: 0.2.27
 maintainers:
   - name: HMCTS Probate Team
     email: probate-action-group@HMCTS.NET
 dependencies:
   - name: java
-    version: 5.0.0
+    version: 5.0.3
     repository: 'https://hmctspublic.azurecr.io/helm/v1/repo/'
