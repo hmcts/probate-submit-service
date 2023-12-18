@@ -56,6 +56,8 @@ public class SolCcdServiceAuthTokenGenerator {
         return idamUserBaseUrl + "/testing-support/accounts";
     }
 
+    private static final String JWT_KEY = "jwtKey";
+
     public String generateServiceToken() {
         return tokenGenerator.generate();
     }
@@ -72,7 +74,7 @@ public class SolCcdServiceAuthTokenGenerator {
         String clientToken = this.userToken;
 
         String withoutSignature = clientToken.substring(0, clientToken.lastIndexOf('.') + 1);
-        Claims claims = Jwts.parser().parseClaimsJwt(withoutSignature).getBody();
+        Claims claims = Jwts.parser().setSigningKey(JWT_KEY).build().parseSignedClaims(withoutSignature).getPayload();
 
         return claims.get("id", String.class);
     }
