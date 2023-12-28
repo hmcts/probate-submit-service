@@ -13,8 +13,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CcdClientApi;
 import uk.gov.hmcts.probate.services.submit.services.PaymentsService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
+import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
@@ -40,6 +42,12 @@ public class PaymentsControllerIT {
 
     @MockBean
     private PaymentsService paymentsService;
+
+    @MockBean
+    private CcdClientApi ccdClientApi;
+
+    @MockBean
+    private CoreCaseDataApi coreCaseDataApi;
 
     @Autowired
     private MockMvc mockMvc;

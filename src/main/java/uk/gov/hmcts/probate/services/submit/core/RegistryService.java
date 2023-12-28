@@ -31,7 +31,7 @@ public class RegistryService {
             determineRegistryLocationName(nextRegistry, grantOfRepresentationData);
             grantOfRepresentationData.setRegistryAddress(nextRegistry.getAddress());
             grantOfRepresentationData.setRegistryEmailAddress(nextRegistry.getEmail());
-            grantOfRepresentationData.setRegistrySequenceNumber(new Long(registryCounter));
+            grantOfRepresentationData.setRegistrySequenceNumber(Long.valueOf(registryCounter));
         }
     }
 

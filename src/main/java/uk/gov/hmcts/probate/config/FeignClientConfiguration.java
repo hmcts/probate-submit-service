@@ -1,12 +1,13 @@
 package uk.gov.hmcts.probate.config;
 
 import feign.Client;
-import feign.httpclient.ApacheHttpClient;
+import feign.hc5.ApacheHttp5Client;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.util.Timeout;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +25,7 @@ public class FeignClientConfiguration {
 
     @Bean
     public Client getFeignHttpClient() {
-        return new ApacheHttpClient(getHttpClient());
+        return new ApacheHttp5Client(getHttpClient());
     }
 
     @Bean("restTemplateForPact")
@@ -36,13 +37,11 @@ public class FeignClientConfiguration {
 
     private CloseableHttpClient getHttpClient() {
         RequestConfig config = RequestConfig.custom()
-                .setConnectTimeout(timeout)
-                .setConnectionRequestTimeout(timeout)
-                .setSocketTimeout(timeout)
+                .setConnectTimeout(Timeout.ofMilliseconds(timeout))
+                .setConnectionRequestTimeout(Timeout.ofMilliseconds(timeout))
                 .build();
 
-        return HttpClientBuilder
-                .create()
+        return HttpClients.custom()
                 .useSystemProperties()
                 .setDefaultRequestConfig(config)
                 .build();

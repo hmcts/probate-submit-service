@@ -4,7 +4,7 @@ import lombok.Getter;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 
 import java.util.Set;
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 
 public class CaseValidationException extends RuntimeException {
 

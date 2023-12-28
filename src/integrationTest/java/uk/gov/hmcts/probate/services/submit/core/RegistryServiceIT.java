@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CcdClientApi;
+import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.probate.model.cases.RegistryLocation;
 import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
@@ -20,6 +23,12 @@ public class RegistryServiceIT {
         + "Line 2 Ox\n"
         + "Line 3 Ox\n"
         + "PostCode Ox\n";
+
+    @MockBean
+    private CcdClientApi ccdClientApi;
+
+    @MockBean
+    private CoreCaseDataApi coreCaseDataApi;
 
     @Autowired
     private RegistryService registryService;

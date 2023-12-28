@@ -7,22 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import uk.gov.hmcts.reform.auth.checker.core.RequestAuthorizer;
-import uk.gov.hmcts.reform.auth.checker.core.SubjectResolver;
-import uk.gov.hmcts.reform.auth.checker.core.service.Service;
-import uk.gov.hmcts.reform.auth.checker.core.user.User;
+import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CcdClientApi;
+import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 
-import java.util.HashSet;
-import javax.servlet.http.HttpServletRequest;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -47,12 +40,10 @@ public class SecurityConfigurationIT {
     private MockMvc mvc;
 
     @MockBean
-    private SubjectResolver<Service> serviceResolver;
+    private CcdClientApi ccdClientApi;
 
     @MockBean
-    private RequestAuthorizer<User> userRequestAuthorizer;
-
-    private Service service;
+    private CoreCaseDataApi coreCaseDataApi;
 
     @BeforeEach
     public void setUp() {
@@ -60,12 +51,6 @@ public class SecurityConfigurationIT {
             .apply(springSecurity())
             .defaultRequest(get("/").accept(MediaType.TEXT_HTML))
             .build();
-
-        service = new Service(PRINCIPAL);
-        when(serviceResolver.getTokenDetails(anyString())).thenReturn(service);
-
-        User user = new User("123", new HashSet<>());
-        when(userRequestAuthorizer.authorise(any(HttpServletRequest.class))).thenReturn(user);
     }
 
     @Test
@@ -90,6 +75,7 @@ public class SecurityConfigurationIT {
     }
 
     @Test
+    @WithMockUser
     public void shouldAuthenticateForCasesEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
         mvc.perform(post("/cases/test@test.com")
             .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
@@ -98,6 +84,7 @@ public class SecurityConfigurationIT {
     }
 
     @Test
+    @WithMockUser
     public void shouldAuthenticateForSubmissionsEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
         mvc.perform(post("/submissions/test@test.com")
             .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
@@ -106,6 +93,7 @@ public class SecurityConfigurationIT {
     }
 
     @Test
+    @WithMockUser
     public void shouldAuthenticateForPaymentsEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
         mvc.perform(post("/payments/test@test.com")
             .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")

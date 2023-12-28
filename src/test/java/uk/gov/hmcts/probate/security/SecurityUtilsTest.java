@@ -9,7 +9,7 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.NoSecurityContextException;
-import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.ServiceAndUserDetails;
+import org.springframework.security.core.userdetails.User;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
 import java.util.Arrays;
@@ -37,8 +37,8 @@ public class SecurityUtilsTest {
     @Test
     public void shouldGetSecurityDto() {
         when(authTokenGenerator.generate()).thenReturn(SERVICE_AUTH_TOKEN);
-        ServiceAndUserDetails serviceAndUserDetails =
-                new ServiceAndUserDetails(USER_ID, "token1234", Collections.emptyList(), "probate_backend");
+        User serviceAndUserDetails =
+                new User(USER_ID, "token1234", Collections.emptyList());
         TestSecurityContextHolder.getContext().setAuthentication(
                 new TestingAuthenticationToken(serviceAndUserDetails, AUTH_TOKEN, "ROLE_USER"));
 

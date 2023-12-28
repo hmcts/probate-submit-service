@@ -8,14 +8,19 @@ security:
   #      enabled: false
 
 management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-      base-path: /
   endpoint:
     health:
-      show-details: always
+      show-details: "always"
+      cache:
+        time-to-live: 10s
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, info
+  health:
+    probes:
+      enabled: true
 
   # THYMELEAF (ThymeleafAutoConfiguration)
 spring:
@@ -32,7 +37,7 @@ spring:
   thymeleaf.cache: false # set to false for hot refresh
   config:
     import: "optional:configtree:/mnt/secrets/probate/"
-    
+
   messages:
     basename: messages
     cache-seconds: -1
@@ -55,8 +60,6 @@ auth.provider.service.client:
   microservice: ${AUTH_S2S_CLIENT_ID:probate_backend}
   key: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
   tokenTimeToLiveInSeconds: '900'
-
-idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
 
 ccd:
   probate:
@@ -176,6 +179,15 @@ registries:
 authorised.services: probate_backend,probate_frontend
 
 auth.idam.client.baseUrl: http://localhost:5000
+
+idam:
+  s2s-auth:
+    url: ${auth.provider.service.client.baseUrl}
+    totp_secret: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
+    microservice: ${auth.provider.service.client.microservice}
+  s2s-authorised:
+    services: PROBATE_BACKEND,PROBATE_FRONTEND
+
 s2s.auth.totp.secret: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
 service.name: ${auth.provider.service.client.microservice}
 

@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @PactTestFor(providerName = "idamApi_users", port = "8862")
 @PactFolder("pacts")
-@SpringBootTest({"auth.provider.client.user: http://localhost:8862"})
+@SpringBootTest({"auth.idam.client.baseUrl: http://localhost:8862"})
 @TestPropertySource(locations = {"/application.properties"})
 @ContextConfiguration(classes = {SubmitApplication.class})
 public class SidamConsumerTest {

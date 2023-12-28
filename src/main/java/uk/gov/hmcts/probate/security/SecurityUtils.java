@@ -3,9 +3,9 @@ package uk.gov.hmcts.probate.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.NoSecurityContextException;
-import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.ServiceAndUserDetails;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
 @Component
@@ -41,7 +41,7 @@ public class SecurityUtils {
 
     public String getUserId() {
         checkSecurityContext();
-        return ((ServiceAndUserDetails) SecurityContextHolder.getContext()
+        return ((UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal())
                 .getUsername();
