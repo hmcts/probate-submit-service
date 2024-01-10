@@ -298,7 +298,7 @@ dependencies {
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
     testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.3'
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.1'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.16.1'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.16.1'
     testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
