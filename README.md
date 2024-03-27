@@ -1,5 +1,29 @@
 # Probate Submit Service 
-Microservice to handle submissions to probate registries
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=uk.gov.hmcts.probate%3Asubmit-service&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=uk.gov.hmcts.probate%3Asubmit-service) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=uk.gov.hmcts.probate%3Asubmit-service&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=uk.gov.hmcts.probate%3Asubmit-service) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=uk.gov.hmcts.probate%3Asubmit-service&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=uk.gov.hmcts.probate%3Asubmit-service) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=uk.gov.hmcts.probate%3Asubmit-service&metric=coverage)](https://sonarcloud.io/summary/new_code?id=uk.gov.hmcts.probate%3Asubmit-service)
+
+Microservice to handle submissions to probate registries.
+
+## Overview
+
+<p align="center">
+<a href="https://github.com/hmcts/probate-frontend">probate-frontend</a> • <a href="https://github.com/hmcts/probate-caveats-frontend">probate-caveats-frontend</a> • <a href="https://github.com/hmcts/probate-back-office">probate-back-office</a> • <a href="https://github.com/hmcts/probate-orchestrator-service">probate-orchestrator-service</a> • <a href="https://github.com/hmcts/probate-business-service">probate-business-service</a> • <b><a href="https://github.com/hmcts/probate-submit-service">probate-submit-service</a></b> • <a href="https://github.com/hmcts/probate-persistence-service">probate-persistence-service</a>
+</p>
+
+<br>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/hmcts/reform-api-docs/master/docs/c4/probate/images/structurizr-probate-overview.png" width="800"/>
+</p>
+
+<details>
+<summary>Citizen view</summary>
+<img src="https://raw.githubusercontent.com/hmcts/reform-api-docs/master/docs/c4/probate/images/structurizr-probate-citizen.png" width="700">
+</details>
+<details>
+<summary>Caseworker view</summary>
+<img src="https://raw.githubusercontent.com/hmcts/reform-api-docs/master/docs/c4/probate/images/structurizr-probate-caseworker.png" width="700">
+</details>
 
 ## Getting Started
 ### Prerequisites
