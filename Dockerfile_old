@@ -8,7 +8,7 @@ USER gradle
 WORKDIR /home/gradle/src
 RUN gradle assemble
 
-FROM openjdk:8-alpine
+FROM openjdk:17-alpine
 
 RUN mkdir -p /usr/local/bin
 
