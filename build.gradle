@@ -10,7 +10,7 @@ buildscript {
 plugins {
     id 'application'
     id 'pmd'
-    id 'org.springframework.boot' version '2.7.14'
+    id 'org.springframework.boot' version '3.2.5'
     id 'uk.gov.hmcts.java' version '0.12.59'
     id 'com.github.ben-manes.versions' version '0.51.0'
     id 'com.gorylenko.gradle-git-properties' version '2.4.1'
@@ -195,7 +195,7 @@ def versions = [
         authCheckerLib                  : '2.1.4',
         ccdClient                       : '4.7.6',
         springCloudStarterNetflixHystrix: '3.0.3',
-        springBoot                      : '2.7.14',
+        springBoot                      : '3.2.5',
         springDocUi                     : '1.8.0',
         springCloudWiremock             : '3.1.1',
         serenity                        : '2.5.8',
