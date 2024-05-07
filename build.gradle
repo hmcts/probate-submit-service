@@ -190,7 +190,7 @@ repositories {
 
 def versions = [
         logging                         : '6.1.4',
-        serviceAuthProviderClient       : '4.1.2',
+        serviceAuthProviderClient       : '5.1.2',
         authCheckerLib                  : '2.3.0',
         ccdClient                       : '4.9.2',
         springCloudStarterNetflixHystrix: '3.1.9',
