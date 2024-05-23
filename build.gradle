@@ -11,11 +11,11 @@ plugins {
     id 'application'
     id 'pmd'
     id 'org.springframework.boot' version '2.7.18'
-    id 'uk.gov.hmcts.java' version '0.12.61'
+    id 'uk.gov.hmcts.java' version '0.12.62'
     id 'com.github.ben-manes.versions' version '0.51.0'
-    id 'com.gorylenko.gradle-git-properties' version '2.4.1'
+    id 'com.gorylenko.gradle-git-properties' version '2.4.2'
     id 'info.solidsoft.pitest' version '1.15.0'
-    id "io.spring.dependency-management" version "1.1.4"
+    id "io.spring.dependency-management" version "1.1.5"
     id 'au.com.dius.pact' version '4.1.7' // do not change, otherwise serenity report fails
     id 'jacoco'
 }
@@ -154,7 +154,7 @@ task fortifyScan(type: JavaExec)  {
 }
 
 pmd {
-    toolVersion = "7.0.0"
+    toolVersion = "7.1.0"
     ignoreFailures = true
     sourceSets = [sourceSets.main, sourceSets.test, sourceSets.testFunctional, sourceSets.testSmoke, sourceSets.integrationTest]
     reportsDir = file("$project.buildDir/reports/pmd")
@@ -186,7 +186,6 @@ repositories {
     mavenLocal()
     maven { url "https://repo.maven.apache.org/maven2" }
     maven { url "https://jitpack.io" }
-    jcenter()
 }
 
 def versions = [
@@ -194,7 +193,7 @@ def versions = [
         serviceAuthProviderClient       : '4.1.2',
         authCheckerLib                  : '2.3.0',
         ccdClient                       : '4.9.2',
-        springCloudStarterNetflixHystrix: '3.0.3',
+        springCloudStarterNetflixHystrix: '3.1.9',
         springBoot                      : '2.7.18',
         springDocUi                     : '1.8.0',
         springCloudWiremock             : '3.1.1',
@@ -209,7 +208,7 @@ def versions = [
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2021.0.1"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2021.0.9"
     }
 
     dependencies {
@@ -220,7 +219,7 @@ dependencyManagement {
         dependency group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
 
         //CVE-2020-8908
-        dependency group: 'com.google.guava', name: 'guava', version: '33.1.0-jre'
+        dependency group: 'com.google.guava', name: 'guava', version: '33.2.0-jre'
 
     }
 }
@@ -244,7 +243,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: versions.springBoot
-    implementation group: 'org.springframework.retry', name: 'spring-retry', version: '2.0.5'
+    implementation group: 'org.springframework.retry', name: 'spring-retry', version: '2.0.6'
     compileOnly group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: versions.springBoot
     implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: versions.feignHttpClient
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloudStarterNetflixHystrix
@@ -258,7 +257,7 @@ dependencies {
     implementation group: 'com.github.hmcts', name: 'core-case-data-store-client', version: versions.ccdClient
     implementation group: 'com.github.hmcts', name: 'probate-commons', version: versions.probateCommons
 
-    implementation group: 'org.pitest', name: 'pitest', version: '1.15.8'
+    implementation group: 'org.pitest', name: 'pitest', version: '1.16.1'
     implementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
     implementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.4'
@@ -268,7 +267,7 @@ dependencies {
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test' , version: versions.springBoot
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
-    testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.6.1'
+    testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.7.11'
     testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
 
     testImplementation 'com.github.hmcts:fortify-client:1.4.1:all'
@@ -283,13 +282,13 @@ dependencies {
     testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
 
     testFunctionalImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
-    testFunctionalImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
+    testFunctionalImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.1'
     testFunctionalCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testFunctionalAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testFunctionalImplementation sourceSets.main.runtimeClasspath
     testFunctionalImplementation sourceSets.test.runtimeClasspath
 
-    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.1'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junitJupiter
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junitJupiter
     testSmokeImplementation sourceSets.main.runtimeClasspath
@@ -300,10 +299,10 @@ dependencies {
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
 
     testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
-    testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.0'
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.17.0'
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.17.0'
+    testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.1'
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.1'
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.17.1'
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.17.1'
     testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testContractAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
 
@@ -342,7 +341,8 @@ tasks.withType(JavaExec).configureEach {
     javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
 }
 
-ext['rest-assured.version'] = '4.5.0'
+ext['rest-assured.version'] = '4.5.1'
+ext['snakeyaml.version'] = '2.2'
 
 bootJar {
     archiveFileName = 'submit-service.jar'
