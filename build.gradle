@@ -281,7 +281,7 @@ dependencies {
     testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
 
-    testFunctionalImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
+    testFunctionalImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.6'
     testFunctionalImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.1'
     testFunctionalCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testFunctionalAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -298,7 +298,7 @@ dependencies {
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
 
-    testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
+    testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.6'
     testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.1'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.1'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.17.1'
@@ -313,7 +313,7 @@ dependencies {
     testPactImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testPactImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testPactImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-    testPactImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
+    testPactImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.6'
     testPactImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
     testPactImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
     testPactImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
