@@ -1,38 +1,30 @@
 package uk.gov.hmcts.probate.functional.cases;
 
 import io.restassured.RestAssured;
-import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
-import uk.gov.hmcts.probate.functional.TestRetryRule;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-@RunWith(SpringIntegrationSerenityRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(SerenityJUnit5Extension.class)
 public class SaveCaseTests extends IntegrationTestBase {
-
-    @Rule
-    public TestRetryRule retryRule = new TestRetryRule(3);
     String gopCaseId;
     String intestacyCaseId;
-    private Boolean setUp = false;
 
-    @Before
+    @BeforeAll
     public void init() {
-        if (!setUp) {
-            String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
-            gopCaseId = utils.createTestCase(gopCaseData);
+        String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
+        gopCaseId = utils.createTestCase(gopCaseData);
 
-            String intestacyCaseData = utils.getJsonFromFile("intestacy.partial.json");
-            intestacyCaseId = utils.createTestCase(intestacyCaseData);
-
-            setUp = true;
-        }
+        String intestacyCaseData = utils.getJsonFromFile("intestacy.partial.json");
+        intestacyCaseId = utils.createTestCase(intestacyCaseData);
     }
 
     @Test

@@ -21,7 +21,7 @@ import java.util.Map;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 
-@FeignClient(name = "idam-api", url = "${auth.provider.client.user}", configuration = FeignClientConfiguration.class)
+@FeignClient(name = "idam-api", url = "${auth.idam.client.baseUrl}", configuration = FeignClientConfiguration.class)
 public interface IdamApi {
     @Deprecated
     @PostMapping(

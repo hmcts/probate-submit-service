@@ -18,7 +18,7 @@ import uk.gov.hmcts.probate.functional.TestTokenGenerator;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 @ContextConfiguration(classes = TestContextConfiguration.class)
 @Component

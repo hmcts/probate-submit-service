@@ -32,7 +32,7 @@ spring:
   thymeleaf.cache: false # set to false for hot refresh
   config:
     import: "optional:configtree:/mnt/secrets/probate/"
-    
+
   messages:
     basename: messages
     cache-seconds: -1
@@ -40,6 +40,15 @@ spring:
   jackson:
     deserialization:
       FAIL_ON_UNKNOWN_PROPERTIES: true
+  cloud:
+    openfeign:
+      client:
+        config:
+          core-case-data-api:
+            connectTimeout: 30000
+            readTimeout: 30000
+            loggerLevel: full
+            errorDecoder: uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CcdClientApiErrorDecoder
 
 server:
   port: 8181
@@ -180,15 +189,6 @@ s2s.auth.totp.secret: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
 service.name: ${auth.provider.service.client.microservice}
 
 core_case_data.api.url: ${services.coreCaseData.baseUrl}
-
-feign:
-  client:
-    config:
-      core-case-data-api:
-        connectTimeout: 30000
-        readTimeout: 30000
-        loggerLevel: full
-        errorDecoder: uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CcdClientApiErrorDecoder
 
 springdoc:
   packagesToScan: uk.gov.hmcts.probate

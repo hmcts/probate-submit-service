@@ -14,7 +14,7 @@ import uk.gov.hmcts.probate.contract.TestContextConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 
 @ContextConfiguration(classes = TestContextConfiguration.class)

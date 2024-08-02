@@ -10,7 +10,8 @@ import au.com.dius.pact.core.model.annotations.Pact;
 import au.com.dius.pact.core.model.annotations.PactFolder;
 import org.apache.http.client.fluent.Executor;
 import org.json.JSONException;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,13 +27,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.pactfoundation.consumer.dsl.LambdaDsl.newJsonBody;
-import static org.junit.Assert.assertEquals;
 
 @ExtendWith(PactConsumerTestExt.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @PactTestFor(providerName = "idamApi_users", port = "8862")
 @PactFolder("pacts")
-@SpringBootTest({"auth.provider.client.user: http://localhost:8862"})
+@SpringBootTest({"auth.idam.client.baseUrl: http://localhost:8862"})
 @TestPropertySource(locations = {"/application.properties"})
 @ContextConfiguration(classes = {SubmitApplication.class})
 public class SidamConsumerTest {
@@ -41,8 +41,7 @@ public class SidamConsumerTest {
     private IdamApi idamApi;
     private static final String AUTH_TOKEN = "Bearer someAuthorizationToken";
 
-
-    @After
+    @AfterEach
     public void teardown() {
         Executor.closeIdleConnections();
     }
@@ -67,23 +66,18 @@ public class SidamConsumerTest {
     @PactTestFor(pactMethod = "generatePactFragmentGetUserDetails")
     public void verifyIdamUserDetailsRolesPact() {
         ResponseEntity<Map<String, Object>> userMapResponse = idamApi.getUserDetails(AUTH_TOKEN);
-        assertEquals("User is not Admin", "joe.bloggs@hmcts.net", userMapResponse.getBody().get("email"));
+        Assertions.assertEquals("joe.bloggs@hmcts.net", userMapResponse.getBody().get("email"), "User is not Admin");
     }
 
 
     private DslPart buildIdamDetailsResponseDsl() {
-        return newJsonBody((o) -> {
-            o.stringType("id",
-                            "123432")
-                    .stringType("forename", "Joe")
-                    .stringType("surname", "Bloggs")
-                    .stringType("email", "joe.bloggs@hmcts.net")
-                    .booleanType("active", true)
-                    .array("roles", r -> r.stringType("caseworker"))
-            ;
-
-
-        }).build();
+        return newJsonBody(o -> o.stringType("id",
+                        "123432")
+                .stringType("forename", "Joe")
+                .stringType("surname", "Bloggs")
+                .stringType("email", "joe.bloggs@hmcts.net")
+                .booleanType("active", true)
+                .array("roles", r -> r.stringType("caseworker"))).build();
     }
 
     private Map<String, String> getHeadersMap() {

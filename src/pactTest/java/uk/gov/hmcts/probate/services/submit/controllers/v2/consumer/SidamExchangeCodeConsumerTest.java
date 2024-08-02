@@ -33,7 +33,7 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VAL
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @PactTestFor(providerName = "idamApi_users", port = "8863")
 @PactFolder("pacts")
-@SpringBootTest({"auth.provider.client.user: http://localhost:8863"})
+@SpringBootTest({"auth.idam.client.baseUrl: http://localhost:8863"})
 @TestPropertySource(locations = {"/application.properties"})
 @ContextConfiguration(classes = {SubmitApplication.class})
 public class SidamExchangeCodeConsumerTest {

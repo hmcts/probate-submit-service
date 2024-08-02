@@ -16,6 +16,6 @@ public class CcdClientApiErrorDecoder implements ErrorDecoder {
         ResponseDecorator responseDecorator = new ResponseDecorator(response);
         ErrorResponse clientErrorResponse = responseDecorator.mapBodyToErrorResponse();
 
-        throw new ApiClientException(response.status(), clientErrorResponse);
+        return new ApiClientException(response.status(), clientErrorResponse);
     }
 }

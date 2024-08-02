@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.probate.model.client.ValidationErrorResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 

@@ -1,33 +1,27 @@
 package uk.gov.hmcts.probate.functional.payments;
 
 import io.restassured.RestAssured;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CaveatsPaymentTests extends IntegrationTestBase {
-
-    private Boolean setUp = false;
-
     private String caveatData;
     private String paymentCaveatData;
 
     private String caveatId;
 
-    @Before
+    @BeforeAll
     public void init() {
-        if (!setUp) {
-            caveatData = utils.getJsonFromFile("caveat.partial.json");
-            paymentCaveatData = utils.getJsonFromFile("caveat.full.json");
-
-            setUp = true;
-        }
+        caveatData = utils.getJsonFromFile("caveat.partial.json");
+        paymentCaveatData = utils.getJsonFromFile("caveat.full.json");
 
         caveatId = utils.createCaveatTestCase(caveatData);
-
     }
 
     @Test
@@ -63,7 +57,7 @@ public class CaveatsPaymentTests extends IntegrationTestBase {
 
 
     @Test
-    public void updateCaveatAsCitizenReturns403() {
+    public void updateCaveatAsCitizenReturns400() {
         RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(utils.getCitizenHeaders())
@@ -72,6 +66,6 @@ public class CaveatsPaymentTests extends IntegrationTestBase {
             .post("/ccd-case-update/" + caveatId)
             .then()
             .assertThat()
-            .statusCode(403);
+            .statusCode(400);
     }
 }

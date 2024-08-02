@@ -2,7 +2,7 @@ package uk.gov.hmcts.probate.functional.submissions;
 
 import io.restassured.RestAssured;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 
 import static org.hamcrest.Matchers.equalTo;

@@ -1,31 +1,26 @@
 package uk.gov.hmcts.probate.functional.cases;
 
 import io.restassured.RestAssured;
-import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
-import uk.gov.hmcts.probate.functional.TestRetryRule;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-@RunWith(SpringIntegrationSerenityRunner.class)
+@ExtendWith(SerenityJUnit5Extension.class)
 public class ValidateCasesTests extends IntegrationTestBase {
-
-    @Rule
-    public TestRetryRule retryRule = new TestRetryRule(3);
 
     private Boolean setUp = false;
 
     String testCaseId;
     String invalidCaseId;
 
-    @Before
+    @BeforeEach
     public void init() {
         if (!setUp) {
             String caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
@@ -69,10 +64,8 @@ public class ValidateCasesTests extends IntegrationTestBase {
 
     @Test
     public void validateCaseWithInvalidDataReturns400() {
-        if (retryRule.firstAttempt) {
-            String invalidCaseData = utils.getJsonFromFile("intestacy.invalid.json");
-            invalidCaseId = utils.createTestCase(invalidCaseData);
-        }
+        String invalidCaseData = utils.getJsonFromFile("intestacy.invalid.json");
+        invalidCaseId = utils.createTestCase(invalidCaseData);
 
         RestAssured.given()
                 .relaxedHTTPSValidation()

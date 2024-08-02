@@ -5,7 +5,7 @@ import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ResourceUtils;
@@ -27,7 +27,7 @@ public abstract class ControllerProviderTest {
     @Value("${pact.provider.version}")
     private String providerVersion;
 
-    @Before
+    @BeforeEach
     public void setUpTest() {
         System.getProperties().setProperty("pact.verifier.publishResults", "true");
         System.getProperties().setProperty("pact.provider.version", providerVersion);

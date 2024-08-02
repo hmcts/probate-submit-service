@@ -1,14 +1,15 @@
 package uk.gov.hmcts.probate.services.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.web.SecurityFilterChain;
 import uk.gov.hmcts.reform.auth.checker.core.RequestAuthorizer;
 import uk.gov.hmcts.reform.auth.checker.core.service.Service;
 import uk.gov.hmcts.reform.auth.checker.core.user.User;
@@ -18,7 +19,7 @@ import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.AuthCheckerService
 @Configuration
 @EnableWebSecurity
 @Order(1)
-public class SecurityMockConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityMockConfiguration {
 
     private AuthCheckerServiceAndUserFilter authCheckerServiceAndUserFilter;
 
@@ -31,22 +32,24 @@ public class SecurityMockConfiguration extends WebSecurityConfigurerAdapter {
         authCheckerServiceAndUserFilter.setAuthenticationManager(authenticationManager);
     }
 
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers(
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers(
                 "/cases/**",
                 "/drafts/**",
                 "/submissions/**",
-                "/");
+                "/"
+        );
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers(
-                "/cases/**",
-                "/drafts/**",
-                "/submissions/**"
-        ).permitAll();
-
+    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                "/cases/**",
+                                "/drafts/**",
+                                "/submissions/**"
+                        ).permitAll()
+        );
+        return http.build();
     }
 }

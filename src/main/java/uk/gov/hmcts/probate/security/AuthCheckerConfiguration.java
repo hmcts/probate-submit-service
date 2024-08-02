@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 @Configuration
@@ -20,12 +20,12 @@ public class AuthCheckerConfiguration {
     @Value("#{'${authorised.services}'.split(',\\s*')}")
     private List<String> authorisedServices;
 
-    @Bean
+    @Bean(value = "authorizedServiceExtractor")
     public Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor() {
         return request -> authorisedServices;
     }
 
-    @Bean
+    @Bean(value = "authorizedRolesExtractor")
     public Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor() {
         return any -> Collections.emptyList();
     }

@@ -1,10 +1,10 @@
 package uk.gov.hmcts.probate.contract.ccdintegrationtests;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import net.serenitybdd.junit.runners.SerenityRunner;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.probate.contract.IntegrationTestBase;
@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
-@RunWith(SerenityRunner.class)
+@ExtendWith(SerenityJUnit5Extension.class)
 public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
 
     private static final String CCD_EVENT_TOKEN_FIELD = "event_token";
