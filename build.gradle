@@ -270,7 +270,7 @@ dependencies {
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.7.11'
     testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
 
-    testImplementation 'com.github.hmcts:fortify-client:1.4.3:all'
+    testImplementation 'com.github.hmcts:fortify-client:1.4.4:all'
     testImplementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: versions.serviceAuthProviderClient
     testRuntimeOnly group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: versions.serviceAuthProviderClient
     testRuntimeOnly group: 'com.github.hmcts', name: 'auth-checker-lib', version: versions.authCheckerLib
