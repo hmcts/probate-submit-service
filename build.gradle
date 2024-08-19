@@ -219,7 +219,7 @@ dependencyManagement {
         dependency group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
 
         //CVE-2020-8908
-        dependency group: 'com.google.guava', name: 'guava', version: '33.2.1-jre'
+        dependency group: 'com.google.guava', name: 'guava', version: '33.3.0-jre'
 
     }
 }
