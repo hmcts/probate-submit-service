@@ -248,7 +248,7 @@ dependencies {
     implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: versions.feignHttpClient
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloudStarterNetflixHystrix
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: versions.springDocUi
-
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.1.8'
 
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.logging
     implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.logging
