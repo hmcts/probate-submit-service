@@ -79,8 +79,7 @@ public class TestTokenGenerator {
     private String getCachedIdamOpenIdToken(String email) {
         String userToken = cache.getIfPresent(email);
         if (userToken == null) {
-            userToken = "Bearer " + generateOpenIdToken(email);
-            cache.put(email, userToken);
+            cache.put(email, generateOpenIdToken(email));
         }
         return userToken;
     }
