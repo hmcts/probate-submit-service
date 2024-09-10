@@ -39,7 +39,7 @@ public class TestTokenGenerator {
     @Autowired
     private ServiceAuthTokenGenerator tokenGenerator;
 
-    private final Cache<String, String> cache = Caffeine.newBuilder().expireAfterWrite(2, TimeUnit.HOURS).build();
+    private final Cache<String, String> cache = Caffeine.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build();
 
     public String generateServiceAuthorisation() {
         return tokenGenerator.generate();
