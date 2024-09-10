@@ -2,7 +2,7 @@ plugins {
     id 'application'
     id 'java'
     id 'org.springframework.boot' version '3.3.0'
-    id 'uk.gov.hmcts.java' version '0.12.61'
+    id 'uk.gov.hmcts.java' version '0.12.63'
     id 'com.github.ben-manes.versions' version '0.51.0'
     id 'com.gorylenko.gradle-git-properties' version '2.4.2'
     id 'info.solidsoft.pitest' version '1.15.0'
@@ -178,7 +178,7 @@ def versions = [
         lombok                          : '1.18.34',
         logging                         : '6.1.6',
         pact_version                    : '4.1.7',
-        probateCommons                  : '2.0.2',
+        probateCommons                  : '2.0.3',
         probatePactCommonsVersion       : '1.0.2',
         restAssured                     : '5.4.0',
         serenity                        : '4.1.14',
@@ -217,9 +217,10 @@ dependencies {
     implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: versions.serviceAuthProviderClient
     implementation group: 'com.github.hmcts', name: 'core-case-data-store-client', version: versions.ccdClient
     implementation group: 'com.github.hmcts', name: 'probate-commons', version: versions.probateCommons
-    implementation group: 'org.pitest', name: 'pitest', version: '1.16.1'
+    implementation group: 'org.pitest', name: 'pitest', version: '1.16.3'
     implementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.0'
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.1.8'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: versions.springSecurityTesting
@@ -331,7 +332,6 @@ pact {
     version = project.pacticipantVersion
   }
 }
-
 runAndPublishConsumerPactTests.finalizedBy pactPublish
 
 static def getCheckedOutGitCommitHash() {
