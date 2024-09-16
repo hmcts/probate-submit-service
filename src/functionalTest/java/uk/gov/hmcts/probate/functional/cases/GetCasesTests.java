@@ -248,10 +248,11 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByInviteIdReturns200() {
+    public void getCaseByInviteIdReturns200() throws Exception {
         String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
         inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, inviteId);
         utils.createTestCase(inviteCaseData);
+        Thread.sleep(SLEEP_TIME);
 
         RestAssured.given()
             .relaxedHTTPSValidation()

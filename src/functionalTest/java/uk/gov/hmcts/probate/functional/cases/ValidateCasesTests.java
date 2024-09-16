@@ -65,9 +65,10 @@ public class ValidateCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void validateCaseWithInvalidDataReturns400() {
+    public void validateCaseWithInvalidDataReturns400() throws Exception {
         String invalidCaseData = utils.getJsonFromFile("intestacy.invalid.json");
         invalidCaseId = utils.createTestCase(invalidCaseData);
+        Thread.sleep(SLEEP_TIME);
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
