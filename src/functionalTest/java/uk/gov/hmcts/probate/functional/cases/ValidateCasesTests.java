@@ -16,17 +16,19 @@ import static org.hamcrest.Matchers.notNullValue;
 public class ValidateCasesTests extends IntegrationTestBase {
 
     private Boolean setUp = false;
+    private static final int SLEEP_TIME = 2000;
 
     String testCaseId;
     String invalidCaseId;
 
     @BeforeEach
-    public void init() {
+    public void init() throws Exception {
         if (!setUp) {
             String caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
             testCaseId = utils.createTestCase(caseData);
 
             setUp = true;
+            Thread.sleep(SLEEP_TIME);
         }
     }
 

@@ -31,8 +31,10 @@ public class GetCasesTests extends IntegrationTestBase {
     @Value("${idam.citizen.username}")
     private String email;
 
+    private static final int SLEEP_TIME = 2000;
+
     @BeforeAll
-    public void init() {
+    public void init() throws Exception {
         String caseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
         caseId1 = utils.createTestCase(caseData);
         caseData = caseData.replace("gop", "intestacy");
@@ -41,6 +43,8 @@ public class GetCasesTests extends IntegrationTestBase {
         inviteId = randomAlphanumeric(12).toLowerCase();
         String caveatCaseData = utils.getJsonFromFile("caveat.full.json");
         caveatCaseId = utils.createTestCase(caveatCaseData);
+
+        Thread.sleep(SLEEP_TIME);
     }
 
     @Test

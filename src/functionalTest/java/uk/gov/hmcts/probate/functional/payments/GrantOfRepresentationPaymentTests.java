@@ -20,15 +20,17 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
     private String paymentSuccessData;
 
     private String caseId;
+    private static final int SLEEP_TIME = 2000;
 
     @BeforeAll
-    public void init() {
+    public void init() throws Exception {
         caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
 
         paymentInitiatedData = utils.getJsonFromFile("gop.paymentInitiated.json");
         paymentSuccessData = utils.getJsonFromFile("gop.singleExecutor.full.json");
 
         caseId = utils.createTestCase(caseData);
+        Thread.sleep(SLEEP_TIME);
     }
 
     @Test
