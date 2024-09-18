@@ -200,7 +200,7 @@ def versions = [
         serenity                        : '2.5.8',
         pact_version                    : '4.1.7',
         probateCommons                  : '1.6.7',
-        feignHttpClient                 : '13.3',
+        feignHttpClient                 : '13.4',
         lombok                          : '1.18.34',
         probatePactCommonsVersion       : '1.0.2',
         junitJupiter                    : '5.8.0-M1'
