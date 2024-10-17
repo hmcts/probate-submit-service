@@ -29,6 +29,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CITIZEN_HUB_RESPONSE;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_APPLICATION;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_CASE;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_CASE_WITHOUT_PAYMENT;
@@ -83,6 +84,7 @@ public class CasesServiceImplTest {
             .updateDraftEventId(GOP_UPDATE_DRAFT)
             .createCaseWithoutPaymentId(GOP_CREATE_CASE_WITHOUT_PAYMENT)
             .updatePaymentFailedEventId(UPDATE_GOP_PAYMENT_FAILED)
+            .citizenHubResponseId(GOP_CITIZEN_HUB_RESPONSE)
             .build());
     }
 
