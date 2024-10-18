@@ -24,7 +24,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static uk.gov.hmcts.reform.probate.model.cases.CaseState.BO_CASE_STOPPED;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseState.CASE_PAYMENT_FAILED;
+import static uk.gov.hmcts.reform.probate.model.cases.CaseState.DORMANT;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseState.DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseState.PA_APP_CREATED;
 
@@ -48,6 +50,8 @@ public class CasesServiceImpl implements CasesService {
             .put(DRAFT, CaseEvents::getUpdateDraftEventId)
             .put(PA_APP_CREATED, CaseEvents::getUpdateCaseApplicationEventId)
             .put(CASE_PAYMENT_FAILED, CaseEvents::getUpdatePaymentFailedEventId)
+            .put(DORMANT, CaseEvents::getCitizenHubResponseId)
+            .put(BO_CASE_STOPPED, CaseEvents::getCitizenHubResponseId)
             .build();
 
     @Override
@@ -118,7 +122,7 @@ public class CasesServiceImpl implements CasesService {
         if (caseResponseOptional.isPresent()) {
             ProbateCaseDetails caseResponse = caseResponseOptional.get();
             CaseState state = caseResponse.getCaseInfo().getState();
-            log.info("Found case with case Id: {} at state: {}", caseResponse.getCaseInfo().getCaseId(), 
+            log.info("Found case with case Id: {} at state: {}", caseResponse.getCaseInfo().getCaseId(),
                 state.getName());
             EventId eventId = eventMap.get(state).apply(caseEvents);
             if (asCaseworker) {
@@ -143,7 +147,7 @@ public class CasesServiceImpl implements CasesService {
         SecurityDto securityDto = securityUtils.getSecurityDto();
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         final EventId eventId =
-            CaseType.CAVEAT == caseType 
+            CaseType.CAVEAT == caseType
                 ? caseEvents.getCreateCaseApplicationEventId() : caseEvents.getCreateDraftEventId();
         return coreCaseDataService.createCase(caseData, eventId, securityDto);
     }
