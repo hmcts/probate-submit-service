@@ -176,7 +176,7 @@ def versions = [
         httpclient5                     : '5.3.1',
         junitJupiter                    : '5.9.1',
         lombok                          : '1.18.34',
-        logging                         : '6.1.6',
+        logging                         : '6.1.7',
         pact_version                    : '4.1.7',
         probateCommons                  : '2.0.20',
         probatePactCommonsVersion       : '1.0.2',
@@ -226,7 +226,7 @@ dependencies {
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: versions.springSecurityTesting
     testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
 
-    testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.4', classifier: 'all'
+    testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.5', classifier: 'all'
     testImplementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: versions.serviceAuthProviderClient
     testImplementation group: 'com.github.hmcts', name: 'auth-checker-lib', version: versions.authCheckerLib
     testImplementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
