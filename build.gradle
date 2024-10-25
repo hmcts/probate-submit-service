@@ -174,7 +174,7 @@ def versions = [
         ccdClient                       : '5.0.3',
         feignHttpClient                 : '13.5',
         httpclient5                     : '5.3.1',
-        junitJupiter                    : '5.9.1',
+        junitJupiter                    : '5.11.3',
         lombok                          : '1.18.34',
         logging                         : '6.1.7',
         pact_version                    : '4.1.7',
@@ -274,7 +274,7 @@ dependencies {
     testPactImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
     testPactRuntimeOnly group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
     testPactRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junitJupiter
-    testPactRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.8.0-M1'
+    testPactRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.11.3'
     testPactImplementation sourceSets.main.runtimeClasspath
     testPactImplementation sourceSets.test.runtimeClasspath
 
