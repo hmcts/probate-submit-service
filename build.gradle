@@ -258,7 +258,7 @@ dependencies {
     testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.18.0'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.18.0'
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.18.0'
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.18.1'
     testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testContractAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testContractImplementation sourceSets.main.runtimeClasspath
