@@ -1,29 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>hmcts/.github:renovate-config", "local>hmcts/.github//renovate/automerge-all"],
-  "prConcurrentLimit": 6,
-  "prHourlyLimit": 3,
-  "labels": [
-    "dependencies"
+  "extends": [
+    "local>hmcts/.github:renovate-config",
+    "local>hmcts/.github//renovate/automerge-all"
   ],
-  "helm-requirements": {
-    "fileMatch": [
-      "\\Chart.yaml$"
-    ],
-    "aliases": {
-      "hmctspublic": "https://hmctspublic.azurecr.io/helm/v1/repo/"
-    }
-  },
-  "separateMajorMinor": false,
-  "packageRules": [
-    {
-      "matchPackageNames": [
-        "redis"
-      ],
-      "allowedVersions": "<=3"
-    }
-  ],
-  "lockFileMaintenance": {
-    "enabled": false
-  }
+  "ignoreDeps": [
+    "com.github.hmcts:probate-commons"
+  ]
 }
