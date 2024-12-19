@@ -173,7 +173,7 @@ def versions = [
         authCheckerLib                  : '3.0.1',
         ccdClient                       : '5.0.3',
         feignHttpClient                 : '13.5',
-        httpclient5                     : '5.3.1',
+        httpclient5                     : '5.4.1',
         jackson                         : '2.18.2',
         junitJupiter                    : '5.9.1',
         lombok                          : '1.18.36',
