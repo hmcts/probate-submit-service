@@ -177,7 +177,7 @@ def versions = [
         jackson                         : '2.18.2',
         junitJupiter                    : '5.9.1',
         lombok                          : '1.18.36',
-        logging                         : '6.1.7',
+        logging                         : '6.1.8',
         pact_version                    : '4.1.7',
         probateCommons                  : '2.0.37',
         probatePactCommonsVersion       : '1.0.2',
