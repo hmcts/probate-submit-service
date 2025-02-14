@@ -199,7 +199,7 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.10.0'
+    implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.10.1'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: versions.springBoot
