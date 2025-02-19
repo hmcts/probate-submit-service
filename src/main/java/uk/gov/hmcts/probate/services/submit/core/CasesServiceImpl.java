@@ -128,6 +128,8 @@ public class CasesServiceImpl implements CasesService {
             EventId eventId = eventMap.get(state).apply(caseEvents);
             if (EventId.GOP_CITIZEN_HUB_RESPONSE_DRAFT.equals(eventId) && isSubmitHubResponse(caseData)) {
                 eventId = EventId.GOP_CITIZEN_HUB_RESPONSE;
+            } else if (EventId.GOP_UPDATE_DRAFT.equals(eventId) && isTaskListPage(eventDescription)) {
+                eventId = EventId.KEEP_DRAFT;
             }
             if (asCaseworker) {
                 return coreCaseDataService
@@ -195,5 +197,9 @@ public class CasesServiceImpl implements CasesService {
         boolean isSaveAndClose = data.getIsSaveAndClose() != null && data.getIsSaveAndClose();
         return hasCitizenResponseCheckbox
             || (hasDocumentUploadIssue && !isSaveAndClose && noResponseOrUploadedDocs);
+    }
+
+    private boolean isTaskListPage(String eventDescription) {
+        return eventDescription != null && eventDescription.contains("task-list");
     }
 }

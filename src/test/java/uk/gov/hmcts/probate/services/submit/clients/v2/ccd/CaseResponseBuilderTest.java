@@ -48,6 +48,7 @@ public class CaseResponseBuilderTest {
         LocalDateTime localDateTime = LocalDateTime.now();
         final LocalDate localDate = localDateTime.toLocalDate();
         when(caseDetails.getCreatedDate()).thenReturn(localDateTime);
+        when(caseDetails.getLastModified()).thenReturn(localDateTime);
 
         ProbateCaseDetails probateCaseDetails = caseResponseBuilder.createCaseResponse(caseDetails);
         assertNotNull(probateCaseDetails);
@@ -55,6 +56,7 @@ public class CaseResponseBuilderTest {
         assertEquals(CASE_ID.toString(), probateCaseDetails.getCaseInfo().getCaseId());
         assertEquals(STATE_NAME, probateCaseDetails.getCaseInfo().getState().getName());
         assertEquals(localDate, probateCaseDetails.getCaseInfo().getCaseCreatedDate());
+        assertEquals(localDate, probateCaseDetails.getCaseInfo().getLastModifiedDate());
     }
 
     @Test
