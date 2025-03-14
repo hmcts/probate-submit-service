@@ -11,6 +11,7 @@ import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.probate.services.submit.services.FeatureToggleService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
@@ -45,6 +46,8 @@ public class CasesServiceImpl implements CasesService {
     private final SearchFieldFactory searchFieldFactory;
 
     private final ValidationService validationService;
+
+    private final FeatureToggleService featureToggleService;
 
     private final Map<CaseState, Function<CaseEvents, EventId>> eventMap =
         ImmutableMap.<CaseState, Function<CaseEvents, EventId>>builder()
@@ -84,6 +87,9 @@ public class CasesServiceImpl implements CasesService {
     @Override
     public ProbateCaseDetails getCaseById(String caseId) {
         log.info("Getting case by caseId: {}", caseId);
+        log.info("feaure toggles: timeout: {}, failure: {}",
+                featureToggleService.causeLookupTimeout(),
+                featureToggleService.causeLookupFailure());
         SecurityDto securityDto = securityUtils.getSecurityDto();
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
             .findCaseById(caseId, securityDto);
