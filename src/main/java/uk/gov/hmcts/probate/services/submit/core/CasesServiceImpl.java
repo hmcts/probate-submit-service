@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -64,6 +65,21 @@ public class CasesServiceImpl implements CasesService {
         log.info("feaure toggles: timeout: {}, failure: {}",
                 featureToggleService.causeLookupTimeout(),
                 featureToggleService.causeLookupFailure());
+
+        if (featureToggleService.causeLookupTimeout()) {
+            log.info("sleeping request for {} for 60 seconds", searchField);
+            try {
+                Thread.sleep(Duration.ofSeconds(60));
+            } catch (InterruptedException e) {
+                log.error("interrupted", e);
+                throw new RuntimeException(e);
+            }
+        }
+        if (featureToggleService.causeLookupFailure()) {
+            log.info("throwing runtime exception for {}", searchField);
+            throw new RuntimeException();
+        }
+
         SecurityDto securityDto = securityUtils.getSecurityDto();
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
             .findCase(searchField, caseType, securityDto);
@@ -93,6 +109,21 @@ public class CasesServiceImpl implements CasesService {
         log.info("feaure toggles: timeout: {}, failure: {}",
                 featureToggleService.causeLookupTimeout(),
                 featureToggleService.causeLookupFailure());
+
+        if (featureToggleService.causeLookupTimeout()) {
+            log.info("sleeping request for {} for 60 seconds", caseId);
+            try {
+                Thread.sleep(Duration.ofSeconds(60));
+            } catch (InterruptedException e) {
+                log.error("interrupted", e);
+                throw new RuntimeException(e);
+            }
+        }
+        if (featureToggleService.causeLookupFailure()) {
+            log.info("throwing runtime exception for {}", caseId);
+            throw new RuntimeException();
+        }
+
         SecurityDto securityDto = securityUtils.getSecurityDto();
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
             .findCaseById(caseId, securityDto);
