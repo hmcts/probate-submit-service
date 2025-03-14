@@ -61,6 +61,9 @@ public class CasesServiceImpl implements CasesService {
     @Override
     public ProbateCaseDetails getCase(String searchField, CaseType caseType) {
         log.info("Getting case of caseType: {}", caseType.getName());
+        log.info("feaure toggles: timeout: {}, failure: {}",
+                featureToggleService.causeLookupTimeout(),
+                featureToggleService.causeLookupFailure());
         SecurityDto securityDto = securityUtils.getSecurityDto();
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
             .findCase(searchField, caseType, securityDto);
