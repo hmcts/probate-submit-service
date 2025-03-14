@@ -1,20 +1,24 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
 import com.launchdarkly.sdk.LDContext;
-import com.launchdarkly.sdk.server.LDClient;
+import com.launchdarkly.sdk.server.interfaces.LDClientInterface;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.probate.services.submit.services.FeatureToggleService;
 
+import java.time.Duration;
+
+@Slf4j
 @Service
 public class FeatureToggleServiceImpl implements FeatureToggleService {
-    private final LDClient ldClient;
+    private final LDClientInterface ldClient;
     private final LDContext ldContext;
 
     @Autowired
     public FeatureToggleServiceImpl(
-            final LDClient ldClient,
+            final LDClientInterface ldClient,
             @Value("${ld.user.key}") final String ldUserKey,
             @Value("${ld.user.firstName}") final String ldUserFirstName,
             @Value("${ld.user.lastName}") final String ldUserLastName) {
@@ -47,5 +51,31 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
     @Override
     public boolean causeLookupFailure() {
         return isFeatureToggleOn("probate-enable-submit-lookup-failure", false);
+    }
+
+    @Override
+    public void doSleep() {
+        try {
+            Thread.sleep(Duration.ofSeconds(60));
+        } catch (InterruptedException e) {
+            log.error("Interrupted while waiting for submit lookup timeout", e);
+            Thread.currentThread().interrupt();
+            throw new FeatureToggleException(e);
+        }
+    }
+
+    @Override
+    public void throwEx() {
+        throw new FeatureToggleException();
+    }
+
+    static final class FeatureToggleException extends RuntimeException {
+        FeatureToggleException() {
+            super();
+        }
+
+        FeatureToggleException(final Exception e) {
+            super(e);
+        }
     }
 }

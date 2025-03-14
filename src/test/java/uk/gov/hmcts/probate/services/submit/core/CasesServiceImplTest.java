@@ -31,6 +31,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -486,5 +487,45 @@ public class CasesServiceImplTest {
                 securityDto);
         verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData,
                 KEEP_DRAFT, securityDto, eventDescription);
+    }
+
+    @Test
+    void shouldSleepWhenFeatureFlagTimeoutSet() {
+        when(featureToggleService.causeLookupTimeout())
+                .thenReturn(true);
+
+        casesService.doFeatureFlag("");
+
+        verify(featureToggleService, times(1)).doSleep();
+    }
+
+    @Test
+    void shouldNotSleepWhenFeatureFlagTimeoutUnset() {
+        when(featureToggleService.causeLookupTimeout())
+                .thenReturn(false);
+
+        casesService.doFeatureFlag("");
+
+        verify(featureToggleService, never()).doSleep();
+    }
+
+    @Test
+    void shouldThrowWhenFeatureFlagFailSet() {
+        when(featureToggleService.causeLookupFailure())
+                .thenReturn(true);
+
+        casesService.doFeatureFlag("");
+
+        verify(featureToggleService, times(1)).throwEx();
+    }
+
+    @Test
+    void shouldNotThrowWhenFeatureFlagFailureUnset() {
+        when(featureToggleService.causeLookupFailure())
+                .thenReturn(false);
+
+        casesService.doFeatureFlag("");
+
+        verify(featureToggleService, never()).throwEx();
     }
 }
