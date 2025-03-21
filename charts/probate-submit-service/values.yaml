@@ -23,7 +23,7 @@ java:
     AUTH_S2S_CLIENT_ID: "probate_backend"
     AUTH_PROVIDER_SERVICE_CLIENT_BASEURL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     SERVICES_PERSISTENCE_BASEURL: http://probate-persistence-service-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
-    SERVICES_CORECASEDATA_BASEURL: http://ccd-data-store-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+    SERVICES_CORECASEDATA_BASEURL: http://probate-back-office-pr-2982-ccd-data-store-api
     AUTH_IDAM_CLIENT_BASEURL: https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net
     SERVICES_CORECASEDATA_ENABLED : true
     SPRING_APPLICATION_JSON : '{"registries":[{"address":"Principal Registry of the Family Division (PRFD)\nHMCTS Probate\nPO Box 12625\nHarlow\nCM20 9QE","name":"ctsc"}]}'
