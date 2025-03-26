@@ -171,7 +171,7 @@ repositories {
 
 def versions = [
         authCheckerLib                  : '3.0.6',
-        ccdClient                       : '5.0.3',
+        ccdClient                       : '5.0.5',
         feignHttpClient                 : '13.5',
         httpclient5                     : '5.3.1',
         jackson                         : '2.18.3',
