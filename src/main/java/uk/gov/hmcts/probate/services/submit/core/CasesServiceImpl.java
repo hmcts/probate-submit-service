@@ -11,6 +11,7 @@ import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.probate.services.submit.services.FeatureToggleService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
@@ -46,6 +47,8 @@ public class CasesServiceImpl implements CasesService {
 
     private final ValidationService validationService;
 
+    private final FeatureToggleService featureToggleService;
+
     private final Map<CaseState, Function<CaseEvents, EventId>> eventMap =
         ImmutableMap.<CaseState, Function<CaseEvents, EventId>>builder()
             .put(DRAFT, CaseEvents::getUpdateDraftEventId)
@@ -55,9 +58,24 @@ public class CasesServiceImpl implements CasesService {
             .put(BO_CASE_STOPPED, CaseEvents::getCitizenHubResponseDraftId)
             .build();
 
+    void doFeatureFlag(final String id) {
+        log.info("feaure toggles: timeout: {}, failure: {}",
+                featureToggleService.causeLookupTimeout(),
+                featureToggleService.causeLookupFailure());
+        if (featureToggleService.causeLookupTimeout()) {
+            log.info("sleeping request for {} for 60 seconds", id);
+            featureToggleService.doSleep();
+        }
+        if (featureToggleService.causeLookupFailure()) {
+            log.info("throwing runtime exception for {}", id);
+            featureToggleService.throwEx();
+        }
+    }
+
     @Override
     public ProbateCaseDetails getCase(String searchField, CaseType caseType) {
         log.info("Getting case of caseType: {}", caseType.getName());
+        doFeatureFlag(searchField);
         SecurityDto securityDto = securityUtils.getSecurityDto();
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
             .findCase(searchField, caseType, securityDto);
@@ -84,6 +102,7 @@ public class CasesServiceImpl implements CasesService {
     @Override
     public ProbateCaseDetails getCaseById(String caseId) {
         log.info("Getting case by caseId: {}", caseId);
+        doFeatureFlag(caseId);
         SecurityDto securityDto = securityUtils.getSecurityDto();
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
             .findCaseById(caseId, securityDto);
