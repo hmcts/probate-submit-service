@@ -176,7 +176,7 @@ def versions = [
         httpclient5                     : '5.3.1',
         jackson                         : '2.18.3',
         junitJupiter                    : '5.9.1',
-        lombok                          : '1.18.36',
+        lombok                          : '1.18.38',
         logging                         : '6.1.8',
         pact_version                    : '4.1.7',
         probateCommons                  : '2.0.56',
