@@ -193,3 +193,10 @@ core_case_data.api.url: ${services.coreCaseData.baseUrl}
 springdoc:
   packagesToScan: uk.gov.hmcts.probate
   pathsToMatch: /**
+
+ld:
+  sdk_key: ${LAUNCHDARKLY_KEY:dummy}
+  user:
+    key: ${LD_USER_KEY:dummy_key}
+    firstName: Probate
+    lastName: Backend
