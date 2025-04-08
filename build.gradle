@@ -9,7 +9,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.7'
     id 'au.com.dius.pact' version '4.6.17'
     id 'net.serenity-bdd.serenity-gradle-plugin' version '4.2.16'
-    id 'org.sonarqube' version '6.0.1.5171'
+    id 'org.sonarqube' version '6.1.0.5360'
     id 'project-report'
     id 'jacoco'
 }
@@ -35,7 +35,7 @@ java {
 }
 
 jacoco {
-    toolVersion = '0.8.12'
+    toolVersion = '0.8.13'
 }
 
 sonarqube {
@@ -171,24 +171,24 @@ repositories {
 
 def versions = [
         authCheckerLib                  : '3.0.6',
-        ccdClient                       : '5.0.3',
+        ccdClient                       : '5.0.5',
         feignHttpClient                 : '13.5',
         httpclient5                     : '5.3.1',
         jackson                         : '2.18.3',
         junitJupiter                    : '5.9.1',
-        lombok                          : '1.18.36',
+        lombok                          : '1.18.38',
         logging                         : '6.1.8',
         pact_version                    : '4.1.7',
-        probateCommons                  : '2.0.45',
+        probateCommons                  : '2.0.56',
         probatePactCommonsVersion       : '1.0.2',
         restAssured                     : '5.5.1',
         serenity                        : '4.2.17',
         serviceAuthProviderClient       : '5.3.0',
         springBoot                      : '3.3.5',
-        springCloudStarterNetflixHystrix: '4.2.0',
-        springCloudWiremock             : '4.2.0',
+        springCloudStarterNetflixHystrix: '4.2.1',
+        springCloudWiremock             : '4.2.1',
         springDocUi                     : '2.6.0',
-        springSecurityTesting           : '6.4.3',
+        springSecurityTesting           : '6.4.4',
         springSecurityVersion           : '6.3.0',
 ]
 
@@ -219,9 +219,9 @@ dependencies {
     implementation group: 'com.github.hmcts', name: 'probate-commons', version: versions.probateCommons
     implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.7.1'
     implementation group: 'com.microsoft.azure', name: 'applicationinsights-runtime-attach', version: '3.7.1'
-    implementation group: 'org.pitest', name: 'pitest', version: '1.18.2'
+    implementation group: 'org.pitest', name: 'pitest', version: '1.19.1'
     implementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
-    implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.0'
+    implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.0'
     implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.3.0'
 
@@ -229,7 +229,7 @@ dependencies {
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: versions.springSecurityTesting
     testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
 
-    testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.7', classifier: 'all'
+    testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.8', classifier: 'all'
     testImplementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: versions.serviceAuthProviderClient
     testImplementation group: 'com.github.hmcts', name: 'auth-checker-lib', version: versions.authCheckerLib
     testImplementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
