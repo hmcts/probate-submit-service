@@ -25,6 +25,7 @@ import uk.gov.hmcts.reform.probate.model.cases.UploadDocument;
 import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +57,7 @@ public class CasesServiceImplTest {
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String INVITATION_ID = "inviationId";
     private static final String CASE_ID = "1343242352";
+    private static final LocalDateTime LAST_MODIFIED_DATE_TIME = LocalDateTime.of(2019, 1, 1, 0, 0, 0);
     private static final String EVENT_DESCRIPTION = "event description";
     private static final CaseType CASE_TYPE = CaseType.GRANT_OF_REPRESENTATION;
 
@@ -189,6 +191,7 @@ public class CasesServiceImplTest {
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
+        caseInfo.setLastModifiedDateTime(LAST_MODIFIED_DATE_TIME);
         caseInfo.setState(CaseState.DRAFT);
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
         SecurityDto securityDto = SecurityDto.builder().build();
@@ -214,6 +217,7 @@ public class CasesServiceImplTest {
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
+        caseInfo.setLastModifiedDateTime(LAST_MODIFIED_DATE_TIME);
         caseInfo.setState(CaseState.DRAFT);
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
         SecurityDto securityDto = SecurityDto.builder().build();
@@ -295,6 +299,7 @@ public class CasesServiceImplTest {
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
+        caseInfo.setLastModifiedDateTime(LAST_MODIFIED_DATE_TIME);
         caseInfo.setState(CaseState.BO_CASE_STOPPED);
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
         SecurityDto securityDto = SecurityDto.builder().build();
@@ -328,6 +333,7 @@ public class CasesServiceImplTest {
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
+        caseInfo.setLastModifiedDateTime(LAST_MODIFIED_DATE_TIME);
         caseInfo.setState(CaseState.BO_CASE_STOPPED);
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
         SecurityDto securityDto = SecurityDto.builder().build();
@@ -356,6 +362,7 @@ public class CasesServiceImplTest {
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
+        caseInfo.setLastModifiedDateTime(LAST_MODIFIED_DATE_TIME);
         caseInfo.setState(CaseState.BO_CASE_STOPPED);
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
         SecurityDto securityDto = SecurityDto.builder().build();
@@ -386,6 +393,7 @@ public class CasesServiceImplTest {
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
+        caseInfo.setLastModifiedDateTime(LAST_MODIFIED_DATE_TIME);
         caseInfo.setState(CaseState.BO_CASE_STOPPED);
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
         SecurityDto securityDto = SecurityDto.builder().build();
@@ -415,6 +423,7 @@ public class CasesServiceImplTest {
         caseData.setIsSaveAndClose(Boolean.TRUE);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
+        caseInfo.setLastModifiedDateTime(LAST_MODIFIED_DATE_TIME);
         caseInfo.setState(CaseState.BO_CASE_STOPPED);
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
         SecurityDto securityDto = SecurityDto.builder().build();
@@ -456,6 +465,7 @@ public class CasesServiceImplTest {
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
+        caseInfo.setLastModifiedDateTime(LAST_MODIFIED_DATE_TIME);
         caseInfo.setState(CaseState.DRAFT);
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
         SecurityDto securityDto = SecurityDto.builder().build();

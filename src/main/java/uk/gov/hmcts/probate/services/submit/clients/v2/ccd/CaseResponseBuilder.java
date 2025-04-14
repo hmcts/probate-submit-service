@@ -32,6 +32,8 @@ public class CaseResponseBuilder {
             caseDetails.getCreatedDate() != null ? caseDetails.getCreatedDate().toLocalDate() : null);
         caseInfo.setLastModifiedDate(
             caseDetails.getLastModified() != null ? caseDetails.getLastModified().toLocalDate() : null);
+        caseInfo.setLastModifiedDateTime(
+                caseDetails.getLastModified() != null ? caseDetails.getLastModified() : null);
         return caseInfo;
     }
 }

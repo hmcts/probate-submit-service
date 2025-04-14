@@ -9,17 +9,20 @@ import org.springframework.util.Assert;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
+import uk.gov.hmcts.probate.services.submit.model.v2.exception.ConcurrentDataUpdateException;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
+import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -103,6 +106,9 @@ public class CasesServiceImpl implements CasesService {
         log.info("saveDraft - Saving draft for case type: {}",
             probateCaseDetails.getCaseData().getClass().getSimpleName());
         CaseData caseData = probateCaseDetails.getCaseData();
+        CaseInfo caseInfo = probateCaseDetails.getCaseInfo();
+        log.info("saveDraft - Saving draft for lastModifiedDateTime: {}",
+                caseInfo.getLastModifiedDateTime());
         CaseType caseType = CaseType.getCaseType(caseData);
         if (!caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
             Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
@@ -112,6 +118,13 @@ public class CasesServiceImpl implements CasesService {
         SecurityDto securityDto = securityUtils.getSecurityDto();
         Optional<ProbateCaseDetails> caseInfoOptional =
             coreCaseDataService.findCase(searchField, caseType, securityDto);
+        if (caseInfoOptional.isPresent()
+                && caseInfoOptional.get().getCaseInfo().getLastModifiedDateTime().truncatedTo(ChronoUnit.MILLIS)
+                .isAfter(caseInfo.getLastModifiedDateTime())) {
+            log.info("saveDraft - Saving draft for  invalid lastModifiedDateTime: {}",
+                    caseInfo.getLastModifiedDateTime());
+            throw new ConcurrentDataUpdateException(searchField);
+        }
         return saveCase(securityDto, caseType, caseData, caseInfoOptional, asCaseworker, eventDescription);
 
     }
@@ -123,8 +136,9 @@ public class CasesServiceImpl implements CasesService {
         if (caseResponseOptional.isPresent()) {
             ProbateCaseDetails caseResponse = caseResponseOptional.get();
             CaseState state = caseResponse.getCaseInfo().getState();
-            log.info("Found case with case Id: {} at state: {}", caseResponse.getCaseInfo().getCaseId(),
-                state.getName());
+            log.info("Found case with case Id: {} at state: {} lastMOfifiedDatatime {} ",
+                    caseResponse.getCaseInfo().getCaseId(), state.getName(),
+                    caseResponse.getCaseInfo().getLastModifiedDateTime());
             EventId eventId = eventMap.get(state).apply(caseEvents);
             if (EventId.GOP_CITIZEN_HUB_RESPONSE_DRAFT.equals(eventId) && isSubmitHubResponse(caseData)) {
                 eventId = EventId.GOP_CITIZEN_HUB_RESPONSE;
