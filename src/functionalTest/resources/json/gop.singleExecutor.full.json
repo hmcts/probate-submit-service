@@ -132,6 +132,6 @@
     "caseId": "1234123412341234",
     "state": "PAAppCreated",
     "caseCreatedDate": "2020-08-20",
-    "lastModifiedDateTime": "2018-01-01T12:12:12.123"
+    "lastModifiedDateTime": "2099-01-01T12:12:12.123"
   }
 }
