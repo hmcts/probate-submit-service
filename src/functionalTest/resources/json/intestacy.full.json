@@ -2,7 +2,6 @@
   "caseData": {
     "type": "GrantOfRepresentation",
     "caseType": "intestacy",
-    "lastModifiedDateTime": "2018-01-01T12:12:12.123",
     "payments": [
       {
         "id": "89e375d1-4c68-4927-bbf0-14e73202d134",
@@ -62,5 +61,8 @@
     "primaryApplicantRelationshipToDeceased": "partner",
     "deceasedDiedEngOrWales": "Yes",
     "deceasedDeathCertificate": "deathCertificate"
+  },
+  "caseInfo": {
+    "lastModifiedDateTime": "2018-01-01T12:12:12.123"
   }
 }

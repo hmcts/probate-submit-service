@@ -2,7 +2,6 @@
   "caseData": {
     "type": "GrantOfRepresentation",
     "caseType": "gop",
-    "lastModifiedDateTime": "2018-01-01T12:12:12.123",
     "payments": [
       {
         "id": "950243f2-c713-4f1b-990d-83eb508bab91",
@@ -311,5 +310,8 @@
     "deceasedMarriedAfterWillOrCodicilDate": "No",
     "deceasedDiedEngOrWales": "Yes",
     "deceasedDeathCertificate": "deathCertificate"
+  },
+  "caseInfo": {
+    "lastModifiedDateTime": "2018-01-01T12:12:12.123"
   }
 }
