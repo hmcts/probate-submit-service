@@ -2,6 +2,7 @@
   "caseData": {
     "type": "GrantOfRepresentation",
     "caseType": "gop",
+    "lastModifiedDateTime": "2018-01-01T12:12:12.123",
     "payments": [
       {
         "id": "565e3fa0-7a4d-4779-9731-2a98a7747fe4",
