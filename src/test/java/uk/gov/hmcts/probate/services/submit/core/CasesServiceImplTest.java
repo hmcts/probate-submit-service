@@ -239,7 +239,7 @@ public class CasesServiceImplTest {
     }
 
     @Test
-    public void shouldThrowConcurrentDataUpdateExceptionUpdateCaseWhenExistingCase() {
+    void shouldThrowConcurrentDataUpdateExceptionUpdateCaseWhenExistingCase() {
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
@@ -253,7 +253,6 @@ public class CasesServiceImplTest {
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
         ProbateCaseDetails findRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(findCaseInfo).build();
         SecurityDto securityDto = SecurityDto.builder().build();
-        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
         Optional<ProbateCaseDetails> findCaseResponseOptional = Optional.of(findRequest);
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(coreCaseDataService.findCaseById(CASE_ID, securityDto)).thenReturn(findCaseResponseOptional);
