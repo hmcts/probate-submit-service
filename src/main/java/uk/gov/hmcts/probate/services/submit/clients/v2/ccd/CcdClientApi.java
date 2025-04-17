@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
+import uk.gov.hmcts.probate.services.submit.model.v2.exception.ConcurrentDataUpdateException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.reform.ccd.client.CaseAccessApi;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
@@ -17,6 +18,8 @@ import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.JurisdictionId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,8 +44,8 @@ public class CcdClientApi implements CoreCaseDataService {
     private final CcdElasticSearchQueryBuilder elasticSearchQueryBuilder;
 
     @Override
-    public ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId,
-                                         SecurityDto securityDto, String eventDescription) {
+    public ProbateCaseDetails updateCase(String caseId, LocalDateTime lastModifiedDateTime, CaseData caseData,
+                                         EventId eventId, SecurityDto securityDto, String eventDescription) {
         CaseType caseType = CaseType.getCaseType(caseData);
         log.info("Update case for caseType: {}, caseId: {}, eventId: {}",
             caseType.getName(), caseId, eventId.getName());
@@ -57,6 +60,11 @@ public class CcdClientApi implements CoreCaseDataService {
             caseId,
             eventId.getName()
         );
+        if (startEventResponse.getCaseDetails().getLastModified().truncatedTo(ChronoUnit.MILLIS)
+                .isAfter(lastModifiedDateTime)) {
+            log.info("updateCase  caseId : {}, lastModifiedDateTime: {}", caseId,lastModifiedDateTime);
+            throw new ConcurrentDataUpdateException(caseId);
+        }
         CaseDataContent caseDataContent =
             createCaseDataContent(caseData, eventId, startEventResponse, EVENT_SUMMARY, eventDescription);
         log.info("Submit event to CCD for Citizen, caseType: {}, caseId: {}",
@@ -75,13 +83,14 @@ public class CcdClientApi implements CoreCaseDataService {
     }
 
     @Override
-    public ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
-                                                     SecurityDto securityDto) {
-        return updateCaseAsCaseworker(caseId, caseData, eventId, securityDto, EVENT_SUMMARY);
+    public ProbateCaseDetails updateCaseAsCaseworker(String caseId, LocalDateTime lastModifiedDateTime,
+                                                     CaseData caseData, EventId eventId, SecurityDto securityDto) {
+        return updateCaseAsCaseworker(caseId, lastModifiedDateTime, caseData, eventId, securityDto, EVENT_SUMMARY);
     }
 
     @Override
-    public ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
+    public ProbateCaseDetails updateCaseAsCaseworker(String caseId, LocalDateTime lastModifiedDateTime,
+                                                     CaseData caseData, EventId eventId,
                                                      SecurityDto securityDto, String eventDescriptor) {
         CaseType caseType = CaseType.getCaseType(caseData);
         log.info("Update case as for caseType: {}, caseId: {}, eventId: {}",
@@ -97,6 +106,12 @@ public class CcdClientApi implements CoreCaseDataService {
             caseId,
             eventId.getName()
         );
+        if (startEventResponse.getCaseDetails().getLastModified().truncatedTo(ChronoUnit.MILLIS)
+                .isAfter(lastModifiedDateTime)) {
+            log.info("updateCaseAsCaseworker caseId : {}, lastModifiedDateTime: {}", caseId,lastModifiedDateTime);
+            throw new ConcurrentDataUpdateException(caseId);
+        }
+
         CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse,
             eventDescriptor,  eventDescriptor);
         log.info("Submit event to CCD for Caseworker, caseType: {}, caseId: {}",
