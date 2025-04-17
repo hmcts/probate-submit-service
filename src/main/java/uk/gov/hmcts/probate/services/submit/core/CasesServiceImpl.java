@@ -108,8 +108,6 @@ public class CasesServiceImpl implements CasesService {
             probateCaseDetails.getCaseData().getClass().getSimpleName());
         CaseData caseData = probateCaseDetails.getCaseData();
         CaseInfo caseInfo = probateCaseDetails.getCaseInfo();
-        log.info("saveDraft - Saving draft for lastModifiedDateTime: {}",
-                caseInfo.getLastModifiedDateTime());
         CaseType caseType = CaseType.getCaseType(caseData);
         if (!caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
             Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
@@ -119,13 +117,7 @@ public class CasesServiceImpl implements CasesService {
         SecurityDto securityDto = securityUtils.getSecurityDto();
         Optional<ProbateCaseDetails> caseInfoOptional =
             coreCaseDataService.findCase(searchField, caseType, securityDto);
-        if (caseInfoOptional.isPresent()
-                && caseInfoOptional.get().getCaseInfo().getLastModifiedDateTime().truncatedTo(ChronoUnit.MILLIS)
-                .isAfter(caseInfo.getLastModifiedDateTime())) {
-            log.info("saveDraft - Saving draft for  invalid lastModifiedDateTime: {}",
-                    caseInfo.getLastModifiedDateTime());
-            throw new ConcurrentDataUpdateException(searchField);
-        }
+
         return saveCase(securityDto, caseType, caseInfo.getLastModifiedDateTime(),
                 caseData, caseInfoOptional, asCaseworker, eventDescription);
 
