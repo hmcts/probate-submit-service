@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.JurisdictionId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,8 +42,8 @@ public class CcdClientApi implements CoreCaseDataService {
     private final CcdElasticSearchQueryBuilder elasticSearchQueryBuilder;
 
     @Override
-    public ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId,
-                                         SecurityDto securityDto, String eventDescription) {
+    public ProbateCaseDetails updateCase(String caseId, LocalDateTime lastModifiedDateTime, CaseData caseData,
+                                         EventId eventId, SecurityDto securityDto, String eventDescription) {
         CaseType caseType = CaseType.getCaseType(caseData);
         log.info("Update case for caseType: {}, caseId: {}, eventId: {}",
             caseType.getName(), caseId, eventId.getName());

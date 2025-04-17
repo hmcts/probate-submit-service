@@ -6,6 +6,7 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,12 +20,12 @@ public interface CoreCaseDataService {
 
     Optional<ProbateCaseDetails> findCaseById(String caseId, SecurityDto securityDto);
 
-    ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId,
-                                    SecurityDto securityDto, String eventDescription);
+    ProbateCaseDetails updateCase(String caseId, LocalDateTime lastModifiedDateTime, CaseData caseData, EventId eventId,
+                                  SecurityDto securityDto, String eventDescription);
 
     ProbateCaseDetails createCase(CaseData caseData, EventId eventId, SecurityDto securityDto);
 
-    ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
+    ProbateCaseDetails updateCaseAsCaseworker(String caseId,  CaseData caseData, EventId eventId,
                                               SecurityDto securityDto);
 
     ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,

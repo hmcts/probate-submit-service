@@ -60,6 +60,7 @@ public class CcdClientApiTest {
     private static final EventId CREATE_DRAFT = EventId.GOP_CREATE_DRAFT;
     private static final EventId UPDATE_DRAFT = EventId.GOP_UPDATE_DRAFT;
     private static final String PROBATE_DESCRIPTOR = "Probate application";
+    private static final LocalDateTime lastModifiedDateTime = LocalDateTime.now();
 
     @Mock
     private CoreCaseDataApi mockCoreCaseDataApi;
@@ -198,7 +199,8 @@ public class CcdClientApiTest {
             .thenReturn(caseDataContent);
 
         ProbateCaseDetails caseResponse =
-            ccdClientApi.updateCase(CASE_ID.toString(), caseData, UPDATE_DRAFT, securityDto, PROBATE_DESCRIPTOR);
+            ccdClientApi.updateCase(CASE_ID.toString(), lastModifiedDateTime, caseData, UPDATE_DRAFT,
+                    securityDto, PROBATE_DESCRIPTOR);
 
         assertNotNull(caseResponse);
         assertEquals(CASE_ID.toString(), caseResponse.getCaseInfo().getCaseId());

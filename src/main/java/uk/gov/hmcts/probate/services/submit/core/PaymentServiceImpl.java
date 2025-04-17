@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -74,18 +75,20 @@ public class PaymentServiceImpl implements PaymentsService {
 
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         String caseId = caseResponse.getCaseInfo().getCaseId();
-        return updateCase(caseId, securityDto, caseType, probateCaseDetails);
+        log.info("Found case with case lastModifiedDateTime: {}", caseResponse.getCaseInfo().getLastModifiedDateTime());
+        return updateCase(caseId,probateCaseDetails.getCaseInfo().getLastModifiedDateTime(),
+                securityDto, caseType, probateCaseDetails);
     }
 
-    private ProbateCaseDetails updateCase(String caseId, SecurityDto securityDto, CaseType caseType,
-                                          ProbateCaseDetails probateCaseDetails) {
+    private ProbateCaseDetails updateCase(String caseId, LocalDateTime lastModifiedDateTime, SecurityDto securityDto,
+                                          CaseType caseType, ProbateCaseDetails probateCaseDetails) {
         CasePayment payment = probateCaseDetails.getCaseData().getPayments().get(0).getValue();
         CaseState caseState = probateCaseDetails.getCaseInfo().getState();
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         CaseData caseData = probateCaseDetails.getCaseData();
         registryService.updateRegistry(caseData);
-        return coreCaseDataService.updateCase(caseId, caseData, eventId,
+        return coreCaseDataService.updateCase(caseId, lastModifiedDateTime, caseData, eventId,
             securityDto, "update case with payment details");
     }
 

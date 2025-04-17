@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
@@ -125,13 +126,14 @@ public class CasesServiceImpl implements CasesService {
                     caseInfo.getLastModifiedDateTime());
             throw new ConcurrentDataUpdateException(searchField);
         }
-        return saveCase(securityDto, caseType, caseData, caseInfoOptional, asCaseworker, eventDescription);
+        return saveCase(securityDto, caseType, caseInfo.getLastModifiedDateTime(),
+                caseData, caseInfoOptional, asCaseworker, eventDescription);
 
     }
 
-    private ProbateCaseDetails saveCase(SecurityDto securityDto, CaseType caseType, CaseData caseData,
-                                        Optional<ProbateCaseDetails> caseResponseOptional, Boolean asCaseworker,
-                                        String eventDescription) {
+    private ProbateCaseDetails saveCase(SecurityDto securityDto, CaseType caseType, LocalDateTime lastModifiedDateTime,
+                                        CaseData caseData, Optional<ProbateCaseDetails> caseResponseOptional,
+                                        Boolean asCaseworker, String eventDescription) {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         if (caseResponseOptional.isPresent()) {
             ProbateCaseDetails caseResponse = caseResponseOptional.get();
@@ -150,8 +152,8 @@ public class CasesServiceImpl implements CasesService {
                     .updateCaseAsCaseworker(caseResponse.getCaseInfo().getCaseId(), caseData, eventId, securityDto);
             } else {
                 return coreCaseDataService
-                    .updateCase(caseResponse.getCaseInfo().getCaseId(), caseData, eventId,
-                    securityDto, eventDescription);
+                    .updateCase(caseResponse.getCaseInfo().getCaseId(), lastModifiedDateTime,
+                            caseData, eventId, securityDto, eventDescription);
             }
         }
         log.info("No case found");
