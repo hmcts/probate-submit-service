@@ -76,13 +76,14 @@ public class CcdClientApi implements CoreCaseDataService {
     }
 
     @Override
-    public ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
-                                                     SecurityDto securityDto) {
-        return updateCaseAsCaseworker(caseId, caseData, eventId, securityDto, EVENT_SUMMARY);
+    public ProbateCaseDetails updateCaseAsCaseworker(String caseId, LocalDateTime lastModifiedDateTime,
+                                                     CaseData caseData, EventId eventId, SecurityDto securityDto) {
+        return updateCaseAsCaseworker(caseId, lastModifiedDateTime, caseData, eventId, securityDto, EVENT_SUMMARY);
     }
 
     @Override
-    public ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
+    public ProbateCaseDetails updateCaseAsCaseworker(String caseId, LocalDateTime lastModifiedDateTime,
+                                                     CaseData caseData, EventId eventId,
                                                      SecurityDto securityDto, String eventDescriptor) {
         CaseType caseType = CaseType.getCaseType(caseData);
         log.info("Update case as for caseType: {}, caseId: {}, eventId: {}",

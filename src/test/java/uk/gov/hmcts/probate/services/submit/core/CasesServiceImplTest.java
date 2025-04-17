@@ -227,7 +227,8 @@ public class CasesServiceImplTest {
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(coreCaseDataService.findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto))
             .thenReturn(caseResponseOptional);
-        when(coreCaseDataService.updateCaseAsCaseworker(CASE_ID, caseData, UPDATE_DRAFT, securityDto))
+        when(coreCaseDataService.updateCaseAsCaseworker(CASE_ID, LAST_MODIFIED_DATE_TIME, caseData,
+                UPDATE_DRAFT, securityDto))
             .thenReturn(caseRequest);
 
         ProbateCaseDetails caseResponse = casesService.saveCaseAsCaseworker(EMAIL_ADDRESS, caseRequest);
@@ -235,7 +236,8 @@ public class CasesServiceImplTest {
         assertEquals(caseData, caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto);
-        verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(CASE_ID, caseData, UPDATE_DRAFT, securityDto);
+        verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(CASE_ID,
+                LAST_MODIFIED_DATE_TIME, caseData, UPDATE_DRAFT, securityDto);
     }
 
     @Test

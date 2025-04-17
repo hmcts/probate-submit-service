@@ -149,7 +149,8 @@ public class CasesServiceImpl implements CasesService {
             }
             if (asCaseworker) {
                 return coreCaseDataService
-                    .updateCaseAsCaseworker(caseResponse.getCaseInfo().getCaseId(), caseData, eventId, securityDto);
+                    .updateCaseAsCaseworker(caseResponse.getCaseInfo().getCaseId(), lastModifiedDateTime,
+                            caseData, eventId, securityDto);
             } else {
                 return coreCaseDataService
                     .updateCase(caseResponse.getCaseInfo().getCaseId(), lastModifiedDateTime,

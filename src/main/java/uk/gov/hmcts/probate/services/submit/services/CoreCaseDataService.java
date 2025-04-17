@@ -25,11 +25,11 @@ public interface CoreCaseDataService {
 
     ProbateCaseDetails createCase(CaseData caseData, EventId eventId, SecurityDto securityDto);
 
-    ProbateCaseDetails updateCaseAsCaseworker(String caseId,  CaseData caseData, EventId eventId,
-                                              SecurityDto securityDto);
+    ProbateCaseDetails updateCaseAsCaseworker(String caseId, LocalDateTime lastModifiedDateTime,  CaseData caseData,
+                                              EventId eventId, SecurityDto securityDto);
 
-    ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
-                                              SecurityDto securityDto, String eventDescriptor);
+    ProbateCaseDetails updateCaseAsCaseworker(String caseId, LocalDateTime lastModifiedDateTime, CaseData caseData,
+                                              EventId eventId, SecurityDto securityDto, String eventDescriptor);
 
     Optional<ProbateCaseDetails> findCaseByApplicantEmail(String searchField, CaseType caseType,
                                                           SecurityDto securityDto);

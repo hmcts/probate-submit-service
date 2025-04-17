@@ -129,7 +129,7 @@ public class PaymentServiceImplTest {
         when(mockSecurityUtils.getSecurityDto()).thenReturn(securityDto);
         when(mockCoreCaseDataService.findCaseById(CASE_ID, securityDto))
             .thenReturn(Optional.of(caseResponse));
-        when(mockCoreCaseDataService.updateCaseAsCaseworker(eq(CASE_ID), eq(caseData),
+        when(mockCoreCaseDataService.updateCaseAsCaseworker(eq(CASE_ID), eq(LAST_MODIFIED_DATE_TIME), eq(caseData),
             eq(GOP_CREATE_CASE), eq(securityDto)))
             .thenReturn(caseResponse);
 
@@ -138,7 +138,7 @@ public class PaymentServiceImplTest {
         assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCaseById(CASE_ID, securityDto);
-        verify(mockCoreCaseDataService).updateCaseAsCaseworker(eq(CASE_ID), eq(caseData),
+        verify(mockCoreCaseDataService).updateCaseAsCaseworker(eq(CASE_ID), eq(LAST_MODIFIED_DATE_TIME), eq(caseData),
             eq(GOP_CREATE_CASE), eq(securityDto));
         verify(registryService).updateRegistry(eq(caseData));
     }

@@ -106,7 +106,8 @@ public class PaymentServiceImpl implements PaymentsService {
         log.info("Updating registry");
         registryService.updateRegistry(caseData);
         log.info("Updating case as caseWorker with eventId:{}", eventId);
-        return coreCaseDataService.updateCaseAsCaseworker(caseId, caseData, eventId, securityDto);
+        return coreCaseDataService.updateCaseAsCaseworker(caseId, updateRequest.getCaseInfo().getLastModifiedDateTime(),
+                caseData, eventId, securityDto);
     }
 
     @Override
