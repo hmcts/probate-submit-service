@@ -9,7 +9,6 @@ import org.springframework.util.Assert;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
-import uk.gov.hmcts.probate.services.submit.model.v2.exception.ConcurrentDataUpdateException;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
