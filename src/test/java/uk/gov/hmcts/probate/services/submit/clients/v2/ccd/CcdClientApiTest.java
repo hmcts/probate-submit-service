@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
+import uk.gov.hmcts.probate.services.submit.model.v2.exception.ConcurrentDataUpdateException;
 import uk.gov.hmcts.reform.ccd.client.CaseAccessApi;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
@@ -60,7 +61,8 @@ public class CcdClientApiTest {
     private static final EventId CREATE_DRAFT = EventId.GOP_CREATE_DRAFT;
     private static final EventId UPDATE_DRAFT = EventId.GOP_UPDATE_DRAFT;
     private static final String PROBATE_DESCRIPTOR = "Probate application";
-    private static final LocalDateTime LAST_MODIFIED_DATE_TIME = LocalDateTime.now();
+    private static final LocalDateTime LAST_MODIFIED_DATE_TIME = LocalDateTime.of(2099, 1, 1, 0, 0, 0);
+    private static final LocalDateTime LAST_MODIFIED_DATE_TIME2 = LocalDateTime.now();
 
     @Mock
     private CoreCaseDataApi mockCoreCaseDataApi;
@@ -116,9 +118,7 @@ public class CcdClientApiTest {
             .build();
 
         caseData = new GrantOfRepresentationData();
-        startEventResponse = StartEventResponse.builder()
-            .token(TOKEN)
-            .build();
+
 
         caseDetails = CaseDetails.builder()
             .id(CASE_ID)
@@ -126,6 +126,7 @@ public class CcdClientApiTest {
                 .jurisdiction(PROBATE.name())
             .caseTypeId(GRANT_OF_REPRESENTATION.getName())
             .createdDate(LocalDateTime.now())
+            .lastModified(LocalDateTime.now())
             .data(ImmutableMap.of("applicationType", ApplicationType.PERSONAL,
                 "caseType", GrantType.INTESTACY))
             .build();
@@ -142,9 +143,15 @@ public class CcdClientApiTest {
 
         searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
 
+        startEventResponse = StartEventResponse.builder()
+                .caseDetails(caseDetails)
+                .token(TOKEN)
+                .build();
+
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(caseDetails.getId().toString());
         caseInfo.setState(CaseState.getState(caseDetails.getState()));
+        caseInfo.setLastModifiedDateTime(LAST_MODIFIED_DATE_TIME);
         caseInfo.setCaseCreatedDate(
             caseDetails.getCreatedDate() != null ? caseDetails.getCreatedDate().toLocalDate() : null);
 
@@ -211,6 +218,29 @@ public class CcdClientApiTest {
         verify(mockCoreCaseDataApi, times(1))
             .submitEventForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent));
+    }
+
+    @Test
+    public void shouldThrowConcurrentDataUpdateExceptionUpdateCase() {
+        caseDataContent.getEvent().setId(UPDATE_DRAFT.getName());
+
+        when(mockCoreCaseDataApi.startEventForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
+                GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), UPDATE_DRAFT.getName()))
+                .thenReturn(startEventResponse);
+
+        when(mockCoreCaseDataApi
+                .submitEventForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
+                        eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent)))
+                .thenReturn(caseDetails);
+        when(caseContentBuilder.createCaseDataContent(caseData, UPDATE_DRAFT, startEventResponse,
+                PROBATE_DESCRIPTOR, PROBATE_DESCRIPTOR))
+                .thenReturn(caseDataContent);
+
+        ConcurrentDataUpdateException exception = assertThrows(ConcurrentDataUpdateException.class, () ->
+                ccdClientApi.updateCase(CASE_ID.toString(), LAST_MODIFIED_DATE_TIME2, caseData, UPDATE_DRAFT,
+                        securityDto, PROBATE_DESCRIPTOR));
+        assertEquals("caseId: " + CASE_ID + " not updated as working with out of date case details",
+                exception.getMessage());
     }
 
     @Test

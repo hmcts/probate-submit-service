@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
-import uk.gov.hmcts.probate.services.submit.model.v2.exception.ConcurrentDataUpdateException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
@@ -238,34 +237,6 @@ public class CasesServiceImplTest {
         verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(CASE_ID,
                 LAST_MODIFIED_DATE_TIME, caseData, UPDATE_DRAFT, securityDto);
-    }
-
-    @Test
-    void shouldThrowConcurrentDataUpdateExceptionUpdateCaseWhenExistingCase() {
-        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
-        caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
-        CaseInfo caseInfo = new CaseInfo();
-        caseInfo.setCaseId(CASE_ID);
-        caseInfo.setLastModifiedDateTime(LAST_MODIFIED_DATE_TIME);
-        caseInfo.setState(CaseState.DRAFT);
-        CaseInfo findCaseInfo = new CaseInfo();
-        findCaseInfo.setCaseId(CASE_ID);
-        findCaseInfo.setLastModifiedDateTime(LAST_MODIFIED_DATE_TIME2);
-        findCaseInfo.setState(CaseState.DRAFT);
-        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
-        ProbateCaseDetails findRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(findCaseInfo).build();
-        SecurityDto securityDto = SecurityDto.builder().build();
-        Optional<ProbateCaseDetails> findCaseResponseOptional = Optional.of(findRequest);
-        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
-        when(coreCaseDataService.findCaseById(CASE_ID, securityDto)).thenReturn(findCaseResponseOptional);
-        when(coreCaseDataService.findCase(CASE_ID, GRANT_OF_REPRESENTATION, securityDto))
-                .thenReturn(findCaseResponseOptional);
-
-        ConcurrentDataUpdateException exception = assertThrows(ConcurrentDataUpdateException.class, () ->
-                casesService.saveCase(CASE_ID, caseRequest, EVENT_DESCRIPTION));
-
-        assertEquals("caseId: " + CASE_ID + " not updated as working with out of date case details",
-                exception.getMessage());
     }
 
     @Test
