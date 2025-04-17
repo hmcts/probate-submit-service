@@ -65,7 +65,7 @@ public class CcdClientApi implements CoreCaseDataService {
         if (startEventResponse.getCaseDetails().getLastModified().truncatedTo(ChronoUnit.MILLIS)
                 .isAfter(lastModifiedDateTime)) {
             log.info("updateCase  caseId : {}, lastModifiedDateTime: {}", caseId,lastModifiedDateTime);
-            log.info("updateCase  caseId : {}, startEventResponse.getCaseDetails().getLastModified(): {}",
+            log.info("updateCase  startEventResponse.getCaseDetails().getLastModified(): {}",
                     startEventResponse.getCaseDetails().getLastModified());
             throw new ConcurrentDataUpdateException(caseId);
         }
