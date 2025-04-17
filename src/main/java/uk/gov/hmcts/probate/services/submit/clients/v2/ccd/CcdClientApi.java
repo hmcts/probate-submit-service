@@ -64,7 +64,7 @@ public class CcdClientApi implements CoreCaseDataService {
                 caseType.getName(), caseId, eventId.getName(), startEventResponse.getCaseDetails().getLastModified());
         if (startEventResponse.getCaseDetails().getLastModified().truncatedTo(ChronoUnit.MILLIS)
                 .isAfter(lastModifiedDateTime)) {
-            log.info("saveDraft - Saving draft for  invalid lastModifiedDateTime: {}", lastModifiedDateTime);
+            log.info("updateCase  caseId : {}, lastModifiedDateTime: {}", caseId,lastModifiedDateTime);
             throw new ConcurrentDataUpdateException(caseId);
         }
         CaseDataContent caseDataContent =
@@ -110,7 +110,7 @@ public class CcdClientApi implements CoreCaseDataService {
         );
         if (startEventResponse.getCaseDetails().getLastModified().truncatedTo(ChronoUnit.MILLIS)
                 .isAfter(lastModifiedDateTime)) {
-            log.info("saveDraft - Saving draft for  invalid lastModifiedDateTime: {}", lastModifiedDateTime);
+            log.info("updateCaseAsCaseworker caseId : {}, lastModifiedDateTime: {}", caseId,lastModifiedDateTime);
             throw new ConcurrentDataUpdateException(caseId);
         }
 
