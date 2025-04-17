@@ -60,6 +60,8 @@ public class CcdClientApi implements CoreCaseDataService {
             caseId,
             eventId.getName()
         );
+        log.info("Retrieve event token from CCD for Citizen, caseType: {}, caseId: {}, eventId: {} lmdt: {}",
+                caseType.getName(), caseId, eventId.getName(), startEventResponse.getCaseDetails().getLastModified());
         if (startEventResponse.getCaseDetails().getLastModified().truncatedTo(ChronoUnit.MILLIS)
                 .isAfter(lastModifiedDateTime)) {
             log.info("saveDraft - Saving draft for  invalid lastModifiedDateTime: {}", lastModifiedDateTime);

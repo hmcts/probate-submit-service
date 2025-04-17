@@ -130,6 +130,7 @@
   "caseInfo": {
     "caseId": "1234123412341234",
     "state": "Pending",
-    "caseCreatedDate": "2020-08-20"
+    "caseCreatedDate": "2020-08-20",
+    "lastModifiedDateTime": "2018-01-01T12:12:12.123"
   }
 }
