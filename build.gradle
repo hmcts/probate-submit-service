@@ -222,6 +222,7 @@ dependencies {
     implementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.2'
+    implementation group: 'org.springframework.security', name: 'spring-security-oauth2-jose'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: versions.springSecurityTesting

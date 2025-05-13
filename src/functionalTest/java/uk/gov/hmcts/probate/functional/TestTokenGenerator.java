@@ -71,9 +71,8 @@ public class TestTokenGenerator {
                         + "&password=" + password
                         + "&grant_type=password&scope=openid profile roles")
                 .body().jsonPath();
-        String token = jp.get("access_token");
 
-        return token;
+        return jp.get("access_token");
     }
 
     private String getCachedIdamOpenIdToken(String email) {
