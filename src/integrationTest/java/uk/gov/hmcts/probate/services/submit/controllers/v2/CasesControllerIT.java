@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseValidationException;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
-import uk.gov.hmcts.probate.services.submit.services.CaveatExpiryService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
@@ -30,7 +29,6 @@ import uk.gov.hmcts.reform.probate.model.client.ValidationErrorResponse;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path;
@@ -45,7 +43,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,24 +54,16 @@ public class CasesControllerIT {
     private static final String CASES_URL = "/cases";
     private static final String CASES_BY_APPLICANT_EMAIL_URL = "/cases/applicantEmail";
     private static final String CASES_INITATE_URL = "/cases/initiate";
-    private static final String CASES_CASEWORKER_INITATE_URL = "/cases/initiate/caseworker";
     private static final String CASES_ALL_URL = "/cases/all";
     private static final String CASES_CASEWORKER_URL = "/cases/caseworker";
     private static final String CASES_INVITATION_URL = "/cases/invitation";
     private static final String EMAIL_ADDRESS = "test@test.com";
-    private static final String CASES_CAVEATS_EXPIRE = "/cases/caveats/expire";
-    private static final String CAVEAT_EXPIRY_DATE = "2020-12-31";
     private static final String INVITATION_ID = "invitationId";
     private static final String CASE_ID = "1343242352";
-    private static final String USER_ID = "6471ea60-1bc2-4a34-b7e0-db3394428498";
     private static final String VALIDATE_ENDPOINT = "/validations";
-    private static final String GRANT_ACCESS_ENDPOINT = "grantaccess/applicant/";
 
     @MockBean
     private CasesService casesService;
-
-    @MockBean
-    private CaveatExpiryService caveatExpiryService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -88,18 +77,6 @@ public class CasesControllerIT {
     @BeforeEach
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
-
-    @Test
-    public void shouldExpireCaveats() throws Exception {
-        List<ProbateCaseDetails> expiredCaveats =
-            Arrays.asList(ProbateCaseDetails.builder().build(), ProbateCaseDetails.builder().build());
-        when(caveatExpiryService.expireCaveats(CAVEAT_EXPIRY_DATE)).thenReturn(expiredCaveats);
-        mockMvc.perform(get(CASES_CAVEATS_EXPIRE)
-            .param("expiryDate", CAVEAT_EXPIRY_DATE)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().string("[{},{}]"));
     }
 
     @Test
