@@ -181,7 +181,7 @@ def versions = [
         pact_version                    : '4.1.7',
         probateCommons                  : '2.0.57',
         probatePactCommonsVersion       : '1.0.2',
-        restAssured                     : '5.5.1',
+        restAssured                     : '5.5.2',
         serenity                        : '4.2.22',
         serviceAuthProviderClient       : '5.3.2',
         springBoot                      : '3.3.11',
