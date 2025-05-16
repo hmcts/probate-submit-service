@@ -5,12 +5,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.probate.services.submit.services.FeatureToggleService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
@@ -31,6 +31,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -72,17 +73,27 @@ public class CasesServiceImplTest {
     @Mock
     private ValidationService validationService;
 
-    @InjectMocks
-    private CasesServiceImpl casesService;
-
     @Mock
     private SearchFieldFactory searchFieldFactory;
 
     @Mock
     private EventFactory eventFactory;
 
+    @Mock
+    private FeatureToggleService featureToggleService;
+
+    private CasesServiceImpl casesService;
+
     @BeforeEach
     public void setUp() {
+        casesService = new CasesServiceImpl(
+                coreCaseDataService,
+                securityUtils,
+                eventFactory,
+                searchFieldFactory,
+                validationService,
+                featureToggleService);
+
         when(eventFactory.getCaseEvents(GRANT_OF_REPRESENTATION)).thenReturn(CaseEvents.builder()
             .createCaseApplicationEventId(GOP_CREATE_APPLICATION)
             .updateCaseApplicationEventId(GOP_UPDATE_APPLICATION)
@@ -476,5 +487,45 @@ public class CasesServiceImplTest {
                 securityDto);
         verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData,
                 KEEP_DRAFT, securityDto, eventDescription);
+    }
+
+    @Test
+    void shouldSleepWhenFeatureFlagTimeoutSet() {
+        when(featureToggleService.causeLookupTimeout())
+                .thenReturn(true);
+
+        casesService.doFeatureFlag("");
+
+        verify(featureToggleService, times(1)).doSleep();
+    }
+
+    @Test
+    void shouldNotSleepWhenFeatureFlagTimeoutUnset() {
+        when(featureToggleService.causeLookupTimeout())
+                .thenReturn(false);
+
+        casesService.doFeatureFlag("");
+
+        verify(featureToggleService, never()).doSleep();
+    }
+
+    @Test
+    void shouldThrowWhenFeatureFlagFailSet() {
+        when(featureToggleService.causeLookupFailure())
+                .thenReturn(true);
+
+        casesService.doFeatureFlag("");
+
+        verify(featureToggleService, times(1)).throwEx();
+    }
+
+    @Test
+    void shouldNotThrowWhenFeatureFlagFailureUnset() {
+        when(featureToggleService.causeLookupFailure())
+                .thenReturn(false);
+
+        casesService.doFeatureFlag("");
+
+        verify(featureToggleService, never()).throwEx();
     }
 }
