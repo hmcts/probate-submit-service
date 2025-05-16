@@ -6,6 +6,7 @@ import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.path.json.JsonPath;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,6 @@ import uk.gov.hmcts.probate.functional.TestTokenGenerator;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import jakarta.annotation.PostConstruct;
 
 @ContextConfiguration(classes = TestContextConfiguration.class)
 @Component
@@ -72,6 +72,21 @@ public class TestUtils {
             .statusCode(200)
             .extract().jsonPath();
         return jsonPath.get("caseInfo.caseId");
+    }
+
+    public JsonPath createCaseAndExtractJson(String caseData) {
+        caseData = caseData.replace(EMAIL_PLACEHOLDER, citizenEmail);
+
+        return RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(getCitizenHeaders())
+                .body(caseData)
+                .when()
+                .post("/cases/initiate")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .extract().jsonPath();
     }
 
     public String createCaveatTestCase(String caseData) {

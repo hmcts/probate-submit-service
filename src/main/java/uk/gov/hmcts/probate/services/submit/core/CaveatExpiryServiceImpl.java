@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,21 +59,22 @@ public class CaveatExpiryServiceImpl implements CaveatExpiryService {
             EventId eventIdToStart =
                 getEventIdForCaveatToExpireGivenPreconditionState(probateCaseDetails.getCaseInfo().getState());
             updateAutoExpiredCaveat(((CaveatData) probateCaseDetails.getCaseData()));
-            updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(), probateCaseDetails.getCaseData(),
-                eventIdToStart,
-                securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
+            updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
+                    probateCaseDetails.getCaseInfo().getLastModifiedDateTime(), probateCaseDetails.getCaseData(),
+                    eventIdToStart, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
             log.info("Caveat autoExpired: {}", probateCaseDetails.getCaseInfo().getCaseId());
         }
 
         return expiredCaveats;
     }
 
-    private void updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventIdToStart,
-                                        SecurityDto securityDto,
+    private void updateCaseAsCaseworker(String caseId, LocalDateTime lastModifiedDateTime, CaseData caseData,
+                                        EventId eventIdToStart, SecurityDto securityDto,
                                         String eventDescriptorCaveatExpired) {
         try {
             coreCaseDataService
-                .updateCaseAsCaseworker(caseId, caseData, eventIdToStart, securityDto, eventDescriptorCaveatExpired);
+                .updateCaseAsCaseworker(caseId, lastModifiedDateTime, caseData, eventIdToStart,
+                        securityDto, eventDescriptorCaveatExpired);
         } catch (RuntimeException e) {
             log.info("Caveat autoExpire failure for case: {}, due to {}", caseId, e.getMessage());
         }

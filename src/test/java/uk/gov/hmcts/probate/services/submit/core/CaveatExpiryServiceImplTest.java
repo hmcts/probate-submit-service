@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,6 +48,7 @@ public class CaveatExpiryServiceImplTest {
     private static final String EXPIRY_DATE = "2020-12-31";
     private static final String SEARCH_QUERY = "Search query";
     private static final String CAVEAT_ID = "1234567890";
+    private static final LocalDateTime LAST_MODIFIED_DATE_TIME = LocalDateTime.of(2019, 1, 1, 0, 0, 0);
     private static final String EVENT_DESCRIPTOR_CAVEAT_EXPIRED = "Caveat Auto Expired";
     @Mock
     private CoreCaseDataService coreCaseDataService;
@@ -92,6 +94,7 @@ public class CaveatExpiryServiceImplTest {
         final EventId eventId = CAVEAT_EXPIRED_FOR_CAVEAT_NOT_MATCHED;
         CaseInfo caseInfo = CaseInfo.builder().state(caseState)
             .caseId(CAVEAT_ID)
+            .lastModifiedDateTime(LAST_MODIFIED_DATE_TIME)
             .build();
         CaveatData caseData = CaveatData.builder().build();
         SecurityDto securityDto = SecurityDto.builder().build();
@@ -121,7 +124,8 @@ public class CaveatExpiryServiceImplTest {
         verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
-            probateCaseDetails.getCaseData(), eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
+                probateCaseDetails.getCaseInfo().getLastModifiedDateTime(), probateCaseDetails.getCaseData(),
+                eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
     }
 
     @Test
@@ -160,7 +164,8 @@ public class CaveatExpiryServiceImplTest {
         verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
-            probateCaseDetails.getCaseData(), eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
+                probateCaseDetails.getCaseInfo().getLastModifiedDateTime(), probateCaseDetails.getCaseData(),
+                eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
     }
 
     @Test
@@ -198,7 +203,8 @@ public class CaveatExpiryServiceImplTest {
         verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
-            probateCaseDetails.getCaseData(), eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
+                probateCaseDetails.getCaseInfo().getLastModifiedDateTime(), probateCaseDetails.getCaseData(),
+                eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
     }
 
     @Test
@@ -236,7 +242,8 @@ public class CaveatExpiryServiceImplTest {
         verify(securityUtils, times(1)).getSecurityDto();
         verify(elasticSearchQueryBuilder, times(1)).buildQueryForCaveatExpiry(EXPIRY_DATE);
         verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
-            probateCaseDetails.getCaseData(), eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
+                probateCaseDetails.getCaseInfo().getLastModifiedDateTime(), probateCaseDetails.getCaseData(),
+                eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED);
     }
 
     @Test
@@ -267,7 +274,8 @@ public class CaveatExpiryServiceImplTest {
             SEARCH_QUERY)).thenReturn(searchResult);
         RuntimeException e = new RuntimeException("Problem updating caveat");
         when(coreCaseDataService.updateCaseAsCaseworker(probateCaseDetails.getCaseInfo().getCaseId(),
-            probateCaseDetails.getCaseData(), eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED)).thenThrow(e);
+                probateCaseDetails.getCaseInfo().getLastModifiedDateTime(), probateCaseDetails.getCaseData(),
+                eventId, securityDto, EVENT_DESCRIPTOR_CAVEAT_EXPIRED)).thenThrow(e);
 
         List<ProbateCaseDetails> expiredCaveats = caveatExpiryService.expireCaveats(EXPIRY_DATE);
 
