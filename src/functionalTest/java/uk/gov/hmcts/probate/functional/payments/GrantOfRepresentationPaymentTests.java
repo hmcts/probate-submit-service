@@ -1,8 +1,9 @@
 package uk.gov.hmcts.probate.functional.payments;
 
 import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,21 +21,27 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
     private String paymentSuccessData;
 
     private String caseId;
+    private String lastModifiedDateTime;
     private static final int SLEEP_TIME = 2000;
+    private static final String DUMMY_DATE_2099 = "2099-01-01T12:12:12.123";
+    private static final String DUMMY_DATE_2019 = "2019-01-01T12:12:12.123";
 
-    @BeforeAll
-    public void init() throws Exception {
+    @BeforeEach
+    void init() throws InterruptedException {
         caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
-
         paymentInitiatedData = utils.getJsonFromFile("gop.paymentInitiated.json");
         paymentSuccessData = utils.getJsonFromFile("gop.singleExecutor.full.json");
 
-        caseId = utils.createTestCase(caseData);
+        JsonPath gopCase = utils.createCaseAndExtractJson(caseData);
+        caseId = gopCase.getString("caseInfo.caseId");
+        lastModifiedDateTime = gopCase.getString("caseInfo.lastModifiedDateTime");
         Thread.sleep(SLEEP_TIME);
     }
 
     @Test
-    public void updatePendingCaseWithInitiatedPaymentReturns200() {
+    void updatePendingCaseWithInitiatedPaymentReturns200() {
+        paymentInitiatedData = paymentInitiatedData.replace(DUMMY_DATE_2099, lastModifiedDateTime);
+
         RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(utils.getCitizenHeaders())
@@ -52,7 +59,9 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
 
 
     @Test
-    public void updatePendingCaseWithoutPaymentReturns400() {
+    void updatePendingCaseWithoutPaymentReturns400() {
+        caseData = caseData.replace(DUMMY_DATE_2019, lastModifiedDateTime);
+
         RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(utils.getCitizenHeaders())
@@ -65,7 +74,9 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
     }
 
     @Test
-    public void updatePendingCaseWithSuccessfulPaymentReturns422() {
+    void updatePendingCaseWithSuccessfulPaymentReturns422() {
+        paymentSuccessData = paymentSuccessData.replace(DUMMY_DATE_2099, lastModifiedDateTime);
+
         RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(utils.getCitizenHeaders())
@@ -78,8 +89,9 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
     }
 
     @Test
-    public void updatePaAppCreatedCaseWithSuccessfulPaymentReturns200() throws InterruptedException {
+    void updatePaAppCreatedCaseWithSuccessfulPaymentReturns200() throws InterruptedException {
         initiatePayment();
+        paymentSuccessData = paymentSuccessData.replace(DUMMY_DATE_2099, lastModifiedDateTime);
 
         RestAssured.given()
             .relaxedHTTPSValidation()
@@ -99,6 +111,7 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
     @Test
     public void updatePaAppCreatedCaseWithoutPaymentReturns400() throws InterruptedException {
         initiatePayment();
+        caseData = caseData.replace(DUMMY_DATE_2019, lastModifiedDateTime);
 
         RestAssured.given()
             .relaxedHTTPSValidation()
@@ -112,8 +125,9 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
     }
 
     @Test
-    public void updatePaAppCreatedCaseWithInitiatedPaymentReturns422() {
+    void updatePaAppCreatedCaseWithInitiatedPaymentReturns422() {
         initiatePayment();
+        paymentInitiatedData = paymentInitiatedData.replace(DUMMY_DATE_2099, lastModifiedDateTime);
 
         RestAssured.given()
             .relaxedHTTPSValidation()
@@ -124,16 +138,19 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
             .then()
             .assertThat()
             .statusCode(422);
-
     }
 
+    void initiatePayment() {
+        paymentInitiatedData = paymentInitiatedData.replace(DUMMY_DATE_2099, lastModifiedDateTime);
 
-    public void initiatePayment() {
-        RestAssured.given()
+        JsonPath gopCase = RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(utils.getCitizenHeaders())
             .body(paymentInitiatedData)
             .when()
-            .post("/payments/" + caseId + "/cases");
+            .post("/payments/" + caseId + "/cases")
+            .then()
+            .extract().jsonPath();
+        lastModifiedDateTime = gopCase.getString("caseInfo.lastModifiedDateTime");
     }
 }

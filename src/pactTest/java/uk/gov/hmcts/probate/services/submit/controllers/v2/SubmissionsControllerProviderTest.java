@@ -24,6 +24,7 @@ import uk.gov.hmcts.reform.probate.model.client.ApiClientException;
 import uk.gov.hmcts.reform.probate.model.client.ErrorResponse;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -77,7 +78,7 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
 
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto))
             .thenReturn(Optional.of(caseResponse));
-        when(coreCaseDataService.updateCase(anyString(), any(GrantOfRepresentationData.class),
+        when(coreCaseDataService.updateCase(anyString(), any(LocalDateTime.class), any(GrantOfRepresentationData.class),
             any(EventId.class), any(SecurityDto.class), anyString()))
             .thenReturn(caseResponse);
 
