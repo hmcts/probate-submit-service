@@ -166,7 +166,7 @@ pitest {
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url "https://jitpack.io" }
+    maven { url 'https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1' }
 }
 
 def versions = [
@@ -179,8 +179,7 @@ def versions = [
         lombok                          : '1.18.38',
         logging                         : '6.1.9',
         pact_version                    : '4.1.7',
-        probateCommons                  : '2.0.57',
-        probatePactCommonsVersion       : '1.0.2',
+        probateCommons                  : '2.2.0-DTSPB-4761-005',
         restAssured                     : '5.5.2',
         serenity                        : '4.2.22',
         serviceAuthProviderClient       : '5.3.2',
@@ -190,6 +189,7 @@ def versions = [
         springDocUi                     : '2.6.0',
         springSecurityTesting           : '6.4.5',
         springSecurityVersion           : '6.3.0',
+        fortifyClient                   : '1.4.9'
 ]
 
 dependencyManagement {
@@ -228,7 +228,7 @@ dependencies {
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: versions.springSecurityTesting
     testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
 
-    testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.8', classifier: 'all'
+    testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: versions.fortifyClient, classifier: 'all'
     testImplementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: versions.serviceAuthProviderClient
     testImplementation group: 'com.github.hmcts', name: 'auth-checker-lib', version: versions.authCheckerLib
     testImplementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
@@ -269,7 +269,7 @@ dependencies {
     testPactImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.6'
     testPactImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
     testPactImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junitJupiter
-    testPactImplementation group: 'com.github.hmcts', name: 'probate-pact-commons', version: versions.probatePactCommonsVersion
+    testPactImplementation group: 'com.github.hmcts', name: 'probate-pact-commons', version: versions.probateCommonsVersion
     testPactImplementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.5.0'
     testPactImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
     testPactImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
