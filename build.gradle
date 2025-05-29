@@ -182,7 +182,7 @@ def versions = [
         probateCommons                  : '2.0.57',
         probatePactCommonsVersion       : '1.0.2',
         restAssured                     : '5.5.5',
-        serenity                        : '4.2.22',
+        serenity                        : '4.2.30',
         serviceAuthProviderClient       : '5.3.2',
         springBoot                      : '3.3.11',
         springCloudStarterNetflixHystrix: '4.2.1',
