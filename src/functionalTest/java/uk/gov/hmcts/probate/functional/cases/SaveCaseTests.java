@@ -1,6 +1,7 @@
 package uk.gov.hmcts.probate.functional.cases;
 
 import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,21 +18,28 @@ import static org.hamcrest.Matchers.notNullValue;
 public class SaveCaseTests extends IntegrationTestBase {
     String gopCaseId;
     String intestacyCaseId;
+    String gopCaseLastModified;
+    String intestacyCaseLastModified;
 
     @BeforeAll
     public void init() {
         String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
-        gopCaseId = utils.createTestCase(gopCaseData);
+        JsonPath gopCase = utils.createCaseAndExtractJson(gopCaseData);
+        gopCaseId = gopCase.getString("caseInfo.caseId");
+        gopCaseLastModified = gopCase.getString("caseInfo.lastModifiedDateTime");
 
         String intestacyCaseData = utils.getJsonFromFile("intestacy.partial.json");
-        intestacyCaseId = utils.createTestCase(intestacyCaseData);
+        JsonPath intestacyCase = utils.createCaseAndExtractJson(intestacyCaseData);
+        intestacyCaseId = intestacyCase.getString("caseInfo.caseId");
+        intestacyCaseLastModified = intestacyCase.getString("caseInfo.lastModifiedDateTime");
     }
 
     @Test
     public void saveSingleExecutorGopCaseReturns200() {
         String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
+        gopCaseData = gopCaseData.replace("2099-01-01T12:12:12.123", gopCaseLastModified);
 
-        RestAssured.given()
+        JsonPath gopCase = RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(utils.getCitizenHeaders())
             .body(gopCaseData)
@@ -43,12 +51,14 @@ public class SaveCaseTests extends IntegrationTestBase {
             .body("caseData", notNullValue())
             .body("caseInfo.caseId", notNullValue())
             .body("caseInfo.state", equalTo("Pending"))
-            .extract().jsonPath().prettify();
+            .extract().jsonPath();
+        gopCaseLastModified = gopCase.getString("caseInfo.lastModifiedDateTime");
     }
 
     @Test
     public void saveMultipleExecutorGopCaseReturns200() {
         String gopCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
+        gopCaseData = gopCaseData.replace("2099-01-01T12:12:12.123", gopCaseLastModified);
 
         RestAssured.given()
             .relaxedHTTPSValidation()
@@ -68,6 +78,7 @@ public class SaveCaseTests extends IntegrationTestBase {
     @Test
     public void saveIntestacyCaseReturns200() {
         String intestacyCaseData = utils.getJsonFromFile("intestacy.full.json");
+        intestacyCaseData = intestacyCaseData.replace("2099-01-01T12:12:12.123", intestacyCaseLastModified);
 
         RestAssured.given()
             .relaxedHTTPSValidation()
