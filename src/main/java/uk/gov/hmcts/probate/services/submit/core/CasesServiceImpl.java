@@ -110,8 +110,9 @@ public class CasesServiceImpl implements CasesService {
             Assert.isTrue(searchValue.equals(searchField), "Applicant email on path must match case data");
         }
         SecurityDto securityDto = securityUtils.getSecurityDto();
-        Optional<ProbateCaseDetails> caseInfoOptional =
-            coreCaseDataService.findCase(searchField, caseType, securityDto);
+        Optional<ProbateCaseDetails> caseInfoOptional = caseType.equals(CaseType.GRANT_OF_REPRESENTATION)
+                ? coreCaseDataService.findCaseById(searchField,securityDto)
+                : coreCaseDataService.findCase(searchField, caseType, securityDto);
         return saveCase(securityDto, caseType, caseData, caseInfoOptional, asCaseworker, eventDescription);
 
     }

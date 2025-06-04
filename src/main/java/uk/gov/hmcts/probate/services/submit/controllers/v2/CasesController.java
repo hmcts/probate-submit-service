@@ -115,7 +115,7 @@ public class CasesController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> initiateCase(@RequestBody ProbateCaseDetails caseRequest) {
-        log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
+        log.info("Initiate case for case type : {}", caseRequest.getCaseData().getClass().getSimpleName());
         return new ResponseEntity(casesService.initiateCase(caseRequest), OK);
     }
 
@@ -125,7 +125,7 @@ public class CasesController {
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> saveCaseAsCaseworker(@PathVariable("applicationId") String applicationId,
                                                                    @RequestBody ProbateCaseDetails caseRequest) {
-        log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
+        log.info("Saving case for caseworker case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         return new ResponseEntity(casesService.saveCaseAsCaseworker(applicationId.toLowerCase(), caseRequest), OK);
     }
 
