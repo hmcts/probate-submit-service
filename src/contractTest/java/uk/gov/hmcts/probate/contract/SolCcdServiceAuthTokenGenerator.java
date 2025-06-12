@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.restassured.RestAssured;
 import io.restassured.response.ResponseBody;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import static io.restassured.RestAssured.given;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class SolCcdServiceAuthTokenGenerator {
 
     String clientToken;
@@ -49,8 +51,11 @@ public class SolCcdServiceAuthTokenGenerator {
     private String idamUserBaseUrl;
 
     private String userToken;
+
     @Autowired
     private ServiceAuthTokenGenerator tokenGenerator;
+
+    private final ObjectMapper objectMapper;
 
     private String idamCreateUrl() {
         return idamUserBaseUrl + "/testing-support/accounts";
@@ -93,10 +98,10 @@ public class SolCcdServiceAuthTokenGenerator {
             .body();
         String jsonResponse = body.asString();
 
-        ObjectMapper mapper = new ObjectMapper();
+
 
         try {
-            token = mapper.readValue(jsonResponse, ClientAuthorizationResponse.class).accessToken;
+            token = objectMapper.readValue(jsonResponse, ClientAuthorizationResponse.class).accessToken;
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -115,10 +120,9 @@ public class SolCcdServiceAuthTokenGenerator {
                 + "&client_id=" + clientId
                 + "&redirect_uri=" + redirectUri)
             .asString();
-        ObjectMapper mapper = new ObjectMapper();
 
         try {
-            code = mapper.readValue(jsonResponse, ClientAuthorizationCodeResponse.class).code;
+            code = objectMapper.readValue(jsonResponse, ClientAuthorizationCodeResponse.class).code;
         } catch (IOException e) {
             log.error(e.getMessage());
         }
