@@ -9,21 +9,13 @@ import uk.gov.hmcts.reform.probate.model.client.ErrorResponse;
 @Slf4j
 public class CcdClientApiErrorDecoder implements ErrorDecoder {
 
-    private final ResponseDecorator responseDecorator;
-
-    public CcdClientApiErrorDecoder(ResponseDecorator responseDecorator) {
-        this.responseDecorator = responseDecorator;
-    }
-
-    public CcdClientApiErrorDecoder() {
-        this.responseDecorator = new ResponseDecorator(null);
-    }
 
     @Override
     public Exception decode(String methodKey, Response response) {
         log.error("Response status: {} - {}", response.status(), response.reason());
 
-        ErrorResponse clientErrorResponse = this.responseDecorator.mapBodyToErrorResponse();
+        ResponseDecorator responseDecorator = new ResponseDecorator(response);
+        ErrorResponse clientErrorResponse = responseDecorator.mapBodyToErrorResponse();
 
         return new ApiClientException(response.status(), clientErrorResponse);
     }
