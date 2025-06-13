@@ -75,4 +75,28 @@ public class SecurityUtilsTest {
             TestSecurityContextHolder.clearContext();
         });
     }
+
+    @Test
+    void givenTokenIsNullWhenGetBearerTokenThenReturnNull() {
+        testGetBearerToken(null, null);
+    }
+
+    @Test
+    void givenTokenIsBlankWhenGetBearerTokenThenReturnBlank() {
+        testGetBearerToken(" ", " ");
+    }
+
+    @Test
+    void givenTokenDoesNotHaveBearerWhenGetBearerTokenThenReturnWithBearer() {
+        testGetBearerToken("TestToken", "Bearer TestToken");
+    }
+
+    @Test
+    void givenTokenDoesHaveBearerWhenGetBearerTokenThenReturnWithBearer() {
+        testGetBearerToken("Bearer TestToken", "Bearer TestToken");
+    }
+
+    private void testGetBearerToken(String input, String expected) {
+        assertEquals(expected, securityUtils.getBearerToken(input));
+    }
 }
