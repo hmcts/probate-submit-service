@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.Util;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
+import uk.gov.hmcts.probate.config.ApplicationContextProvider;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientError;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientErrorResponse;
 import uk.gov.hmcts.reform.probate.model.client.ErrorResponse;
@@ -13,16 +12,17 @@ import uk.gov.hmcts.reform.probate.model.client.ErrorResponse;
 import java.io.IOException;
 
 @Slf4j
-@Configurable
 class ResponseDecorator {
 
     private Response response;
 
-    @Autowired
+
     private ObjectMapper objectMapper;
 
     ResponseDecorator(Response response) {
+
         this.response = response;
+        this.objectMapper = ApplicationContextProvider.getApplicationContext().getBean(ObjectMapper.class);
     }
 
     String bodyToString() {
