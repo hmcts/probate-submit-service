@@ -276,7 +276,7 @@ dependencies {
     testPactImplementation group: 'au.com.dius.pact.consumer', name: 'java8',  version: versions.pact_version
     testPactRuntimeOnly group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
     testPactRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junitJupiter
-    testPactRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.12.2'
+    testPactRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.13.2'
     testPactImplementation sourceSets.main.runtimeClasspath
     testPactImplementation sourceSets.test.runtimeClasspath
 
