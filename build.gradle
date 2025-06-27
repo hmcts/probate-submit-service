@@ -175,7 +175,7 @@ def versions = [
         feignHttpClient                 : '13.6',
         httpclient5                     : '5.5',
         jackson                         : '2.19.1',
-        junitJupiter                    : '5.12.2',
+        junitJupiter                    : '5.13.2',
         lombok                          : '1.18.38',
         logging                         : '6.1.9',
         pact_version                    : '4.1.34',
