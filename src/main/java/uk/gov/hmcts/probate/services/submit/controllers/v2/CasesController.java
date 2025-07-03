@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
-import uk.gov.hmcts.probate.services.submit.services.CaveatExpiryService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
@@ -33,7 +32,6 @@ import static org.springframework.http.HttpStatus.OK;
 public class CasesController {
 
     private final CasesService casesService;
-    private final CaveatExpiryService caveatExpiryService;
 
     @Operation(summary = "Get case to CCD using session identifier", description = "Get case to CCD")
     @ApiResponses(value = {
@@ -140,17 +138,4 @@ public class CasesController {
         log.info("CasesController.validate() caseType: {}, applicationId: {}", caseType.getName(), applicationId);
         return new ResponseEntity(casesService.validate(applicationId, caseType), OK);
     }
-
-    @Operation(summary = "Caveat expire from CCD by expiryDate", description = "Get expired caveats from CCD")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Caveat search from CCD successful"),
-        @ApiResponse(responseCode = "400", description = "Caveat search from CCD not successful")
-    })
-    @GetMapping(path = "/cases/caveats/expire", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<List<ProbateCaseDetails>> expireCaveats(@RequestParam("expiryDate") String expiryDate) {
-        log.info("Expiring Caveats for expiryDate: {}", expiryDate);
-        return ResponseEntity.ok(caveatExpiryService.expireCaveats(expiryDate));
-    }
-
 }
