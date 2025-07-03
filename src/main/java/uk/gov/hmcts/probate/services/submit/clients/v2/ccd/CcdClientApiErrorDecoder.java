@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.probate.model.client.ErrorResponse;
 @Slf4j
 public class CcdClientApiErrorDecoder implements ErrorDecoder {
 
+
     @Override
     public Exception decode(String methodKey, Response response) {
         log.error("Response status: {} - {}", response.status(), response.reason());
