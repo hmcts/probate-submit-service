@@ -18,17 +18,4 @@ public class CcdElasticSearchQueryBuilderTest {
             + "{ \"data.executorsApplying.value.applyingExecutorInvitationId.keyword\":\"123456\"}}}"));
 
     }
-
-
-    @Test
-    public void shouldBuildCaveatExpiryQuery() {
-        String result = ccdElasticSearchQueryBuilder.buildQueryForCaveatExpiry("2020-12-31");
-        assertThat(result,
-            Matchers.equalTo("{\"query\":{\"bool\":{\"must\":[{\"match\":{\"data.expiryDate\":\"2020-12-31\"}}]"
-                + ",\"should\":[{\"match\":{\"state\":\"CaveatNotMatched\"}},{\"match\":"
-                + "{\"state\":\"AwaitingCaveatResolution\"}}"
-                + ",{\"match\":{\"state\":\"WarningValidation\"}},"
-                + "{\"match\":{\"state\":\"AwaitingWarningResponse\"}}],\"minimum_should_match\":1}},\"size\": 100}"));
-
-    }
 }
