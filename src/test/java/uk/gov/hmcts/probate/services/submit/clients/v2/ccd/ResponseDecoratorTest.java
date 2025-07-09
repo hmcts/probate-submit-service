@@ -1,14 +1,19 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.Response;
 import feign.Util;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientError;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientErrorResponse;
+import uk.gov.hmcts.reform.probate.model.client.ApiClientException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,12 +25,17 @@ import java.util.Map;
 import static feign.Util.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(SpringExtension.class)
+@SpringBootTest
 public class ResponseDecoratorTest {
 
     private Map<String, Collection<String>> headers = new LinkedHashMap<>();
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     public void bodyToStringShouldReturnString() {
@@ -37,7 +47,7 @@ public class ResponseDecoratorTest {
             .body("hello world", UTF_8)
             .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response,objectMapper);
         String body = responseDecorator.bodyToString();
 
         assertThat(body).isEqualTo("hello world");
@@ -52,7 +62,7 @@ public class ResponseDecoratorTest {
             .headers(headers)
             .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response,objectMapper);
         String body = responseDecorator.bodyToString();
 
         assertNull(response.body());
@@ -74,14 +84,16 @@ public class ResponseDecoratorTest {
                 }, 1)
                 .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response,objectMapper);
+        assertNotNull(responseDecorator);
         String body = responseDecorator.bodyToString();
 
         assertEquals("", body);
     }
 
     @Test
-    public void mapBodyToApiClientErrorShouldReturnApiClientError() {
+    @ExceptionHandler(ApiClientException.class)
+    public void mapBodyToApiClientErrorShouldReturnApiClientError() throws ReflectiveOperationException {
         String validApiClientErrorResponse =
             "{\"status\":500,\"error\":\"Not Found\",\"exception\":\"ResourceNotFound\"}";
 
@@ -93,7 +105,9 @@ public class ResponseDecoratorTest {
             .body(validApiClientErrorResponse, UTF_8)
             .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response,objectMapper);
+        assertNotNull(responseDecorator);
+
         ApiClientErrorResponse errorResponse = (ApiClientErrorResponse) responseDecorator.mapBodyToErrorResponse();
 
         ApiClientError apiClientError = errorResponse.getError();
@@ -103,7 +117,8 @@ public class ResponseDecoratorTest {
     }
 
     @Test
-    public void mapBodyToApiClientErrorShouldReturnEmptyApiClientErrorWhenResponseBodyIsNull() {
+    public void mapBodyToApiClientErrorShouldReturnEmptyApiClientErrorWhenResponseBodyIsNull()
+            throws ReflectiveOperationException {
 
         Response response = Response.builder()
             .status(500)
@@ -112,7 +127,7 @@ public class ResponseDecoratorTest {
             .headers(headers)
             .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response,objectMapper);
         ApiClientErrorResponse errorResponse = (ApiClientErrorResponse) responseDecorator.mapBodyToErrorResponse();
         ApiClientError apiClientError = errorResponse.getError();
 

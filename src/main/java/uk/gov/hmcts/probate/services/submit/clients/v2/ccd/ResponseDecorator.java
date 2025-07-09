@@ -9,21 +9,27 @@ import uk.gov.hmcts.reform.probate.model.client.ApiClientErrorResponse;
 import uk.gov.hmcts.reform.probate.model.client.ErrorResponse;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 class ResponseDecorator {
 
     private Response response;
 
-    ResponseDecorator(Response response) {
+
+    private ObjectMapper objectMapper;
+
+    ResponseDecorator(Response response,ObjectMapper objectMapper) {
+
         this.response = response;
+        this.objectMapper = objectMapper;
     }
 
     String bodyToString() {
         String apiError = "";
         try {
             if (this.response.body() != null) {
-                apiError = Util.toString(this.response.body().asReader());
+                apiError = Util.toString(this.response.body().asReader(StandardCharsets.UTF_8));
             }
         } catch (IOException ignored) {
             log.debug("Unable to read response body");
@@ -32,11 +38,10 @@ class ResponseDecorator {
     }
 
     ErrorResponse mapBodyToErrorResponse() {
-        ObjectMapper mapper = new ObjectMapper();
 
         ApiClientError clientError = new ApiClientError();
         try {
-            clientError = mapper.readValue(this.bodyToString(), ApiClientError.class);
+            clientError = objectMapper.readValue(this.bodyToString(), ApiClientError.class);
         } catch (IOException e) {
             log.debug("Response contained empty body");
         }
