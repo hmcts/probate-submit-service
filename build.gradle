@@ -188,7 +188,7 @@ def versions = [
         springCloudWiremock             : '4.3.0',
         springDocUi                     : '2.8.9',
         springSecurityTesting           : '6.5.2',
-        fortifyClient                   : '1.4.9',
+        fortifyClient                   : '1.4.10',
 ]
 
 dependencyManagement {
