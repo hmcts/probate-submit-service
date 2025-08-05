@@ -104,7 +104,7 @@ public class CasesController {
                                                        @RequestParam(name = "eventDescription",
                                                           defaultValue = "Probate Application") String eventDescription,
                                                        @RequestBody ProbateCaseDetails caseRequest) {
-        log.info("Saving case for case type: {} id {}", caseRequest.getCaseData().getClass().getSimpleName(),
+        log.info("saveCase for case type: {} id {}", caseRequest.getCaseData().getClass().getSimpleName(),
                 applicationId);
         return new ResponseEntity(casesService.saveCase(applicationId.toLowerCase(),
             caseRequest, eventDescription), OK);
