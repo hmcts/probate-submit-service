@@ -180,7 +180,7 @@ def versions = [
         logging                         : '6.1.9',
         pact_version                    : '4.1.34',
         probateCommons                  : '2.2.3',
-        restAssured                     : '5.5.5',
+        restAssured                     : '5.5.6',
         serenity                        : '4.2.34',
         serviceAuthProviderClient       : '5.3.3',
         springBoot                      : '3.5.4',
