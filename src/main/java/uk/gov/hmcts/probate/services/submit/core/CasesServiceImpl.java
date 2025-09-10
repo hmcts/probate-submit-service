@@ -115,6 +115,11 @@ public class CasesServiceImpl implements CasesService {
         Optional<ProbateCaseDetails> caseInfoOptional = caseType.equals(CaseType.GRANT_OF_REPRESENTATION)
                 ? coreCaseDataService.findCaseById(searchField,securityDto)
                 : coreCaseDataService.findCase(searchField, caseType, securityDto);
+        log.info("saveDraft - caseInfoOptional - Saving draft for id: {} {}", searchField,
+                caseInfoOptional.get().getCaseData().getPayments());
+        Optional<ProbateCaseDetails> tempCaseInfo = coreCaseDataService.findCase(searchField, caseType, securityDto);
+        log.info("saveDraft - tempCaseInfo - Saving draft for id: {} {}", searchField,
+                tempCaseInfo.get().getCaseData().getPayments());
         return saveCase(securityDto, caseType, caseData, caseInfoOptional, asCaseworker, eventDescription);
 
     }

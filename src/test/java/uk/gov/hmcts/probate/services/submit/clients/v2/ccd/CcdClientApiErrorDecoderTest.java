@@ -1,6 +1,5 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.Response;
 import feign.Util;
@@ -35,8 +34,7 @@ public class CcdClientApiErrorDecoderTest {
 
     @Test
     public void initializesObjectMapperWhenProvided() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        CcdClientApiErrorDecoder errorDecoder = new CcdClientApiErrorDecoder(objectMapper);
+        CcdClientApiErrorDecoder errorDecoder = new CcdClientApiErrorDecoder();
 
         assertNotNull(errorDecoder);
     }
