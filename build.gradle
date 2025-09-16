@@ -174,7 +174,7 @@ def versions = [
         ccdClient                       : '5.2.0',
         feignHttpClient                 : '13.6',
         httpclient5                     : '5.5',
-        jackson                         : '2.19.2',
+        jackson                         : '2.20.0',
         junitJupiter                    : '5.12.2',
         lombok                          : '1.18.40',
         logging                         : '6.1.9',
