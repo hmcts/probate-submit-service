@@ -188,7 +188,7 @@ def versions = [
         springCloudWiremock             : '4.3.0',
         springDocUi                     : '2.8.13',
         swaggerAnnotations              : '2.2.37',
-        springSecurityTesting           : '6.5.4',
+        springSecurityTesting           : '6.5.5',
         fortifyClient                   : '1.4.10',
         tomcat                          : '11.0.11'
 ]
