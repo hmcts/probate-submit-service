@@ -1,7 +1,7 @@
 plugins {
     id 'application'
     id 'java'
-    id 'org.springframework.boot' version '3.5.5'
+    id 'org.springframework.boot' version '3.5.6'
     id 'uk.gov.hmcts.java' version '0.12.67'
     id 'com.github.ben-manes.versions' version '0.52.0'
     id 'com.gorylenko.gradle-git-properties' version '2.5.3'
@@ -183,7 +183,7 @@ def versions = [
         restAssured                     : '5.5.6',
         serenity                        : '4.2.34',
         serviceAuthProviderClient       : '5.3.3',
-        springBoot                      : '3.5.5',
+        springBoot                      : '3.5.6',
         springCloudStarterNetflixHystrix: '4.3.0',
         springCloudWiremock             : '4.3.0',
         springDocUi                     : '2.8.13',
