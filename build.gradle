@@ -191,7 +191,7 @@ def versions = [
         swaggerAnnotations              : '2.2.39',
         springSecurityTesting           : '6.5.5',
         fortifyClient                   : '1.4.10',
-        tomcat                          : '11.0.11'
+        tomcat                          : '11.0.13'
 ]
 
 dependencyManagement {
