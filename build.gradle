@@ -224,7 +224,7 @@ dependencies {
     implementation group: 'com.microsoft.azure', name: 'applicationinsights-runtime-attach', version: versions.applicationInsightsVersion
     implementation group: 'org.pitest', name: 'pitest', version: '1.21.0'
     implementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
-    implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
+    implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '9.0'
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.2'
 
     //Solves CVE-2025-48989
