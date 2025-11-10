@@ -65,10 +65,10 @@ public class PaymentServiceImpl implements PaymentsService {
 
     @Override
     public ProbateCaseDetails createCase(String searchField, ProbateCaseDetails probateCaseDetails) {
-        CaseType caseType = CaseType.getCaseType(probateCaseDetails.getCaseData());
-        log.info("Updating payment details for case type: {}", CaseType.getCaseType(probateCaseDetails.getCaseData()));
+        final CaseType caseType = CaseType.getCaseType(probateCaseDetails.getCaseData());
+        log.info("Updating payment details for case type: {}", caseType);
         SecurityDto securityDto = securityUtils.getSecurityDto();
-        ProbateCaseDetails caseResponse = findCase(searchField, caseType, securityDto);
+        ProbateCaseDetails caseResponse = findCaseById(searchField, securityDto);
 
         validationService.validateForSubmission(probateCaseDetails);
 
@@ -114,12 +114,6 @@ public class PaymentServiceImpl implements PaymentsService {
         CaseType caseType = CaseType.getCaseType(caseResponse.getCaseData());
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         return updateCase(caseId, probateUpdateRequest, securityDto, caseType, caseResponse);
-    }
-
-    private ProbateCaseDetails findCase(String applicantEmail, CaseType caseType, SecurityDto securityDto) {
-        Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
-            .findCase(applicantEmail, caseType, securityDto);
-        return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 
     private ProbateCaseDetails findCaseById(String caseId, SecurityDto securityDto) {
