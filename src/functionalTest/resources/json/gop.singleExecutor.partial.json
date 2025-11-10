@@ -116,5 +116,7 @@
     "deceasedMarriedAfterWillOrCodicilDate": "No",
     "deceasedDiedEngOrWales": "Yes",
     "deceasedDeathCertificate": "deathCertificate"
+  },
+  "caseInfo": {
   }
 }
