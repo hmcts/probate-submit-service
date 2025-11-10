@@ -181,7 +181,7 @@ def versions = [
         lombok                          : '1.18.46',
         logging                         : '8.0.0',
         pact_version                    : '4.1.34',
-        probateCommons                  : '2.2.15-DTSPB-4720-v4',
+        probateCommons                  : '2.2.12-DTSPB-4689-v5',
         restAssured                     : '5.5.7',
         serenity                        : '5.3.11',
         serviceAuthProviderClient       : '5.3.4',
