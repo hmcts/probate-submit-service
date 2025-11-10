@@ -1,7 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
 import com.google.common.collect.ImmutableMap;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
@@ -10,6 +9,7 @@ import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.probate.services.submit.services.FeatureToggleService;
 import uk.gov.hmcts.probate.services.submit.services.PaymentsService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.PaymentStatus;
@@ -35,40 +35,64 @@ import static uk.gov.hmcts.reform.probate.model.cases.CaseState.PA_APP_CREATED;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentsService {
 
     private static final Map<Pair<CaseState, PaymentStatus>, Function<CaseEvents, EventId>> PAYMENT_EVENT_MAP =
-        ImmutableMap.<Pair<CaseState, PaymentStatus>, Function<CaseEvents, EventId>>builder()
-            .put(Pair.of(DRAFT, INITIATED), CaseEvents::getCreateCaseApplicationEventId)
-            .put(Pair.of(DRAFT, NOT_REQUIRED), CaseEvents::getCreateCaseWithoutPaymentId)
-            .put(Pair.of(PA_APP_CREATED, SUCCESS), CaseEvents::getCreateCaseEventId)
-            .put(Pair.of(PA_APP_CREATED, FAILED), CaseEvents::getPaymentFailedEventId)
-            .put(Pair.of(PA_APP_CREATED, INITIATED), CaseEvents::getUpdateCaseApplicationEventId)
-            .put(Pair.of(PA_APP_CREATED, null), CaseEvents::getPaymentFailedEventId)
-            .put(Pair.of(CASE_PAYMENT_FAILED, SUCCESS), CaseEvents::getPaymentFailedToSuccessEventId)
-            .put(Pair.of(CASE_PAYMENT_FAILED, FAILED), CaseEvents::getPaymentFailedAgainEventId)
-            .put(Pair.of(CASE_PAYMENT_FAILED, INITIATED), CaseEvents::getUpdatePaymentFailedEventId)
-            .put(Pair.of(CASE_PAYMENT_FAILED, null), CaseEvents::getPaymentFailedAgainEventId)
-            .build();
+            ImmutableMap.<Pair<CaseState, PaymentStatus>, Function<CaseEvents, EventId>>builder()
+                    .put(Pair.of(DRAFT, INITIATED), CaseEvents::getCreateCaseApplicationEventId)
+                    .put(Pair.of(DRAFT, NOT_REQUIRED), CaseEvents::getCreateCaseWithoutPaymentId)
+                    .put(Pair.of(PA_APP_CREATED, SUCCESS), CaseEvents::getCreateCaseEventId)
+                    .put(Pair.of(PA_APP_CREATED, FAILED), CaseEvents::getPaymentFailedEventId)
+                    .put(Pair.of(PA_APP_CREATED, INITIATED), CaseEvents::getUpdateCaseApplicationEventId)
+                    .put(Pair.of(PA_APP_CREATED, null), CaseEvents::getPaymentFailedEventId)
+                    .put(Pair.of(CASE_PAYMENT_FAILED, SUCCESS), CaseEvents::getPaymentFailedToSuccessEventId)
+                    .put(Pair.of(CASE_PAYMENT_FAILED, FAILED), CaseEvents::getPaymentFailedAgainEventId)
+                    .put(Pair.of(CASE_PAYMENT_FAILED, INITIATED), CaseEvents::getUpdatePaymentFailedEventId)
+                    .put(Pair.of(CASE_PAYMENT_FAILED, null), CaseEvents::getPaymentFailedAgainEventId)
+                    .build();
 
     private final CoreCaseDataService coreCaseDataService;
-
     private final SecurityUtils securityUtils;
-
     private final EventFactory eventFactory;
-
     private final RegistryService registryService;
-
     private final ValidationService validationService;
+    private final FeatureToggleService featureToggleService;
 
+    public PaymentServiceImpl(
+            final CoreCaseDataService coreCaseDataService,
+            final SecurityUtils securityUtils,
+            final EventFactory eventFactory,
+            final RegistryService registryService,
+            final ValidationService validationService,
+            final FeatureToggleService featureToggleService) {
+        this.coreCaseDataService = coreCaseDataService;
+        this.securityUtils = securityUtils;
+        this.eventFactory = eventFactory;
+        this.registryService = registryService;
+        this.validationService = validationService;
+        this.featureToggleService = featureToggleService;
+    }
 
     @Override
     public ProbateCaseDetails createCase(String searchField, ProbateCaseDetails probateCaseDetails) {
-        CaseType caseType = CaseType.getCaseType(probateCaseDetails.getCaseData());
-        log.info("Updating payment details for case type: {}", CaseType.getCaseType(probateCaseDetails.getCaseData()));
+        final CaseType caseType = CaseType.getCaseType(probateCaseDetails.getCaseData());
+        log.info("Updating payment details for case type: {}", caseType);
         SecurityDto securityDto = securityUtils.getSecurityDto();
-        ProbateCaseDetails caseResponse = findCase(searchField, caseType, securityDto);
+        final String probateCaseId = probateCaseDetails.getCaseInfo().getCaseId();
+        final ProbateCaseDetails caseResponse;
+        if (featureToggleService.useCcdLookupForPayments()) {
+            log.info("Looking up {} case from ccd using searchField {} (probateCaseId: {})",
+                    caseType,
+                    searchField,
+                    probateCaseId);
+            caseResponse = findCaseById(searchField, securityDto);
+        } else {
+            log.info("Looking up {} case from elasticsearch using searchField {} (probateCaseId: {})",
+                    caseType,
+                    searchField,
+                    probateCaseId);
+            caseResponse = findCase(searchField, caseType, securityDto);
+        }
 
         validationService.validateForSubmission(probateCaseDetails);
 
@@ -86,7 +110,7 @@ public class PaymentServiceImpl implements PaymentsService {
         CaseData caseData = probateCaseDetails.getCaseData();
         registryService.updateRegistry(caseData);
         return coreCaseDataService.updateCase(caseId, caseData, eventId,
-            securityDto, "update case with payment details");
+                securityDto, "update case with payment details");
     }
 
     private ProbateCaseDetails updateCase(String caseId, ProbateCaseDetails updateRequest,
@@ -118,21 +142,21 @@ public class PaymentServiceImpl implements PaymentsService {
 
     private ProbateCaseDetails findCase(String applicantEmail, CaseType caseType, SecurityDto securityDto) {
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
-            .findCase(applicantEmail, caseType, securityDto);
+                .findCase(applicantEmail, caseType, securityDto);
         return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 
     private ProbateCaseDetails findCaseById(String caseId, SecurityDto securityDto) {
         log.info("DEBUG: Finding case with Id: {}", caseId);
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
-            .findCaseById(caseId, securityDto);
+                .findCaseById(caseId, securityDto);
         return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 
     private Function<CaseEvents, EventId> getEventId(CaseState caseState, CasePayment payment) {
         Optional<Function<CaseEvents, EventId>> optionalFunction =
-            Optional.ofNullable(PAYMENT_EVENT_MAP.get(Pair.of(caseState, payment.getStatus())));
+                Optional.ofNullable(PAYMENT_EVENT_MAP.get(Pair.of(caseState, payment.getStatus())));
         return optionalFunction
-            .orElseThrow(() -> new CaseStatePreconditionException(caseState, payment.getStatus()));
+                .orElseThrow(() -> new CaseStatePreconditionException(caseState, payment.getStatus()));
     }
 }
