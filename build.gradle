@@ -176,7 +176,7 @@ def versions = [
         feignHttpClient                 : '13.6',
         httpclient5                     : '5.5.1',
         jackson                         : '2.20.1',
-        junitJupiter                    : '5.12.2',
+        junitJupiter                    : '5.14.1',
         lombok                          : '1.18.42',
         logging                         : '6.1.9',
         pact_version                    : '4.1.34',
@@ -285,7 +285,7 @@ dependencies {
     testPactImplementation group: 'au.com.dius.pact.consumer', name: 'java8',  version: versions.pact_version
     testPactRuntimeOnly group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
     testPactRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junitJupiter
-    testPactRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.13.2'
+    testPactRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.14.1'
     testPactImplementation sourceSets.main.runtimeClasspath
     testPactImplementation sourceSets.test.runtimeClasspath
 
