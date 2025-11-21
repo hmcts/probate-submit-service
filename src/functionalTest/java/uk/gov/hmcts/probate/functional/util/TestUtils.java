@@ -6,6 +6,7 @@ import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.path.json.JsonPath;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ import jakarta.annotation.PostConstruct;
 
 @ContextConfiguration(classes = TestContextConfiguration.class)
 @Component
+@Slf4j
 public class TestUtils {
 
     public static final String APPLICATION_ID = "appId";
@@ -71,7 +73,10 @@ public class TestUtils {
             .assertThat()
             .statusCode(200)
             .extract().jsonPath();
-        return jsonPath.get("caseInfo.caseId");
+
+        final String caseId = jsonPath.getString("caseInfo.caseId");
+        log.info("createTestCase: id {}", caseId);
+        return caseId;
     }
 
     public String createCaveatTestCase(String caseData) {
