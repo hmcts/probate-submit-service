@@ -1,8 +1,10 @@
 package uk.gov.hmcts.probate.functional.payments;
 
 import io.restassured.RestAssured;
+import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +15,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SerenityJUnit5Extension.class)
+@Slf4j
 public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
 
     private String caseData;
@@ -28,8 +31,14 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
 
         paymentInitiatedData = utils.getJsonFromFile("gop.paymentInitiated.json");
         paymentSuccessData = utils.getJsonFromFile("gop.singleExecutor.full.json");
+    }
 
+    @BeforeEach
+    public void setUp() throws Exception {
+        log.info("Setting up test case");
+        final String old = caseId;
         caseId = utils.createTestCase(caseData);
+        log.info("set up test case with id {} (was {})", caseId, old);
         Thread.sleep(SLEEP_TIME);
     }
 
@@ -53,6 +62,7 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
 
     @Test
     public void updatePendingCaseWithoutPaymentReturns400() {
+        log.info("updatePendingCaseWithoutPaymentReturns400: caseId {}", caseId);
         RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(utils.getCitizenHeaders())
@@ -99,6 +109,8 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
     @Test
     public void updatePaAppCreatedCaseWithoutPaymentReturns400() throws InterruptedException {
         initiatePayment();
+
+        log.info("updatePaAppCreatedCaseWithoutPaymentReturns400: caseId {}", caseId);
 
         RestAssured.given()
             .relaxedHTTPSValidation()
