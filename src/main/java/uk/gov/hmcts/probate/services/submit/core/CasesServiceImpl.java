@@ -133,6 +133,8 @@ public class CasesServiceImpl implements CasesService {
                 eventId = EventId.GOP_CITIZEN_HUB_RESPONSE;
             } else if (EventId.GOP_UPDATE_DRAFT.equals(eventId) && isTaskListPage(eventDescription)) {
                 eventId = EventId.KEEP_DRAFT;
+            } else if (EventId.GOP_UPDATE_DRAFT.equals(eventId) && isRelationshipToDeceased(eventDescription)) {
+                eventId = EventId.INTESTACY_RELATIONSHIP_DRAFT;
             }
             if (asCaseworker) {
                 return coreCaseDataService
@@ -204,5 +206,9 @@ public class CasesServiceImpl implements CasesService {
 
     private boolean isTaskListPage(String eventDescription) {
         return eventDescription != null && eventDescription.contains("task-list");
+    }
+
+    private boolean isRelationshipToDeceased(String eventDescription) {
+        return eventDescription != null && eventDescription.contains("relationship-to-deceased");
     }
 }
