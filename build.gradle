@@ -171,7 +171,7 @@ repositories {
 
 def versions = [
         applicationInsightsVersion      : '3.7.6',
-        authCheckerLib                  : '3.1.1',
+        authCheckerLib                  : '3.1.2',
         ccdClient                       : '5.2.0',
         feignHttpClient                 : '13.6',
         httpclient5                     : '5.5.1',
