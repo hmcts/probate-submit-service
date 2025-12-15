@@ -71,7 +71,7 @@ public class TestUtils {
             .assertThat()
             .statusCode(200)
             .extract().jsonPath();
-        return jsonPath.get("caseInfo.caseId");
+        return jsonPath.getString("caseInfo.caseId");
     }
 
     public String createCaveatTestCase(String caseData) {
