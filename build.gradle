@@ -185,8 +185,8 @@ def versions = [
         serenity                        : '4.3.4',
         serviceAuthProviderClient       : '5.3.3',
         springBoot                      : '3.5.9',
-        springCloudStarterNetflixHystrix: '4.3.0',
-        springCloudWiremock             : '4.3.0',
+        springCloudStarterNetflixHystrix: '4.3.1',
+        springCloudWiremock             : '4.3.1',
         springDocUi                     : '2.8.14',
         swaggerAnnotations              : '2.2.41',
         springSecurityTesting           : '7.0.2',
@@ -196,7 +196,7 @@ def versions = [
 
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2025.0.0'
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2025.1.0'
     }
 }
 
