@@ -59,3 +59,11 @@ ccd-elasticsearch:
         - caseworker-probate-solicitor
         - citizen
         - caseworker-probate-examiner
+
+keyVaults:
+  probate:
+    secrets:
+      - name: launchdarkly-key
+        alias: ld.sdk_key
+      - name: launchdarklyUserkeyBackend
+        alias: ld.user.key
