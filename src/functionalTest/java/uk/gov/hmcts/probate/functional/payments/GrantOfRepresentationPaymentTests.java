@@ -3,6 +3,7 @@ package uk.gov.hmcts.probate.functional.payments;
 import io.restassured.RestAssured;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +29,10 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
 
         paymentInitiatedData = utils.getJsonFromFile("gop.paymentInitiated.json");
         paymentSuccessData = utils.getJsonFromFile("gop.singleExecutor.full.json");
+    }
 
+    @BeforeEach
+    public void setUp() throws Exception {
         caseId = utils.createTestCase(caseData);
         Thread.sleep(SLEEP_TIME);
     }
