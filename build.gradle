@@ -173,6 +173,7 @@ def versions = [
         applicationInsightsVersion      : '3.7.6',
         authCheckerLib                  : '3.1.1',
         ccdClient                       : '5.2.0',
+        commonsFileuploadVersion        : '1.6.0',
         feignHttpClient                 : '13.6',
         httpclient5                     : '5.5.1',
         jackson                         : '2.20.1',
@@ -198,6 +199,11 @@ dependencyManagement {
     imports {
         mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2025.0.0'
     }
+}
+
+ext {
+    set("log4j2.version", libs.versions.log4j2.get()) // CVE-2025-68161
+    set("commons-lang3.version", libs.versions.commonsLang3.get()) // CVE-2025-48924
 }
 
 dependencies {
@@ -292,16 +298,9 @@ dependencies {
 
     integrationTestImplementation sourceSets.main.runtimeClasspath
     integrationTestImplementation sourceSets.test.runtimeClasspath
-}
 
-configurations.configureEach {
-    resolutionStrategy {
-        eachDependency { details ->
-            // Resolve CVE‑2025‑48976
-            if (details.requested.name == 'commons-fileupload') {
-                details.useVersion '1.6.0'
-            }
-        }
+    constraints {
+        implementation(group: 'commons-fileupload', name: 'commons-fileupload', version: versions.commonsFileuploadVersion) // CVE-2025-48976
     }
 }
 
