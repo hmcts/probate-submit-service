@@ -176,7 +176,7 @@ def versions = [
         commonsFileuploadVersion        : '1.6.0',
         feignHttpClient                 : '13.6',
         httpclient5                     : '5.5.1',
-        jackson                         : '2.20.1',
+        jackson                         : '2.21.0',
         junitJupiter                    : '5.12.2',
         lombok                          : '1.18.42',
         logging                         : '7.0.0',
@@ -275,7 +275,7 @@ dependencies {
     testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.20'
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.21'
     testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testContractAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testContractImplementation sourceSets.main.runtimeClasspath
