@@ -12,6 +12,7 @@ import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
+import uk.gov.hmcts.reform.probate.model.Relationship;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
@@ -46,6 +47,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_TO_SUCCESS;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_APPLICATION;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_DRAFT;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.INTESTACY_RELATIONSHIP_DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.KEEP_DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.UPDATE_GOP_PAYMENT_FAILED;
 
@@ -470,5 +472,32 @@ public class CasesServiceImplTest {
         verify(coreCaseDataService, times(1)).findCaseById(CASE_ID, securityDto);
         verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData,
                 KEEP_DRAFT, securityDto, eventDescription);
+    }
+
+    @Test
+    void shouldUpdateCaseForChangeInRelationshipToDeceased() {
+        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
+        caseData.setPrimaryApplicantRelationshipToDeceased(Relationship.CHILD);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(CaseState.DRAFT);
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+        SecurityDto securityDto = SecurityDto.builder().build();
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
+        String eventDescription = "Page completed /relationship-to-deceased";
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(coreCaseDataService.findCaseById(CASE_ID, securityDto))
+                .thenReturn(caseResponseOptional);
+        when(coreCaseDataService
+                .updateCase(CASE_ID, caseData, INTESTACY_RELATIONSHIP_DRAFT, securityDto, eventDescription))
+                .thenReturn(caseRequest);
+
+        ProbateCaseDetails caseResponse = casesService.saveCase(CASE_ID, caseRequest,eventDescription);
+
+        assertEquals(caseData, caseResponse.getCaseData());
+        verify(securityUtils, times(1)).getSecurityDto();
+        verify(coreCaseDataService, times(1)).findCaseById(CASE_ID, securityDto);
+        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData,
+                INTESTACY_RELATIONSHIP_DRAFT, securityDto, eventDescription);
     }
 }
