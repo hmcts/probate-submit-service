@@ -209,6 +209,7 @@ public class CasesServiceImpl implements CasesService {
     }
 
     private boolean isRelationshipToDeceased(String eventDescription) {
-        return eventDescription != null && eventDescription.contains("relationship-to-deceased");
+        return eventDescription != null && eventDescription
+                .equalsIgnoreCase("Page completed: relationship-to-deceased");
     }
 }
