@@ -484,7 +484,7 @@ public class CasesServiceImplTest {
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
         SecurityDto securityDto = SecurityDto.builder().build();
         Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
-        String eventDescription = "Page completed /relationship-to-deceased";
+        String eventDescription = "Page completed: relationship-to-deceased";
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(coreCaseDataService.findCaseById(CASE_ID, securityDto))
                 .thenReturn(caseResponseOptional);
