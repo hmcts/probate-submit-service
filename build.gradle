@@ -232,7 +232,7 @@ dependencies {
     implementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '9.0'
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.3'
-    implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '7.10.2'
+    implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '7.11.0'
 
     //Solves CVE-2025-48989
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: versions.tomcat
