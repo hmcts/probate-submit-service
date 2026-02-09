@@ -135,6 +135,8 @@ public class CasesServiceImpl implements CasesService {
                 eventId = EventId.KEEP_DRAFT;
             } else if (EventId.GOP_UPDATE_DRAFT.equals(eventId) && isRelationshipToDeceased(eventDescription)) {
                 eventId = EventId.INTESTACY_RELATIONSHIP_DRAFT;
+            } else if (EventId.GOP_UPDATE_DRAFT.equals(eventId) && isSameParentPage(eventDescription)) {
+                eventId = EventId.INTESTACY_SIBLING_SAME_PARENT_DRAFT;
             }
             if (asCaseworker) {
                 return coreCaseDataService
@@ -206,6 +208,10 @@ public class CasesServiceImpl implements CasesService {
 
     private boolean isTaskListPage(String eventDescription) {
         return eventDescription != null && eventDescription.contains("task-list");
+    }
+
+    private boolean isSameParentPage(String eventDescription) {
+        return eventDescription != null && eventDescription.contains("deceased-same-parents");
     }
 
     private boolean isRelationshipToDeceased(String eventDescription) {
