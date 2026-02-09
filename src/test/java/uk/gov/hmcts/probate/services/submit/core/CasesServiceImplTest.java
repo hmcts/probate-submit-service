@@ -500,4 +500,31 @@ public class CasesServiceImplTest {
         verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData,
                 INTESTACY_RELATIONSHIP_DRAFT, securityDto, eventDescription);
     }
+
+    @Test
+    void shouldUpdateCaseForChangeInSiblingSameParentPage() {
+        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
+        caseData.setPrimaryApplicantRelationshipToDeceased(Relationship.CHILD);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(CaseState.DRAFT);
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+        SecurityDto securityDto = SecurityDto.builder().build();
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
+        String eventDescription = "deceased-same-parents";
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(coreCaseDataService.findCaseById(CASE_ID, securityDto))
+                .thenReturn(caseResponseOptional);
+        when(coreCaseDataService
+                .updateCase(CASE_ID, caseData, EventId.INTESTACY_SIBLING_SAME_PARENT_DRAFT,
+                        securityDto, eventDescription)).thenReturn(caseRequest);
+
+        ProbateCaseDetails caseResponse = casesService.saveCase(CASE_ID, caseRequest,eventDescription);
+
+        assertEquals(caseData, caseResponse.getCaseData());
+        verify(securityUtils, times(1)).getSecurityDto();
+        verify(coreCaseDataService, times(1)).findCaseById(CASE_ID, securityDto);
+        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData,
+                EventId.INTESTACY_SIBLING_SAME_PARENT_DRAFT, securityDto, eventDescription);
+    }
 }
