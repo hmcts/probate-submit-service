@@ -42,8 +42,15 @@ public class SecurityConfiguration {
                 .addFilter(filter)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().authenticated()
-            );
+                        .requestMatchers(
+                                "/cases/**",
+                                "/submissions/**",
+                                "/payments/**",
+                                "/ccd-case-update/**"
+                        ).hasAuthority("citizen")
+                        .requestMatchers("/health",
+                                "/health/liveness").authenticated()
+                );
         return http.build();
     }
 
