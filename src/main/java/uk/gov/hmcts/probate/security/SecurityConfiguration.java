@@ -49,8 +49,8 @@ public class SecurityConfiguration {
                                 "/ccd-case-update/**"
                         ).hasAuthority("citizen")
                         .requestMatchers("/health",
-                                "/health/liveness").authenticated()
-                );
+                               "/health/liveness").authenticated()
+            );
         return http.build();
     }
 
