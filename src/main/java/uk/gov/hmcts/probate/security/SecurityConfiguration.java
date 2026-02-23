@@ -44,11 +44,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/cases/caseworker/**",
-                                "/payments/**",
                                 "/ccd-case-update/**"
                         ).hasAuthority("caseworker-probate")
                         .requestMatchers(
                                 "/cases/**",
+                                "/payments/**",
                                 "/submissions/**"
                         ).hasAuthority("citizen")
                         .requestMatchers("/health",
