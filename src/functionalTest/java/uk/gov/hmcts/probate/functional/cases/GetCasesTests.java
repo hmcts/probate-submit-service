@@ -270,7 +270,7 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByInviteIdAndInCorrectHeaderReturns404() {
+    public void getCaseByInviteIdAndInCorrectHeaderReturns403() {
 
         RestAssured.given()
             .relaxedHTTPSValidation()
@@ -279,7 +279,7 @@ public class GetCasesTests extends IntegrationTestBase {
             .when()
             .get("/cases/invitation/" + inviteId)
             .then()
-            .statusCode(404);
+            .statusCode(403);
     }
 
     @Test
