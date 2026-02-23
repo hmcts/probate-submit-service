@@ -176,7 +176,7 @@ def versions = [
         commonsFileuploadVersion        : '1.6.0',
         feignHttpClient                 : '13.8',
         httpclient5                     : '5.5.1',
-        jackson                         : '2.21.0',
+        jackson                         : '2.21.1',
         junitJupiter                    : '5.12.2',
         lombok                          : '1.18.42',
         logging                         : '7.0.0',
