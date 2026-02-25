@@ -270,16 +270,29 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByInviteIdAndInCorrectHeaderReturns403() {
+    public void getCaseByInviteIdAndInByCaseWorkerReturns403() {
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCaseworkerHeaders())
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/invitation/" + inviteId)
+                .then()
+                .statusCode(403);
+    }
+
+    @Test
+    public void getCaseByInviteIdAndInCorrectHeaderReturns404() {
 
         RestAssured.given()
             .relaxedHTTPSValidation()
-            .headers(utils.getCaseworkerHeaders())
+            .headers(utils.getCitizenHeaders())
             .queryParam("caseType", GRANT_OF_REPRESENTATION)
             .when()
             .get("/cases/invitation/" + inviteId)
             .then()
-            .statusCode(403);
+            .statusCode(404);
     }
 
     @Test

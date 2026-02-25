@@ -55,6 +55,18 @@ public class CaveatsPaymentTests extends IntegrationTestBase {
             .statusCode(500);
     }
 
+    @Test
+    public void updateCaveatAsCaseWorkerReturns400() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCaseworkerHeaders())
+                .body(paymentCaveatData)
+                .when()
+                .post("/ccd-case-update/" + caveatId)
+                .then()
+                .assertThat()
+                .statusCode(400);
+    }
 
     @Test
     public void updateCaveatAsCitizenReturns403() {
