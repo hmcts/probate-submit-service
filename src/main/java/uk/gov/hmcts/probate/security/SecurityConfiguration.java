@@ -36,6 +36,7 @@ public class SecurityConfiguration {
                         "/submissions/**",
                         "/payments/**",
                         "/ccd-case-update/**",
+                        "/forms/**",
                         "/health",
                         "/health/liveness"
                 )
@@ -45,6 +46,7 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/cases/caseworker/**",
                                 "/cases/invitation/**",
+                                "/forms/case/**",
                                 "/ccd-case-update/**"
                         ).hasAuthority("caseworker-probate")
                         .requestMatchers(
