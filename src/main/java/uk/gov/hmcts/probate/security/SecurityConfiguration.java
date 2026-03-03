@@ -36,7 +36,6 @@ public class SecurityConfiguration {
                         "/submissions/**",
                         "/payments/**",
                         "/ccd-case-update/**",
-                        "/forms/**",
                         "/health",
                         "/health/liveness"
                 )
@@ -44,9 +43,9 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
+                                "/cases",
                                 "/cases/caseworker/**",
                                 "/cases/invitation/**",
-                                "/forms/case/**",
                                 "/ccd-case-update/**"
                         ).hasAuthority("caseworker-probate")
                         .requestMatchers(
