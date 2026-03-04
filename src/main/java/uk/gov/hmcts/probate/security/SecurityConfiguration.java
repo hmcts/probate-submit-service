@@ -43,13 +43,13 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/cases").hasAnyAuthority("caseworker-probate", "citizen")
-                        .requestMatchers("/cases/**").hasAuthority("citizen")
                         .requestMatchers(
                                 "/cases/caseworker/**",
                                 "/cases/invitation/**",
                                 "/ccd-case-update/**"
                         ).hasAuthority("caseworker-probate")
                         .requestMatchers(
+                                "/cases/**",
                                 "/payments/**",
                                 "/submissions/**"
                         ).hasAuthority("citizen")
