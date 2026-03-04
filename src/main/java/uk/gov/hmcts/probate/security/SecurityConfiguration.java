@@ -49,6 +49,7 @@ public class SecurityConfiguration {
                                 "/ccd-case-update/**"
                         ).hasAuthority("caseworker-probate")
                         .requestMatchers(
+                                "/cases",
                                 "/cases/**",
                                 "/payments/**",
                                 "/submissions/**"
