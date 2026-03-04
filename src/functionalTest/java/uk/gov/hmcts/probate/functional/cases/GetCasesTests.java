@@ -270,7 +270,7 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByInviteIdAndInByCaseWorkerReturns403() {
+    public void getCaseByInviteIdAndInByCaseWorkerReturns404() {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
@@ -279,11 +279,11 @@ public class GetCasesTests extends IntegrationTestBase {
                 .when()
                 .get("/cases/invitation/" + inviteId)
                 .then()
-                .statusCode(403);
+                .statusCode(404);
     }
 
     @Test
-    public void getCaseByInviteIdAndInCorrectHeaderReturns404() {
+    public void getCaseByInviteIdAndInCorrectHeaderReturns403() {
 
         RestAssured.given()
             .relaxedHTTPSValidation()
@@ -292,7 +292,7 @@ public class GetCasesTests extends IntegrationTestBase {
             .when()
             .get("/cases/invitation/" + inviteId)
             .then()
-            .statusCode(404);
+            .statusCode(403);
     }
 
     @Test
@@ -301,7 +301,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
         RestAssured.given()
             .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
+            .headers(utils.getCaseworkerHeaders())
             .queryParam("caseType", GRANT_OF_REPRESENTATION)
             .when()
             .get("/cases/invitation/" + randomInviteId)
@@ -332,7 +332,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getCaseByCaseIdForCaseTypeIntestacyAsRequestParamReturns200() {
         RestAssured.given()
             .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
+            .headers(utils.getCaseworkerHeaders())
             .queryParam("caseId", caseId2)
             .when()
             .get("/cases")
@@ -351,7 +351,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
         RestAssured.given()
             .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
+            .headers(utils.getCaseworkerHeaders())
             .queryParam("caseId", randomCaseId)
             .when()
             .get("/cases")
