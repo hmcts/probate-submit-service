@@ -174,7 +174,7 @@ def versions = [
         authCheckerLib                  : '3.1.1',
         ccdClient                       : '5.2.0',
         commonsFileuploadVersion        : '1.6.0',
-        feignHttpClient                 : '13.9.2',
+        feignHttpClient                 : '13.9.3',
         httpclient5                     : '5.5.1',
         jackson                         : '2.21.1',
         junitJupiter                    : '5.12.2',
