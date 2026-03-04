@@ -248,7 +248,7 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByInviteIdReturns200() throws Exception {
+    public void getCaseByInviteIdReturns403() throws Exception {
         String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
         inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, inviteId);
         utils.createTestCase(inviteCaseData);
@@ -262,11 +262,7 @@ public class GetCasesTests extends IntegrationTestBase {
             .get("/cases/invitation/" + inviteId)
             .then()
             .assertThat()
-            .statusCode(200)
-            .body("caseData", notNullValue())
-            .body("caseInfo.caseId", notNullValue())
-            .body("caseInfo.state", equalTo("Pending"))
-            .extract().jsonPath().prettify();
+            .statusCode(403);
     }
 
     @Test
@@ -311,7 +307,7 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByCaseIdAsRequestParamReturns200() {
+    public void getCaseByCaseIdAsRequestParamReturns403() {
         RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(utils.getCitizenHeaders())
@@ -320,16 +316,12 @@ public class GetCasesTests extends IntegrationTestBase {
             .get("/cases")
             .then()
             .assertThat()
-            .statusCode(200)
-            .body("caseData", notNullValue())
-            .body("caseInfo.caseId", notNullValue())
-            .body("caseInfo.state", equalTo("Pending"))
-            .extract().jsonPath().prettify();
+            .statusCode(403);
 
     }
 
     @Test
-    public void getCaseByCaseIdForCaseTypeIntestacyAsRequestParamReturns200() {
+    public void getCaseByCaseIdForCaseTypeIntestacyAsRequestParamReturns404() {
         RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(utils.getCaseworkerHeaders())
@@ -338,11 +330,7 @@ public class GetCasesTests extends IntegrationTestBase {
             .get("/cases")
             .then()
             .assertThat()
-            .statusCode(200)
-            .body("caseData", notNullValue())
-            .body("caseInfo.caseId", notNullValue())
-            .body("caseInfo.state", equalTo("Pending"))
-            .extract().jsonPath().prettify();
+            .statusCode(404);
     }
 
     @Test
