@@ -50,42 +50,42 @@ public class GetCasesTests extends IntegrationTestBase {
     @Test
     public void getCaseByIdAsPathVariableReturns200() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", GRANT_OF_REPRESENTATION)
-            .when()
-            .get("/cases/" + caseId1)
-            .then()
-            .assertThat()
-            .statusCode(200)
-            .body("caseData", notNullValue())
-            .body("caseInfo.caseId", notNullValue())
-            .body("caseInfo.state", equalTo("Pending"))
-            .extract().jsonPath().prettify();
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/" + caseId1)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
     }
 
     @Test
     public void getCaseByIdAsPathVariableReturns404() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", CAVEAT)
-            .when()
-            .get("/cases/" + caseId1)
-            .then()
-            .assertThat().statusCode(404);
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", CAVEAT)
+                .when()
+                .get("/cases/" + caseId1)
+                .then()
+                .assertThat().statusCode(404);
     }
 
     @Test
     public void getCaseMissingCaseTypeReturns400() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .when()
-            .get("/cases/" + caseId1)
-            .then()
-            .assertThat()
-            .statusCode(400);
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .when()
+                .get("/cases/" + caseId1)
+                .then()
+                .assertThat()
+                .statusCode(400);
     }
 
     @Test
@@ -93,57 +93,57 @@ public class GetCasesTests extends IntegrationTestBase {
         String randomCaseId = RandomStringUtils.randomNumeric(16).toLowerCase();
 
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", GRANT_OF_REPRESENTATION)
-            .when()
-            .get("/cases/" + randomCaseId)
-            .then()
-            .assertThat()
-            .statusCode(404)
-            .extract().jsonPath().prettify();
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/" + randomCaseId)
+                .then()
+                .assertThat()
+                .statusCode(404)
+                .extract().jsonPath().prettify();
     }
 
     @Test
     public void getCaseByApplicantEmailReturns200() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", GRANT_OF_REPRESENTATION)
-            .when()
-            .get("/cases/applicantEmail/" + email)
-            .then()
-            .assertThat()
-            .statusCode(200)
-            .body("caseData", notNullValue())
-            .body("caseInfo.caseId", notNullValue())
-            .body("caseInfo.state", equalTo("Pending"))
-            .extract().jsonPath().prettify();
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/applicantEmail/" + email)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
     }
 
     @Test
     public void getCaseByApplicantInvalidEmailReturns404() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", GRANT_OF_REPRESENTATION)
-            .when()
-            .get("/cases/applicantEmail/" + "inValidEmail@test.com")
-            .then()
-            .assertThat()
-            .statusCode(404);
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/applicantEmail/" + "inValidEmail@test.com")
+                .then()
+                .assertThat()
+                .statusCode(404);
     }
 
     @Test
     public void getCaseByApplicantEmailMissingCaseTypeReturn400() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .when()
-            .get("/cases/applicantEmail/" + email)
-            .then()
-            .assertThat()
-            .statusCode(400);
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .when()
+                .get("/cases/applicantEmail/" + email)
+                .then()
+                .assertThat()
+                .statusCode(400);
     }
 
     @Test
@@ -151,185 +151,181 @@ public class GetCasesTests extends IntegrationTestBase {
         String randomEmail = randomAlphanumeric(5).toLowerCase() + "@email.com";
 
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", GRANT_OF_REPRESENTATION)
-            .when()
-            .get("/cases/applicantEmail/" + randomEmail)
-            .then()
-            .assertThat()
-            .statusCode(404)
-            .extract().jsonPath().prettify();
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/applicantEmail/" + randomEmail)
+                .then()
+                .assertThat()
+                .statusCode(404)
+                .extract().jsonPath().prettify();
     }
 
     @Test
     public void getAllGrantOfRepresentationCaseTypeReturns200() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", GRANT_OF_REPRESENTATION)
-            .when()
-            .get("/cases/all")
-            .then()
-            .assertThat()
-            .statusCode(200)
-            .body("[0].caseData.type", equalTo("GrantOfRepresentation"));
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/all")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("[0].caseData.type", equalTo("GrantOfRepresentation"));
 
     }
 
     @Test
     public void getAllStandingSearchGopCasesReturnsEmptyBodyAndStatusCodeIs200() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", STANDING_SEARCH)
-            .when()
-            .get("/cases/all")
-            .then()
-            .assertThat()
-            .statusCode(200)
-            .body("isEmpty()", is(true));
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", STANDING_SEARCH)
+                .when()
+                .get("/cases/all")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("isEmpty()", is(true));
 
     }
 
     @Test
     public void getAllCaveatGopCasesReturns200() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", CAVEAT)
-            .when()
-            .get("/cases/all")
-            .then()
-            .assertThat()
-            .statusCode(200)
-            .log().all(true)
-            .body("[0].caseData.type", equalTo("Caveat"));
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", CAVEAT)
+                .when()
+                .get("/cases/all")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .log().all(true)
+                .body("[0].caseData.type", equalTo("Caveat"));
     }
 
     @Test
     public void getAllWillLodgementGopCasesReturns200() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", WILL_LODGEMENT)
-            .when()
-            .get("/cases/all")
-            .then()
-            .assertThat()
-            .statusCode(200)
-            .extract().jsonPath().prettify();
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", WILL_LODGEMENT)
+                .when()
+                .get("/cases/all")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .extract().jsonPath().prettify();
     }
 
     @Test
     public void getAllGopCasesInvalidCaseTypeReturns400() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", "INVALID_CASE_TYPE")
-            .when()
-            .get("/cases/all")
-            .then()
-            .assertThat()
-            .statusCode(400);
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", "INVALID_CASE_TYPE")
+                .when()
+                .get("/cases/all")
+                .then()
+                .assertThat()
+                .statusCode(400);
 
     }
 
     @Test
     public void getAllGopCasesMissingCaseTypeReturns400() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .when()
-            .get("/cases/all")
-            .then()
-            .assertThat()
-            .statusCode(400);
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .when()
+                .get("/cases/all")
+                .then()
+                .assertThat()
+                .statusCode(400);
     }
 
     @Test
-    public void getCaseByInviteIdReturns200() throws Exception {
+    public void getCaseByInviteIdReturns404() throws Exception {
         String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
         inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, inviteId);
         utils.createTestCase(inviteCaseData);
         Thread.sleep(SLEEP_TIME);
 
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", GRANT_OF_REPRESENTATION)
-            .when()
-            .get("/cases/invitation/" + inviteId)
-            .then()
-            .assertThat()
-            .statusCode(200)
-            .body("caseData", notNullValue())
-            .body("caseInfo.caseId", notNullValue())
-            .body("caseInfo.state", equalTo("Pending"))
-            .extract().jsonPath().prettify();
+                .relaxedHTTPSValidation()
+                .headers(utils.getCaseworkerHeaders())
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/invitation/" + inviteId)
+                .then()
+                .assertThat()
+                .statusCode(404);
     }
 
     @Test
     public void getCaseByInviteIdAndInCorrectHeaderReturns404() {
 
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCaseworkerHeaders())
-            .queryParam("caseType", GRANT_OF_REPRESENTATION)
-            .when()
-            .get("/cases/invitation/" + inviteId)
-            .then()
-            .statusCode(404);
+                .relaxedHTTPSValidation()
+                .headers(utils.getCaseworkerHeaders())
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/invitation/" + inviteId)
+                .then()
+                .statusCode(404);
     }
 
     @Test
-    public void getCaseByIncorrectInviteIdReturns404() {
+    public void getCaseByIncorrectInviteIdReturns403() {
         String randomInviteId = randomAlphanumeric(12).toLowerCase();
 
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", GRANT_OF_REPRESENTATION)
-            .when()
-            .get("/cases/invitation/" + randomInviteId)
-            .then()
-            .assertThat()
-            .statusCode(404);
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/invitation/" + randomInviteId)
+                .then()
+                .assertThat()
+                .statusCode(403);
     }
 
     @Test
     public void getCaseByCaseIdAsRequestParamReturns200() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseId", caseId1)
-            .when()
-            .get("/cases")
-            .then()
-            .assertThat()
-            .statusCode(200)
-            .body("caseData", notNullValue())
-            .body("caseInfo.caseId", notNullValue())
-            .body("caseInfo.state", equalTo("Pending"))
-            .extract().jsonPath().prettify();
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseId", caseId1)
+                .when()
+                .get("/cases")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
 
     }
 
     @Test
     public void getCaseByCaseIdForCaseTypeIntestacyAsRequestParamReturns200() {
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseId", caseId2)
-            .when()
-            .get("/cases")
-            .then()
-            .assertThat()
-            .statusCode(200)
-            .body("caseData", notNullValue())
-            .body("caseInfo.caseId", notNullValue())
-            .body("caseInfo.state", equalTo("Pending"))
-            .extract().jsonPath().prettify();
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseId", caseId2)
+                .when()
+                .get("/cases")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
     }
 
     @Test
@@ -337,14 +333,14 @@ public class GetCasesTests extends IntegrationTestBase {
         String randomCaseId = RandomStringUtils.randomNumeric(16).toLowerCase();
 
         RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseId", randomCaseId)
-            .when()
-            .get("/cases")
-            .then()
-            .assertThat()
-            .statusCode(400)
-            .extract().jsonPath().prettify();
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseId", randomCaseId)
+                .when()
+                .get("/cases")
+                .then()
+                .assertThat()
+                .statusCode(400)
+                .extract().jsonPath().prettify();
     }
 }
