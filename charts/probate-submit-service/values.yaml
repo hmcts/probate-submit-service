@@ -38,6 +38,6 @@ java:
           alias: ld.sdk_key
         - name: launchdarklyUserkeyBackend
           alias: ld.user.key
-  image: hmctspublic.azurecr.io/probate/probate-submit-service:latest
+  image: hmctsprod.azurecr.io/probate/probate-submit-service:latest
 
 
