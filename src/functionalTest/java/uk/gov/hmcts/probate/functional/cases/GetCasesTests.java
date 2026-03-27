@@ -248,6 +248,28 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
+    public void getCaseByInviteIdReturns200() throws Exception {
+        String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
+        inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, inviteId);
+        utils.createTestCase(inviteCaseData);
+        Thread.sleep(SLEEP_TIME);
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCaseworkerSupeuserHeaders())
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/invitation/" + inviteId)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
+    }
+
+    @Test
     public void getCaseByInviteIdReturns404() throws Exception {
         String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
         inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, inviteId);

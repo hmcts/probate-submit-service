@@ -36,6 +36,12 @@ public class TestTokenGenerator {
     @Value("${idam.password}")
     private String password;
 
+    @Value("${caseworker.superuser.email}")
+    private String cwSuperuserEmail;
+
+    @Value("${caseworker.superuser.password}")
+    private String cwSuperuserPassword;
+
     @Autowired
     private ServiceAuthTokenGenerator tokenGenerator;
 
@@ -80,6 +86,28 @@ public class TestTokenGenerator {
         if (userToken == null) {
             userToken = generateOpenIdToken(email);
             cache.put(email, userToken);
+        }
+        return userToken;
+    }
+
+    public String generateSuperuserOpenIdToken() {
+        JsonPath jp = RestAssured.given().relaxedHTTPSValidation().post(idamUserBaseUrl + "/o/token?"
+                        + "client_secret=" + secret
+                        + "&client_id=" + clientId
+                        + "&redirect_uri=" + redirectUri
+                        + "&username=" + cwSuperuserEmail
+                        + "&password=" + cwSuperuserPassword
+                        + "&grant_type=password&scope=openid profile roles")
+                .body().jsonPath();
+
+        return jp.get("access_token");
+    }
+
+    public String getCachedSuperuserIdamOpenIdToken() {
+        String userToken = cache.getIfPresent(cwSuperuserEmail);
+        if (userToken == null) {
+            userToken = generateSuperuserOpenIdToken();
+            cache.put(cwSuperuserEmail, userToken);
         }
         return userToken;
     }

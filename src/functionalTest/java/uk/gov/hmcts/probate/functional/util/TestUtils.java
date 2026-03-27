@@ -105,4 +105,11 @@ public class TestUtils {
             new Header(CONTENT_TYPE, ContentType.JSON.toString()),
             new Header(AUTHORIZATION, testTokenGenerator.generateAuthorisation(email)));
     }
+
+    public Headers getCaseworkerSupeuserHeaders() {
+        return Headers.headers(
+                new Header("ServiceAuthorization", serviceToken),
+                new Header(CONTENT_TYPE, ContentType.JSON.toString()),
+                new Header(AUTHORIZATION, testTokenGenerator.getCachedSuperuserIdamOpenIdToken()));
+    }
 }
