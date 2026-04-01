@@ -255,18 +255,36 @@ public class GetCasesTests extends IntegrationTestBase {
         Thread.sleep(SLEEP_TIME);
 
         RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCaseworkerSupeuserHeaders())
+                .queryParam("caseType", GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/invitation/" + inviteId)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void getCaseByInviteIdReturns404() throws Exception {
+        String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
+        inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, inviteId);
+        utils.createTestCase(inviteCaseData);
+        Thread.sleep(SLEEP_TIME);
+
+        RestAssured.given()
             .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
+            .headers(utils.getCaseworkerHeaders())
             .queryParam("caseType", GRANT_OF_REPRESENTATION)
             .when()
             .get("/cases/invitation/" + inviteId)
             .then()
             .assertThat()
-            .statusCode(200)
-            .body("caseData", notNullValue())
-            .body("caseInfo.caseId", notNullValue())
-            .body("caseInfo.state", equalTo("Pending"))
-            .extract().jsonPath().prettify();
+            .statusCode(404);
     }
 
     @Test
@@ -283,7 +301,7 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByIncorrectInviteIdReturns404() {
+    public void getCaseByIncorrectInviteIdReturns403() {
         String randomInviteId = randomAlphanumeric(12).toLowerCase();
 
         RestAssured.given()
@@ -294,7 +312,7 @@ public class GetCasesTests extends IntegrationTestBase {
             .get("/cases/invitation/" + randomInviteId)
             .then()
             .assertThat()
-            .statusCode(404);
+            .statusCode(403);
     }
 
     @Test
