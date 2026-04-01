@@ -19,3 +19,20 @@ gradle-wrapper.jar
 gradlew.bat
 *.hprof
 .aat-env
+
+# Ignore all log files
+*.log
+
+# Ignore Gradle build directory
+/build/
+/.gradle/
+
+# Ignore test reports
+reports/
+/reports/
+
+# Ignore JaCoCo coverage outputs
+jacoco*.exec
+jacocoTestReport.xml
+reports/jacoco/
+reports/jacoco/test/
