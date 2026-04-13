@@ -188,7 +188,7 @@ def versions = [
         springBoot                      : '3.5.13',
         springCloudStarterNetflixHystrix: '4.3.0',
         springCloudWiremock             : '4.3.0',
-        springDocUi                     : '2.8.16',
+        springDocUi                     : '2.8.17',
         swaggerAnnotations              : '2.2.46',
         springSecurityTesting           : '7.0.4',
         fortifyClient                   : '1.4.10',
