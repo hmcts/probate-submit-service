@@ -6,8 +6,10 @@ tags:
 java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_NAME}.preview.platform.hmcts.net
-
-ccd-elasticsearch:
+  devcpuRequests: 100m
+  devcpuLimits: 500m
+  devmemoryRequests: 896Mi
+  devmemoryLimits: 896Mi
   logstash:
     elasticsearch:
       host: "{{ .Release.Name }}-ccd-es-client"
