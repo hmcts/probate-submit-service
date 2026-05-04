@@ -79,20 +79,13 @@ public class PaymentServiceImpl implements PaymentsService {
         log.info("Updating payment details for case type: {}", caseType);
         SecurityDto securityDto = securityUtils.getSecurityDto();
         final String probateCaseId = probateCaseDetails.getCaseInfo().getCaseId();
-        final ProbateCaseDetails caseResponse;
-        if (featureToggleService.useCcdLookupForPayments()) {
-            log.info("Looking up {} case from ccd using searchField {} (probateCaseId: {})",
-                    caseType,
-                    searchField,
-                    probateCaseId);
-            caseResponse = findCaseById(searchField, securityDto);
-        } else {
-            log.info("Looking up {} case from elasticsearch using searchField {} (probateCaseId: {})",
-                    caseType,
-                    searchField,
-                    probateCaseId);
-            caseResponse = findCase(searchField, caseType, securityDto);
-        }
+
+        log.info("Looking up {} case from ccd using searchField {} (probateCaseId: {})",
+                caseType,
+                searchField,
+                probateCaseId);
+        final ProbateCaseDetails caseResponse = findCaseById(searchField, securityDto);
+
 
         validationService.validateForSubmission(probateCaseDetails);
 
