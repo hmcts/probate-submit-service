@@ -11,7 +11,6 @@ import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
-import uk.gov.hmcts.probate.services.submit.services.FeatureToggleService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.PaymentStatus;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
@@ -44,7 +43,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_TO_SUCCESS;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_DRAFT;
 
-public class PaymentServiceImplTest {
+class PaymentServiceImplTest {
 
     private static final String CASE_ID = "12323213323";
     private static final CaseState STATE = CaseState.PA_APP_CREATED;
@@ -61,8 +60,6 @@ public class PaymentServiceImplTest {
     RegistryService registryService;
     @Mock
     ValidationService validationService;
-    @Mock
-    FeatureToggleService featureToggleServiceMock;
 
     PaymentServiceImpl paymentService;
 
@@ -82,15 +79,14 @@ public class PaymentServiceImplTest {
     private ProbateCaseDetails probateCaseDetailsRequest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         closeableMocks = MockitoAnnotations.openMocks(this);
         paymentService = new PaymentServiceImpl(
                 mockCoreCaseDataService,
                 mockSecurityUtils,
                 eventFactory,
                 registryService,
-                validationService,
-                featureToggleServiceMock);
+                validationService);
 
 
         securityDto = mock(SecurityDto.class);
@@ -129,12 +125,12 @@ public class PaymentServiceImplTest {
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() throws Exception {
         closeableMocks.close();
     }
 
     @Test
-    public void shouldUpdateCaseByCaseIdAndIsSuccess() {
+    void shouldUpdateCaseByCaseIdAndIsSuccess() {
         when(mockSecurityUtils.getSecurityDto()).thenReturn(securityDto);
         when(mockCoreCaseDataService.findCaseById(CASE_ID, securityDto))
             .thenReturn(Optional.of(caseResponse));
@@ -153,7 +149,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void shouldNotUpdatePaymentByCaseIdWhenCaseStateIsCaseCreated() {
+    void shouldNotUpdatePaymentByCaseIdWhenCaseStateIsCaseCreated() {
         caseResponse.getCaseInfo().setState(CaseState.CASE_CREATED);
         when(mockSecurityUtils.getSecurityDto()).thenReturn(securityDto);
         when(mockCoreCaseDataService.findCaseById(CASE_ID, securityDto))
@@ -169,7 +165,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void shouldCreateCaseWhenPaymentStatusIsSuccess() {
+    void shouldCreateCaseWhenPaymentStatusIsSuccess() {
         when(mockSecurityUtils.getSecurityDto()).thenReturn(securityDto);
         when(mockCoreCaseDataService.findCaseById(APPLICANT_EMAIL, securityDto))
                 .thenReturn(Optional.of(caseResponse));
@@ -187,7 +183,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void shouldCreateCaseWhenPaymentStatusIsFailed() {
+    void shouldCreateCaseWhenPaymentStatusIsFailed() {
         caseData.getPayments().get(0).getValue().setStatus(PaymentStatus.FAILED);
         when(mockSecurityUtils.getSecurityDto()).thenReturn(securityDto);
         when(mockCoreCaseDataService.findCaseById(APPLICANT_EMAIL, securityDto))
@@ -206,7 +202,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void shouldCreateCaseWhenPaymentStatusIsFailedAgain() {
+    void shouldCreateCaseWhenPaymentStatusIsFailedAgain() {
         caseInfo.setState(CaseState.CASE_PAYMENT_FAILED);
         caseData.getPayments().get(0).getValue().setStatus(PaymentStatus.FAILED);
         when(mockSecurityUtils.getSecurityDto()).thenReturn(securityDto);
@@ -226,7 +222,7 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void shouldCreateCaseWhenPaymentStatusIsSuccessAfterFailure() {
+    void shouldCreateCaseWhenPaymentStatusIsSuccessAfterFailure() {
         caseInfo.setState(CaseState.CASE_PAYMENT_FAILED);
         caseData.getPayments().get(0).getValue().setStatus(PaymentStatus.SUCCESS);
         when(mockSecurityUtils.getSecurityDto()).thenReturn(securityDto);

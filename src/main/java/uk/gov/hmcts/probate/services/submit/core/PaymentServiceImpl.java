@@ -9,7 +9,6 @@ import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
-import uk.gov.hmcts.probate.services.submit.services.FeatureToggleService;
 import uk.gov.hmcts.probate.services.submit.services.PaymentsService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.PaymentStatus;
@@ -56,21 +55,18 @@ public class PaymentServiceImpl implements PaymentsService {
     private final EventFactory eventFactory;
     private final RegistryService registryService;
     private final ValidationService validationService;
-    private final FeatureToggleService featureToggleService;
 
     public PaymentServiceImpl(
             final CoreCaseDataService coreCaseDataService,
             final SecurityUtils securityUtils,
             final EventFactory eventFactory,
             final RegistryService registryService,
-            final ValidationService validationService,
-            final FeatureToggleService featureToggleService) {
+            final ValidationService validationService) {
         this.coreCaseDataService = coreCaseDataService;
         this.securityUtils = securityUtils;
         this.eventFactory = eventFactory;
         this.registryService = registryService;
         this.validationService = validationService;
-        this.featureToggleService = featureToggleService;
     }
 
     @Override
@@ -131,12 +127,6 @@ public class PaymentServiceImpl implements PaymentsService {
         CaseType caseType = CaseType.getCaseType(caseResponse.getCaseData());
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         return updateCase(caseId, probateUpdateRequest, securityDto, caseType, caseResponse);
-    }
-
-    private ProbateCaseDetails findCase(String applicantEmail, CaseType caseType, SecurityDto securityDto) {
-        Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
-                .findCase(applicantEmail, caseType, securityDto);
-        return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 
     private ProbateCaseDetails findCaseById(String caseId, SecurityDto securityDto) {
