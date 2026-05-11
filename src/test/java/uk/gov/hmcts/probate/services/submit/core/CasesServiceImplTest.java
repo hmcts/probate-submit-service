@@ -5,12 +5,15 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.probate.services.submit.services.FeatureToggleService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
@@ -63,6 +66,9 @@ public class CasesServiceImplTest {
 
     private static final EventId UPDATE_DRAFT = EventId.GOP_UPDATE_DRAFT;
 
+    private static final EventId UPDATE_DRAFT_WITH_CALLBACK = EventId.GOP_UPDATE_DRAFT_WITH_CALLBACK;
+
+
     @Mock
     private CoreCaseDataService coreCaseDataService;
 
@@ -80,6 +86,9 @@ public class CasesServiceImplTest {
 
     @Mock
     private EventFactory eventFactory;
+
+    @Mock
+    private FeatureToggleService featureToggleService;
 
     @BeforeEach
     public void setUp() {
@@ -470,5 +479,37 @@ public class CasesServiceImplTest {
         verify(coreCaseDataService, times(1)).findCaseById(CASE_ID, securityDto);
         verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData,
                 KEEP_DRAFT, securityDto, eventDescription);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "Page completed /executor-contact-details/*",
+        "Page completed /declaration",
+        "Page completed /executors-invite",
+        "Page completed /executors-update-invite"
+    })
+    void shouldUpdateCaseWithCallback(String eventDescription) {
+        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
+        caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(CaseState.DRAFT);
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+        SecurityDto securityDto = SecurityDto.builder().build();
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(coreCaseDataService.findCaseById(CASE_ID, securityDto))
+                .thenReturn(caseResponseOptional);
+        when(coreCaseDataService
+                .updateCase(CASE_ID, caseData, UPDATE_DRAFT_WITH_CALLBACK, securityDto, eventDescription))
+                .thenReturn(caseRequest);
+        when(featureToggleService.useUpdateDraftCallbackEvent()).thenReturn(true);
+        ProbateCaseDetails caseResponse = casesService.saveCase(CASE_ID, caseRequest,eventDescription);
+
+        assertEquals(caseData, caseResponse.getCaseData());
+        verify(securityUtils, times(1)).getSecurityDto();
+        verify(coreCaseDataService, times(1)).findCaseById(CASE_ID, securityDto);
+        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData,
+                UPDATE_DRAFT_WITH_CALLBACK, securityDto, eventDescription);
     }
 }

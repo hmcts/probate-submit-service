@@ -11,6 +11,7 @@ import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.probate.services.submit.services.FeatureToggleService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
@@ -36,6 +37,13 @@ import static uk.gov.hmcts.reform.probate.model.cases.CaseState.PA_APP_CREATED;
 @RequiredArgsConstructor
 public class CasesServiceImpl implements CasesService {
 
+    private static final List<String> DRAFT_CALLBACK_PAGES = List.of(
+            "/declaration",
+            "/executor-contact-details",
+            "/executors-invite",
+            "/executors-update-invite"
+    );
+
     private final CoreCaseDataService coreCaseDataService;
 
     private final SecurityUtils securityUtils;
@@ -45,6 +53,8 @@ public class CasesServiceImpl implements CasesService {
     private final SearchFieldFactory searchFieldFactory;
 
     private final ValidationService validationService;
+
+    private final FeatureToggleService featureToggleService;
 
     private final Map<CaseState, Function<CaseEvents, EventId>> eventMap =
         ImmutableMap.<CaseState, Function<CaseEvents, EventId>>builder()
@@ -133,6 +143,8 @@ public class CasesServiceImpl implements CasesService {
                 eventId = EventId.GOP_CITIZEN_HUB_RESPONSE;
             } else if (EventId.GOP_UPDATE_DRAFT.equals(eventId) && isTaskListPage(eventDescription)) {
                 eventId = EventId.KEEP_DRAFT;
+            } else if (EventId.GOP_UPDATE_DRAFT.equals(eventId) && updateDraftWithCallback(eventDescription)) {
+                eventId = EventId.GOP_UPDATE_DRAFT_WITH_CALLBACK;
             }
             if (asCaseworker) {
                 return coreCaseDataService
@@ -204,5 +216,11 @@ public class CasesServiceImpl implements CasesService {
 
     private boolean isTaskListPage(String eventDescription) {
         return eventDescription != null && eventDescription.contains("task-list");
+    }
+
+    private boolean updateDraftWithCallback(String eventDescription) {
+        return featureToggleService.useUpdateDraftCallbackEvent()
+            && eventDescription != null
+            && DRAFT_CALLBACK_PAGES.stream().anyMatch(eventDescription::contains);
     }
 }

@@ -20,6 +20,7 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
 
     static final String CONFIRM_FEATURE = "probate-confirm-feature-toggle";
     static final String PAYMENT_LOOKUP_FEATURE = "probate-use-ccd-lookup-not-elastic-when-paying";
+    static final String UPDATE_DRAFT_CALLBACK_FEATURE = "probate-use-update-draft-callback-event";
 
     public FeatureToggleServiceImpl(
             final LDClientInterface ldClient,
@@ -53,5 +54,10 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
     public boolean useCcdLookupForPayments() {
         confirmFeatureToggle();
         return isFeatureToggleOn(PAYMENT_LOOKUP_FEATURE, false);
+    }
+
+    @Override
+    public boolean useUpdateDraftCallbackEvent() {
+        return isFeatureToggleOn(UPDATE_DRAFT_CALLBACK_FEATURE, false);
     }
 }

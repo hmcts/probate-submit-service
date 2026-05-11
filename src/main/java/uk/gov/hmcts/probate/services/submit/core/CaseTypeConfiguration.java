@@ -23,6 +23,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_TO_SUCCESS;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_APPLICATION;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_DRAFT;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_DRAFT_WITH_CALLBACK;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.UPDATE_GOP_PAYMENT_FAILED;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CITIZEN_HUB_RESPONSE;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CITIZEN_HUB_RESPONSE_DRAFT;
@@ -42,6 +43,7 @@ public class CaseTypeConfiguration {
                 .paymentFailedEventId(GOP_PAYMENT_FAILED)
                 .paymentFailedToSuccessEventId(GOP_PAYMENT_FAILED_TO_SUCCESS)
                 .updateDraftEventId(GOP_UPDATE_DRAFT)
+                .updateDraftWithCallbackEventId(GOP_UPDATE_DRAFT_WITH_CALLBACK)
                 .createCaseWithoutPaymentId(GOP_CREATE_CASE_WITHOUT_PAYMENT)
                 .updatePaymentFailedEventId(UPDATE_GOP_PAYMENT_FAILED)
                 .citizenHubResponseId(GOP_CITIZEN_HUB_RESPONSE)
