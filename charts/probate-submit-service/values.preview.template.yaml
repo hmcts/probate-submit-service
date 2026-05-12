@@ -1,8 +1,3 @@
-tags:
-  ccd-enabled: false
-  ccd-idam-pr: false
-  ccd-elasticsearch: false
-
 java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_NAME}.preview.platform.hmcts.net
@@ -10,58 +5,6 @@ java:
   devcpuLimits: 500m
   devmemoryRequests: 896Mi
   devmemoryLimits: 1.5Gi
-ccd-elasticsearch:
-  logstash:
-    elasticsearch:
-      host: "{{ .Release.Name }}-ccd-es-client"
-  elasticsearch:
-    nameOverride: ccd-es
-    master:
-      persistence:
-        enabled: false
-    data:
-      persistence:
-        enabled: false
-  ccd:
-    ingressHost: ${SERVICE_FQDN}
-    ingressIP: ${INGRESS_IP}
-    consulIP: ${CONSUL_LB_IP}
-    idam-pr:
-      releaseNameOverride: ${SERVICE_NAME}-ccd-idam-pr
-      redirect_uris:
-        CCD:
-          - https://case-management-web-${SERVICE_FQDN}/oauth2redirect
-        CCD Admin:
-          - https://admin-web-${SERVICE_FQDN}/oauth2redirect
-    definitionStoreApi:
-      s2sKey: ${DEFINITION_STORE_S2S_KEY}
-      s2sAuthorisedServices: ccd_admin,ccd_data,ccd_gw
-    apiGateway:
-      s2sKey: ${API_GATEWAY_S2S_KEY}
-      idamClientSecret:
-        value: ${API_GATEWAY_IDAM_SECRET}
-    dataStoreApi:
-      s2sKey: ${DATA_STORE_S2S_KEY}
-      image: "hmctsprod.azurecr.io/ccd/data-store-api:latest"
-    caseManagementWeb:
-      enabled: true
-      environment:
-        NODE_TLS_REJECT_UNAUTHORIZED: 0
-    adminWeb:
-      enabled: true
-      s2sKey: ${ADMIN_S2S_KEY}
-      idamClientSecret:
-        value: ${ADMIN_WEB_IDAM_SECRET}
-      environment:
-        NODE_TLS_REJECT_UNAUTHORIZED: 0
-
-    importer:
-      userRoles:
-        - caseworker-probate
-        - caseworker-probate-issuer
-        - caseworker-probate-solicitor
-        - citizen
-        - caseworker-probate-examiner
 
 keyVaults:
   probate:
