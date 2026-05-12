@@ -9,7 +9,7 @@ java:
   devcpuRequests: 100m
   devcpuLimits: 500m
   devmemoryRequests: 896Mi
-  devmemoryLimits: 896Mi
+  devmemoryLimits: 1.5Gi
   logstash:
     elasticsearch:
       host: "{{ .Release.Name }}-ccd-es-client"
