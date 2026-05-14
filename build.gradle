@@ -189,10 +189,10 @@ def versions = [
         springCloudStarterNetflixHystrix: '4.3.0',
         springCloudWiremock             : '4.3.0',
         springDocUi                     : '2.8.17',
-        swaggerAnnotations              : '2.2.49',
+        swaggerAnnotations              : '2.2.50',
         springSecurityTesting           : '7.0.5',
         fortifyClient                   : '1.4.10',
-        tomcat                          : '11.0.21'
+        tomcat                          : '11.0.22'
 ]
 
 dependencyManagement {
