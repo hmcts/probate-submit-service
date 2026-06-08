@@ -184,7 +184,7 @@ def versions = [
         probateCommons                  : '2.2.17',
         restAssured                     : '5.5.7',
         serenity                        : '5.3.10',
-        serviceAuthProviderClient       : '5.3.4',
+        serviceAuthProviderClient       : '6.0.0',
         springBoot                      : '3.5.14',
         springCloudStarterNetflixHystrix: '4.3.0',
         springCloudWiremock             : '4.3.0',
