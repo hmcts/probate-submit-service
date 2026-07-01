@@ -28,7 +28,7 @@ public class CaveatsPaymentTests extends IntegrationTestBase {
     public void updatePaAppCreatedCaveatWithSuccessfulPaymentReturns200() {
         RestAssured.given()
             .relaxedHTTPSValidation()
-            .headers(utils.getCaseworkerHeaders())
+            .headers(utils.getCitizenHeaders())
             .body(paymentCaveatData)
             .when()
             .post("/ccd-case-update/" + caveatId)
