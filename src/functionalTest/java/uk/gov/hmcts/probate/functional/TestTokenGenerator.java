@@ -42,6 +42,12 @@ public class TestTokenGenerator {
     @Value("${caseworker.superuser.password}")
     private String cwSuperuserPassword;
 
+    @Value("${payment.caseworker.email}")
+    private String payCaseWorkerUser;
+
+    @Value("${payment.caseworker.password}")
+    private String payCaseWorkerPass;
+
     @Autowired
     private ServiceAuthTokenGenerator tokenGenerator;
 
@@ -108,6 +114,28 @@ public class TestTokenGenerator {
         if (userToken == null) {
             userToken = generateSuperuserOpenIdToken();
             cache.put(cwSuperuserEmail, userToken);
+        }
+        return userToken;
+    }
+
+    public String generatePaymentUserOpenIdToken() {
+        JsonPath jp = RestAssured.given().relaxedHTTPSValidation().post(idamUserBaseUrl + "/o/token?"
+                        + "client_secret=" + secret
+                        + "&client_id=" + clientId
+                        + "&redirect_uri=" + redirectUri
+                        + "&username=" + payCaseWorkerUser
+                        + "&password=" + payCaseWorkerPass
+                        + "&grant_type=password&scope=openid profile roles")
+                .body().jsonPath();
+
+        return jp.get("access_token");
+    }
+
+    public String getCachedPaymentUserIdamOpenIdToken() {
+        String userToken = cache.getIfPresent(payCaseWorkerUser);
+        if (userToken == null) {
+            userToken = generatePaymentUserOpenIdToken();
+            cache.put(payCaseWorkerUser, userToken);
         }
         return userToken;
     }

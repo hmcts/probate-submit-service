@@ -22,6 +22,8 @@ def secrets = [
                 secret('cwUserPass', 'CW_USER_PASSWORD'),
                 secret('cwSuperuserEmail', 'CW_SUPERUSER_EMAIL'),
                 secret('cwSuperuserPass', 'CW_SUPERUSER_PASSWORD'),
+                secret('payCaseWorkerUser', 'PAYMENT_CASEWORKER_USERNAME'),
+                secret('payCaseWorkerPass', 'PAYMENT_CASEWORKER_PASSWORD'),
                 secret('launchdarkly-key', 'LAUNCHDARKLY_KEY'),
                 secret('launchdarklyUserkeyBackend', 'LD_USER_KEY')
         ],
