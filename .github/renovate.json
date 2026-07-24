@@ -12,6 +12,8 @@
     "au.com.dius.pact.consumer:java8",
     "au.com.dius.pact.consumer:junit5",
     "au.com.dius.pact.provider:spring",
-    "au.com.dius.pact.provider:junit5"
+    "au.com.dius.pact.provider:junit5",
+    "hmctsprod.azurecr.io/base/java"
+
   ]
 }
