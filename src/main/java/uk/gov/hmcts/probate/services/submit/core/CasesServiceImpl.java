@@ -3,6 +3,7 @@ package uk.gov.hmcts.probate.services.submit.core;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -215,7 +216,6 @@ public class CasesServiceImpl implements CasesService {
     }
 
     private boolean isRelationshipToDeceased(String eventDescription) {
-        return eventDescription != null && eventDescription
-                .equalsIgnoreCase("Page completed: intestacy/relationship-to-deceased");
+        return StringUtils.containsIgnoreCase(eventDescription, "relationship-to-deceased");
     }
 }
