@@ -215,6 +215,7 @@ public class CasesServiceImpl implements CasesService {
         return eventDescription != null && eventDescription.contains("deceased-same-parents");
     }
 
+    // Intentional contains check: co-applicant routes can include an index segment such as "/0".
     private boolean isRelationshipToDeceased(String eventDescription) {
         return StringUtils.containsIgnoreCase(eventDescription, "relationship-to-deceased");
     }
