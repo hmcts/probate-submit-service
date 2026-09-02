@@ -37,10 +37,8 @@
             file name: spring-oxm-6.2.19.jar
             file name: spring-web-6.2.19.jar
             file name: spring-webmvc-6.2.19.jar
-            expiry date: 2026-12-02
         ]]></notes>
     </suppress >
-
     <suppress until = "2026-10-24">
         <cve>CVE-2026-47893</cve>
         <notes><![CDATA[
@@ -53,10 +51,8 @@
             file name: spring-oxm-6.2.19.jar
             file name: spring-web-6.2.19.jar
             file name: spring-webmvc-6.2.19.jar
-            expiry date: 2026-12-02
         ]]></notes>
     </suppress>
-
     <suppress until = "2026-10-24">
         <cve>CVE-2026-59280</cve>
         <notes><![CDATA[
@@ -69,10 +65,8 @@
             file name: spring-oxm-6.2.19.jar
             file name: spring-web-6.2.19.jar
             file name: spring-webmvc-6.2.19.jar
-            expiry date: 2026-12-02
         ]]></notes>
     </suppress>
-
     <!-- Spring Cloud Commons -->
     <suppress until = "2026-10-24">
         <cve>CVE-2026-59284</cve>
@@ -80,17 +74,13 @@
             file name: spring-cloud-commons-4.3.3.jar
             file name: spring-cloud-context-4.3.3.jar
             file name: spring-cloud-starter-4.3.3.jar
-            expiry date: 2026-12-02
         ]]></notes>
     </suppress>
-
     <!-- Spring Security -->
     <suppress until = "2026-10-24">
         <cve>CVE-2026-59270</cve>
         <notes><![CDATA[
             file name: spring-security-crypto-6.5.11.jar
-            expiry date: 2026-12-02
         ]]></notes>
     </suppress>
-
 </suppressions>
