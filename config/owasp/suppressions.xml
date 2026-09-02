@@ -38,7 +38,7 @@
             file name: spring-web-6.2.19.jar
             file name: spring-webmvc-6.2.19.jar
         ]]></notes>
-    </suppress >
+    </suppress>
     <suppress until = "2026-10-24">
         <cve>CVE-2026-47893</cve>
         <notes><![CDATA[
