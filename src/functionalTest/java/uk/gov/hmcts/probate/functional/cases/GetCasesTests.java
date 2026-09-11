@@ -261,13 +261,13 @@ public class GetCasesTests extends IntegrationTestBase {
         Thread.sleep(SLEEP_TIME);
 
         RestAssured.given()
-                .log().all()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCaseworkerSupeuserHeaders())
                 .queryParam("caseType", GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/invitation/" + inviteId)
                 .then()
+                .log().all()
                 .assertThat()
                 .statusCode(200)
                 .body("caseData", notNullValue())
