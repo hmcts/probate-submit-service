@@ -1,6 +1,7 @@
 package uk.gov.hmcts.probate.functional.cases;
 
 import io.restassured.RestAssured;
+import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,6 +22,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.CaseType.WILL_LODGEMENT;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SerenityJUnit5Extension.class)
+@Slf4j
 public class GetCasesTests extends IntegrationTestBase {
 
     public static final String INVITE_ID_PLACEHOLDER = "inviteId";
@@ -45,6 +47,10 @@ public class GetCasesTests extends IntegrationTestBase {
         caveatCaseId = utils.createTestCase(caveatCaseData);
 
         Thread.sleep(SLEEP_TIME);
+
+        log.info("caseId1: {}", caseId1);
+        log.info("caseId2: {}", caseId2);
+        log.info("inviteId: {}", inviteId);
     }
 
     @Test
@@ -255,6 +261,7 @@ public class GetCasesTests extends IntegrationTestBase {
         Thread.sleep(SLEEP_TIME);
 
         RestAssured.given()
+                .log().all()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCaseworkerSupeuserHeaders())
                 .queryParam("caseType", GRANT_OF_REPRESENTATION)
