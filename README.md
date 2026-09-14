@@ -27,7 +27,7 @@ Microservice to handle submissions to probate registries.
 
 ## Getting Started
 ### Prerequisites
-- Java 21
+- Java 25
 - Gradle
 - Docker
 
