@@ -170,13 +170,13 @@ repositories {
 }
 
 def versions = [
-        applicationInsightsVersion      : '3.7.9',
+        applicationInsightsVersion      : '3.7.10',
         authCheckerLib                  : '3.1.1',
         ccdClient                       : '5.3.0',
         commonsFileuploadVersion        : '1.6.0',
         feignHttpClient                 : '13.15',
         httpclient5                     : '5.6.4',
-        jackson                         : '2.22.2',
+        jackson                         : '2.22.3',
         junitJupiter                    : '5.12.2',
         lombok                          : '1.18.48',
         logging                         : '8.0.0',
@@ -201,7 +201,7 @@ dependencyManagement {
     }
     dependencies {
         //CVE-2026-29062
-        dependencySet(group: 'tools.jackson.core', version: '3.2.2') {
+        dependencySet(group: 'tools.jackson.core', version: '3.2.3') {
             entry 'jackson-core'
             entry 'jackson-databind'
         }
@@ -245,7 +245,7 @@ dependencies {
     implementation group: 'org.pitest', name: 'pitest', version: '1.30.0'
     implementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '9.0'
-    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.4'
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.3.0'
     implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '7.17.1'
 
     //Solves CVE-2025-48989
