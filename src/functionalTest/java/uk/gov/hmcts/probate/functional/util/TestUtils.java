@@ -18,6 +18,8 @@ import uk.gov.hmcts.probate.functional.TestTokenGenerator;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Objects;
+
 import jakarta.annotation.PostConstruct;
 
 @ContextConfiguration(classes = TestContextConfiguration.class)
@@ -29,8 +31,7 @@ public class TestUtils {
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String AUTHORIZATION = "Authorization";
     public static final String CITIZEN = "citizen";
-    @Value("${idam.citizen.username}")
-    public String citizenEmail;
+    private String citizenEmail;
     @Value("${probate.submit.url}")
     public String submitServiceUrl;
     @Autowired
@@ -42,7 +43,9 @@ public class TestUtils {
     @PostConstruct
     public void init() throws JsonProcessingException {
         serviceToken = testTokenGenerator.generateServiceAuthorisation();
-
+        citizenEmail = "probate-ss-ft-"
+                + RandomStringUtils.secure().nextAlphanumeric(12).toLowerCase()
+                + "@test.com";
         testTokenGenerator.createNewUser(citizenEmail, CITIZEN);
 
         RestAssured.baseURI = submitServiceUrl;
@@ -50,7 +53,8 @@ public class TestUtils {
 
     public String getJsonFromFile(String fileName) {
         try {
-            File file = ResourceUtils.getFile(this.getClass().getResource("/json/" + fileName));
+            File file = ResourceUtils.getFile(
+                    Objects.requireNonNull(this.getClass().getResource("/json/" + fileName)));
             return new String(Files.readAllBytes(file.toPath()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -59,11 +63,15 @@ public class TestUtils {
     }
 
     public String createTestCase(String caseData) {
-        caseData = caseData.replace(EMAIL_PLACEHOLDER, citizenEmail);
+        return createTestCase(caseData, citizenEmail);
+    }
+
+    public String createTestCase(String caseData, String email) {
+        caseData = caseData.replace(EMAIL_PLACEHOLDER, email);
 
         JsonPath jsonPath  = RestAssured.given()
             .relaxedHTTPSValidation()
-            .headers(getCitizenHeaders())
+            .headers(getHeaders(email))
             .body(caseData)
             .when()
             .post("/cases/initiate")
@@ -75,7 +83,7 @@ public class TestUtils {
     }
 
     public String createCaveatTestCase(String caseData) {
-        String applicationId = RandomStringUtils.randomNumeric(16).toLowerCase();
+        String applicationId = RandomStringUtils.secure().nextNumeric(16).toLowerCase();
         caseData = caseData.replace(APPLICATION_ID, applicationId);
 
         JsonPath jsonPath = RestAssured.given()
@@ -118,5 +126,9 @@ public class TestUtils {
                 new Header("ServiceAuthorization", serviceToken),
                 new Header(CONTENT_TYPE, ContentType.JSON.toString()),
                 new Header(AUTHORIZATION, testTokenGenerator.getCachedPaymentUserIdamOpenIdToken()));
+    }
+
+    public String getCitizenEmail() {
+        return citizenEmail;
     }
 }

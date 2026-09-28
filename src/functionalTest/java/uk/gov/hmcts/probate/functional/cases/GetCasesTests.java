@@ -7,10 +7,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -28,19 +26,20 @@ public class GetCasesTests extends IntegrationTestBase {
     String caseId2;
     String inviteId;
     String caveatCaseId;
-    @Value("${idam.citizen.username}")
     private String email;
 
     private static final int SLEEP_TIME = 2000;
 
     @BeforeAll
     public void init() throws Exception {
+        email = utils.getCitizenEmail();
+
         String caseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
         caseId1 = utils.createTestCase(caseData);
         caseData = caseData.replace("gop", "intestacy");
         caseId2 = utils.createTestCase(caseData);
 
-        inviteId = randomAlphanumeric(12).toLowerCase();
+        inviteId = RandomStringUtils.secure().nextAlphanumeric(12).toLowerCase();
         String caveatCaseData = utils.getJsonFromFile("caveat.full.json");
         caveatCaseId = utils.createTestCase(caveatCaseData);
 
@@ -90,7 +89,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
     @Test
     public void getCaseByIncorrectIdAsPathVariableReturns404() {
-        String randomCaseId = RandomStringUtils.randomNumeric(16).toLowerCase();
+        String randomCaseId = RandomStringUtils.secure().nextNumeric(16).toLowerCase();
 
         RestAssured.given()
             .relaxedHTTPSValidation()
@@ -148,7 +147,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
     @Test
     public void getCaseByIncorrectApplicantEmailReturns404() {
-        String randomEmail = randomAlphanumeric(5).toLowerCase() + "@email.com";
+        String randomEmail = RandomStringUtils.secure().nextAlphanumeric(5).toLowerCase() + "@email.com";
 
         RestAssured.given()
             .relaxedHTTPSValidation()
@@ -302,7 +301,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
     @Test
     public void getCaseByIncorrectInviteIdReturns403() {
-        String randomInviteId = randomAlphanumeric(12).toLowerCase();
+        String randomInviteId = RandomStringUtils.secure().nextAlphanumeric(12).toLowerCase();
 
         RestAssured.given()
             .relaxedHTTPSValidation()
@@ -352,7 +351,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
     @Test
     public void getCaseByIncorrectIdAsRequestParamReturns400() {
-        String randomCaseId = RandomStringUtils.randomNumeric(16).toLowerCase();
+        String randomCaseId = RandomStringUtils.secure().nextNumeric(16).toLowerCase();
 
         RestAssured.given()
             .relaxedHTTPSValidation()
