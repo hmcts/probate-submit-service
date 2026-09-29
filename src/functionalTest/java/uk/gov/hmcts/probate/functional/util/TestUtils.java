@@ -6,6 +6,7 @@ import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.path.json.JsonPath;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,11 +18,12 @@ import uk.gov.hmcts.probate.functional.TestTokenGenerator;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
-import java.util.Objects;
 
 import jakarta.annotation.PostConstruct;
 
+@Slf4j
 @ContextConfiguration(classes = TestContextConfiguration.class)
 @Component
 public class TestUtils {
@@ -46,6 +48,7 @@ public class TestUtils {
         citizenEmail = "probate-ss-ft-"
                 + RandomStringUtils.secure().nextAlphanumeric(12).toLowerCase()
                 + "@test.com";
+        log.info("Creating new citizen user with email: {}", citizenEmail);
         testTokenGenerator.createNewUser(citizenEmail, CITIZEN);
 
         RestAssured.baseURI = submitServiceUrl;
@@ -53,12 +56,14 @@ public class TestUtils {
 
     public String getJsonFromFile(String fileName) {
         try {
-            File file = ResourceUtils.getFile(
-                    Objects.requireNonNull(this.getClass().getResource("/json/" + fileName)));
-            return new String(Files.readAllBytes(file.toPath()));
+            var resource = getClass().getResource("/json/" + fileName);
+            if (resource == null) {
+                throw new IllegalStateException("JSON file not found: " + fileName);
+            }
+            File file = ResourceUtils.getFile(resource);
+            return Files.readString(file.toPath());
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new UncheckedIOException("Error reading JSON file: " + fileName, e);
         }
     }
 
