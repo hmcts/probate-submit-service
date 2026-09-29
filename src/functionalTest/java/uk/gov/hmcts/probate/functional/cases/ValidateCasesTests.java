@@ -51,7 +51,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
 
     @Test
     public void validateCaseIncorrectIdReturns404() {
-        String randomCaseId = RandomStringUtils.randomNumeric(16).toLowerCase();
+        String randomCaseId = RandomStringUtils.secure().nextNumeric(16).toLowerCase();
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
