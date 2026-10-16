@@ -1,19 +1,19 @@
 package uk.gov.hmcts.probate.security;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.test.context.TestSecurityContextHolder;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.NoSecurityContextException;
 import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.ServiceAndUserDetails;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -21,21 +21,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 
-@ExtendWith(SpringExtension.class)
-public class SecurityUtilsTest {
+@ExtendWith(MockitoExtension.class)
+class SecurityUtilsTest {
 
     private static final String SERVICE_AUTH_TOKEN = "SERVICEAUTH123456";
     private static final String AUTH_TOKEN = "AUTHXXXXXXX45566";
     private static final String USER_ID = "userName";
+    private SecurityUtils securityUtils;
 
     @Mock
     private AuthTokenGenerator authTokenGenerator;
 
-    @InjectMocks
-    private SecurityUtils securityUtils;
+    @BeforeEach
+    void setUp() {
+        securityUtils = new SecurityUtils(authTokenGenerator);
+    }
 
     @Test
-    public void shouldGetSecurityDto() {
+    void shouldGetSecurityDto() {
         when(authTokenGenerator.generate()).thenReturn(SERVICE_AUTH_TOKEN);
         ServiceAndUserDetails serviceAndUserDetails =
                 new ServiceAndUserDetails(USER_ID, "token1234", Collections.emptyList(), "probate_backend");
@@ -52,16 +55,16 @@ public class SecurityUtilsTest {
     }
 
     @Test
-    public void shouldGetAuthorisationHeaders() {
+    void shouldGetAuthorisationHeaders() {
         when(authTokenGenerator.generate()).thenReturn(SERVICE_AUTH_TOKEN);
 
         HttpHeaders httpHeaders = securityUtils.authorizationHeaders();
 
-        assertEquals(Arrays.asList(SERVICE_AUTH_TOKEN), httpHeaders.get("ServiceAuthorization"));
+        assertEquals(List.of(SERVICE_AUTH_TOKEN), httpHeaders.get("ServiceAuthorization"));
     }
 
     @Test
-    public void shouldThrowNoSecurityContextExceptionWhenNoContextSetOnGetUserId() {
+    void shouldThrowNoSecurityContextExceptionWhenNoContextSetOnGetUserId() {
         assertThrows(NoSecurityContextException.class, () -> {
             securityUtils.getUserId();
             TestSecurityContextHolder.clearContext();
@@ -69,7 +72,7 @@ public class SecurityUtilsTest {
     }
 
     @Test
-    public void shouldThrowNoSecurityContextExceptionWhenNoContextSetOnGetUserToken() {
+    void shouldThrowNoSecurityContextExceptionWhenNoContextSetOnGetUserToken() {
         assertThrows(NoSecurityContextException.class, () -> {
             securityUtils.getUserToken();
             TestSecurityContextHolder.clearContext();

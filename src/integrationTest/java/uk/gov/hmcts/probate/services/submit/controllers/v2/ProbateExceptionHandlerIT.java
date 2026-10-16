@@ -15,13 +15,13 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-public class ProbateExceptionHandlerIT {
+class ProbateExceptionHandlerIT {
 
     private ProbateExceptionHandler exceptionHandler = new ProbateExceptionHandler();
     private ApiClientErrorResponse clientErrorResponse;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    void setUp() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String json =
             "{\"exception\":\"uk.gov.hmcts.ccd.endpoint.exceptions.ResourceNotFoundException\","
@@ -33,27 +33,27 @@ public class ProbateExceptionHandlerIT {
     }
 
     @Test
-    public void handleApiClientExceptionReturnsResponseStatus500FromException() {
+    void handleApiClientExceptionReturnsResponseStatus500FromException() {
         ResponseEntity responseEntity = exceptionHandler
             .handleApiClientException(new ApiClientException(500, clientErrorResponse));
 
-        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(500);
+        assertThat(responseEntity.getStatusCode().value()).isEqualTo(500);
     }
 
     @Test
-    public void handleApiClientExceptionReturnsResponseStatus400FromException() {
+    void handleApiClientExceptionReturnsResponseStatus400FromException() {
         ResponseEntity responseEntity = exceptionHandler
             .handleApiClientException(new ApiClientException(400, clientErrorResponse));
 
-        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(400);
+        assertThat(responseEntity.getStatusCode().value()).isEqualTo(400);
     }
 
     @Test
-    public void handleApiClientExceptionReturns500IfResponseStatusIsUnprocessable() {
+    void handleApiClientExceptionReturns500IfResponseStatusIsUnprocessable() {
         ResponseEntity responseEntity = exceptionHandler
             .handleApiClientException(new ApiClientException(575, clientErrorResponse));
 
-        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(500);
+        assertThat(responseEntity.getStatusCode().value()).isEqualTo(500);
     }
 
 }
