@@ -5,9 +5,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
@@ -50,8 +49,8 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.KEEP_DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.UPDATE_GOP_PAYMENT_FAILED;
 
 
-@ExtendWith(SpringExtension.class)
-public class CasesServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class CasesServiceImplTest {
 
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String INVITATION_ID = "inviationId";
@@ -72,7 +71,6 @@ public class CasesServiceImplTest {
     @Mock
     private ValidationService validationService;
 
-    @InjectMocks
     private CasesServiceImpl casesService;
 
     @Mock
@@ -82,25 +80,33 @@ public class CasesServiceImplTest {
     private EventFactory eventFactory;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
+        casesService = new CasesServiceImpl(coreCaseDataService,
+                securityUtils,
+                eventFactory,
+                searchFieldFactory,
+                validationService);
+    }
+
+    private void mockCaseEvents() {
         when(eventFactory.getCaseEvents(GRANT_OF_REPRESENTATION)).thenReturn(CaseEvents.builder()
-            .createCaseApplicationEventId(GOP_CREATE_APPLICATION)
-            .updateCaseApplicationEventId(GOP_UPDATE_APPLICATION)
-            .createCaseEventId(GOP_CREATE_CASE)
-            .createDraftEventId(GOP_CREATE_DRAFT)
-            .paymentFailedAgainEventId(GOP_PAYMENT_FAILED_AGAIN)
-            .paymentFailedEventId(GOP_PAYMENT_FAILED)
-            .paymentFailedToSuccessEventId(GOP_PAYMENT_FAILED_TO_SUCCESS)
-            .updateDraftEventId(GOP_UPDATE_DRAFT)
-            .createCaseWithoutPaymentId(GOP_CREATE_CASE_WITHOUT_PAYMENT)
-            .updatePaymentFailedEventId(UPDATE_GOP_PAYMENT_FAILED)
-            .citizenHubResponseId(GOP_CITIZEN_HUB_RESPONSE)
-            .citizenHubResponseDraftId(GOP_CITIZEN_HUB_RESPONSE_DRAFT)
-            .build());
+                .createCaseApplicationEventId(GOP_CREATE_APPLICATION)
+                .updateCaseApplicationEventId(GOP_UPDATE_APPLICATION)
+                .createCaseEventId(GOP_CREATE_CASE)
+                .createDraftEventId(GOP_CREATE_DRAFT)
+                .paymentFailedAgainEventId(GOP_PAYMENT_FAILED_AGAIN)
+                .paymentFailedEventId(GOP_PAYMENT_FAILED)
+                .paymentFailedToSuccessEventId(GOP_PAYMENT_FAILED_TO_SUCCESS)
+                .updateDraftEventId(GOP_UPDATE_DRAFT)
+                .createCaseWithoutPaymentId(GOP_CREATE_CASE_WITHOUT_PAYMENT)
+                .updatePaymentFailedEventId(UPDATE_GOP_PAYMENT_FAILED)
+                .citizenHubResponseId(GOP_CITIZEN_HUB_RESPONSE)
+                .citizenHubResponseDraftId(GOP_CITIZEN_HUB_RESPONSE_DRAFT)
+                .build());
     }
 
     @Test
-    public void shouldGetCase() {
+    void shouldGetCase() {
         SecurityDto securityDto = SecurityDto.builder().build();
         Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
@@ -114,7 +120,7 @@ public class CasesServiceImplTest {
     }
 
     @Test
-    public void shouldGetCaseByApplicantEmail() {
+    void shouldGetCaseByApplicantEmail() {
         SecurityDto securityDto = SecurityDto.builder().build();
         Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
@@ -129,7 +135,7 @@ public class CasesServiceImplTest {
     }
 
     @Test
-    public void shouldGetCaseByInvitationId() {
+    void shouldGetCaseByInvitationId() {
         SecurityDto securityDto = SecurityDto.builder().build();
         Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
@@ -144,7 +150,7 @@ public class CasesServiceImplTest {
     }
 
     @Test
-    public void shouldValidate() {
+    void shouldValidate() {
         SecurityDto securityDto = SecurityDto.builder().build();
         Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
@@ -156,7 +162,7 @@ public class CasesServiceImplTest {
     }
 
     @Test
-    public void shouldGetCaseById() {
+    void shouldGetCaseById() {
         SecurityDto securityDto = SecurityDto.builder().build();
         Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
@@ -170,7 +176,7 @@ public class CasesServiceImplTest {
     }
 
     @Test
-    public void shouldGetAllCases() {
+    void shouldGetAllCases() {
         SecurityDto securityDto = SecurityDto.builder().build();
         Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
@@ -184,7 +190,9 @@ public class CasesServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateCaseWhenExistingCase() {
+    void shouldUpdateCaseWhenExistingCase() {
+        mockCaseEvents();
+
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
@@ -209,7 +217,9 @@ public class CasesServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateCaseAsCaseworkerWhenExistingCase() {
+    void shouldUpdateCaseAsCaseworkerWhenExistingCase() {
+        mockCaseEvents();
+
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
@@ -233,7 +243,9 @@ public class CasesServiceImplTest {
     }
 
     @Test
-    public void shouldCreateNewCaseWhenNoneExisting() {
+    void shouldCreateNewCaseWhenNoneExisting() {
+        mockCaseEvents();
+
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
@@ -255,7 +267,9 @@ public class CasesServiceImplTest {
     }
 
     @Test
-    public void shouldInitiateCase() {
+    void shouldInitiateCase() {
+        mockCaseEvents();
+
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         CaseType caseType = CaseType.getCaseType(caseData);
 
@@ -291,6 +305,8 @@ public class CasesServiceImplTest {
 
     @Test
     void shouldUpdateCaseForCitizenHubResponseDraft() {
+        mockCaseEvents();
+
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
@@ -317,6 +333,8 @@ public class CasesServiceImplTest {
 
     @Test
     void shouldUpdateCaseForCitizenHubResponse() {
+        mockCaseEvents();
+
         List<CollectionMember<UploadDocument>> documents = new ArrayList<>();
         documents.add(createUploadDocuments("0"));
 
@@ -349,6 +367,8 @@ public class CasesServiceImplTest {
 
     @Test
     void shouldUpdateCaseForCitizenHubResponseWithUploadIssue() {
+        mockCaseEvents();
+
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setDocumentUploadIssue(Boolean.TRUE);
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
@@ -376,6 +396,8 @@ public class CasesServiceImplTest {
 
     @Test
     void shouldUpdateCaseForCitizenHubResponseWithUploadIssueEmptyFields() {
+        mockCaseEvents();
+
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setDocumentUploadIssue(Boolean.TRUE);
         caseData.setCitizenResponse("");
@@ -405,6 +427,8 @@ public class CasesServiceImplTest {
 
     @Test
     void shouldUpdateCaseForCitizenHubResponseDraftWithUploadIssueIsSaveAndClose() {
+        mockCaseEvents();
+
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setDocumentUploadIssue(Boolean.TRUE);
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
@@ -447,6 +471,8 @@ public class CasesServiceImplTest {
 
     @Test
     void shouldUpdateCaseForKeepDraft() {
+        mockCaseEvents();
+
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
