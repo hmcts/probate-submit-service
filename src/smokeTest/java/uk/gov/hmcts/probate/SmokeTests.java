@@ -5,7 +5,6 @@ import io.restassured.config.HttpClientConfig;
 import io.restassured.config.RestAssuredConfig;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +44,6 @@ public class SmokeTests {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @Disabled
     @Test
     public void shouldGetOkStatusFromInfoEndpointForProsubmitService() {
         given().config(config)
@@ -55,5 +53,5 @@ public class SmokeTests {
                 .statusCode(HttpStatus.OK.value())
                 .body("git.commit.id", notNullValue())
                 .body("git.commit.time", notNullValue());
-    }    
+    }
 }
