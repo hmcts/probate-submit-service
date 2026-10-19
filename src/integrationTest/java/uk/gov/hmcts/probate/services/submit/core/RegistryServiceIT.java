@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class RegistryServiceIT {
+class RegistryServiceIT {
 
     private static final String CTSC_EMAIL = "ctsc@email.com";
     private static final String CTSC_ADDRESS = "Line 1 Ox\n"
@@ -25,7 +25,7 @@ public class RegistryServiceIT {
     private RegistryService registryService;
 
     @Test
-    public void shouldGetRegistry() {
+    void shouldGetRegistry() {
         GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder()
             .build();
 
@@ -42,7 +42,7 @@ public class RegistryServiceIT {
     }
 
     @Test
-    public void shouldSetCardiffRegistryForWelshCase() {
+    void shouldSetCardiffRegistryForWelshCase() {
         GrantOfRepresentationData grantOfRepresentationData =
             GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.TRUE)
                 .build();
@@ -60,7 +60,7 @@ public class RegistryServiceIT {
     }
 
     @Test
-    public void shouldSetCardiffRegistryForWelshCaseEvenIfRegistryPreviouslyPopulated() {
+    void shouldSetCardiffRegistryForWelshCaseEvenIfRegistryPreviouslyPopulated() {
         GrantOfRepresentationData grantOfRepresentationData =
             GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.TRUE)
                 .registryLocation(RegistryLocation.CTSC).build();
@@ -78,7 +78,7 @@ public class RegistryServiceIT {
     }
 
     @Test
-    public void shouldNotChangeRegistryIfRegistryPreviouslyPopulatedAndLanguagePreferenceNotWelsh() {
+    void shouldNotChangeRegistryIfRegistryPreviouslyPopulatedAndLanguagePreferenceNotWelsh() {
         GrantOfRepresentationData grantOfRepresentationData =
             GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.FALSE)
                 .registryLocation(RegistryLocation.BIRMINGHAM).build();
@@ -96,7 +96,7 @@ public class RegistryServiceIT {
     }
 
     @Test
-    public void shouldSetCtcsRegistryForEnglishCaseIfPreviouslyCardiff() {
+    void shouldSetCtcsRegistryForEnglishCaseIfPreviouslyCardiff() {
         GrantOfRepresentationData grantOfRepresentationData =
             GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.FALSE)
                 .registryLocation(RegistryLocation.CARDIFF)

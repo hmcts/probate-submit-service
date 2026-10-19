@@ -178,15 +178,18 @@ class CasesServiceImplTest {
     @Test
     void shouldGetAllCases() {
         SecurityDto securityDto = SecurityDto.builder().build();
-        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
+        ProbateCaseDetails caseDetails = ProbateCaseDetails.builder().build();
+
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
-        when(coreCaseDataService.findCaseById(CASE_ID, securityDto)).thenReturn(caseResponseOptional);
+        when(coreCaseDataService.findCases(CaseType.GRANT_OF_REPRESENTATION, securityDto))
+                .thenReturn(List.of(caseDetails));
 
-        ProbateCaseDetails caseResponse = casesService.getCaseById(CASE_ID);
+        List<ProbateCaseDetails> caseResponse = casesService.getAllCases(CaseType.GRANT_OF_REPRESENTATION);
 
-        assertEquals(caseResponseOptional.get().getCaseData(), caseResponse.getCaseData());
+        assertEquals(List.of(caseDetails), caseResponse);
         verify(securityUtils, times(1)).getSecurityDto();
-        verify(coreCaseDataService, times(1)).findCaseById(CASE_ID, securityDto);
+        verify(coreCaseDataService, times(1))
+                .findCases(CaseType.GRANT_OF_REPRESENTATION, securityDto);
     }
 
     @Test
