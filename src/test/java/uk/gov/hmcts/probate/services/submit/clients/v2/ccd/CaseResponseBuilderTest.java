@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-public class CaseResponseBuilderTest {
+@ExtendWith(MockitoExtension.class)
+class CaseResponseBuilderTest {
 
     private CaseResponseBuilder caseResponseBuilder;
 
@@ -34,7 +34,7 @@ public class CaseResponseBuilderTest {
     private static final String STATE_NAME = "CaseCreated";
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         caseResponseBuilder = new CaseResponseBuilder(caseDetailsToCaseDataMapper);
 
         when(caseDetailsToCaseDataMapper.map(caseDetails)).thenReturn(caseData);
@@ -44,7 +44,7 @@ public class CaseResponseBuilderTest {
     }
 
     @Test
-    public void shouldCreateResponseWithDate() {
+    void shouldCreateResponseWithDate() {
         LocalDateTime localDateTime = LocalDateTime.now();
         final LocalDate localDate = localDateTime.toLocalDate();
         when(caseDetails.getCreatedDate()).thenReturn(localDateTime);
@@ -60,7 +60,7 @@ public class CaseResponseBuilderTest {
     }
 
     @Test
-    public void shouldCreateResponseWithoutDate() {
+    void shouldCreateResponseWithoutDate() {
         ProbateCaseDetails probateCaseDetails = caseResponseBuilder.createCaseResponse(caseDetails);
         assertNotNull(probateCaseDetails);
         assertNotNull(probateCaseDetails.getCaseInfo());
