@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
@@ -18,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-public class CaseContentBuilderTest {
+@ExtendWith(MockitoExtension.class)
+class CaseContentBuilderTest {
 
     private static final String DESCRIPTOR = "Descriptor";
     private static final String EVENT_TOKEN = "Event token";
@@ -31,7 +31,7 @@ public class CaseContentBuilderTest {
     private EventId eventId;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         caseContentBuilder = new CaseContentBuilder();
         eventId = EventId.GOP_CREATE_APPLICATION;
 
