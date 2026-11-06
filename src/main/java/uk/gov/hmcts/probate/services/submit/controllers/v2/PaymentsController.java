@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ public class PaymentsController {
 
     @PostMapping(path = "/payments/{applicationId}/cases", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('citizen') and @ccdDataStoreService.isCaseOwner(#applicationId)")
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> createCase(@PathVariable("applicationId") String applicationId,
                                                          @RequestBody ProbateCaseDetails probateCaseDetails) {
