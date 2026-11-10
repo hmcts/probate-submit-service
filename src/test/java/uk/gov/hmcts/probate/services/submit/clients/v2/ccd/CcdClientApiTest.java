@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
 import uk.gov.hmcts.reform.ccd.client.CaseAccessApi;
@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
@@ -44,11 +45,11 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 import static uk.gov.hmcts.reform.probate.model.cases.JurisdictionId.PROBATE;
 
-@ExtendWith(SpringExtension.class)
-public class CcdClientApiTest {
+@ExtendWith(MockitoExtension.class)
+class CcdClientApiTest {
 
-    public static final String INVITATION_ID = "12334345";
-    public static final String INVIATION_QUERY = "inviationQuery";
+    static final String INVITATION_ID = "12334345";
+    static final String INVIATION_QUERY = "inviationQuery";
     private static final Long CASE_ID = 123456789L;
     private static final CaseState STATE = CaseState.DRAFT;
     private static final String AUTHORIZATION = "AUTHXXXXXXXXXXXXX";
@@ -95,18 +96,9 @@ public class CcdClientApiTest {
     private ArgumentCaptor<UserId> userIdCaptor;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         ccdClientApi = new CcdClientApi(mockCoreCaseDataApi, mockCaseAccessApi, caseContentBuilder, caseResponseBuilder,
             searchFieldFactory, mockInvitationElasticSearchQueryBuilder);
-
-        when(searchFieldFactory.getEsSearchFieldName(CaseType.GRANT_OF_REPRESENTATION))
-            .thenReturn("primaryApplicantEmailAddress");
-
-        when(searchFieldFactory.getSearchApplicantEmailFieldName()).thenReturn("primaryApplicantEmailAddress");
-
-        String inviteField = "inviteField";
-
-        when(searchFieldFactory.getSearchInviteFieldName()).thenReturn(inviteField);
 
         securityDto = SecurityDto.builder()
             .authorisation(AUTHORIZATION)
@@ -151,14 +143,12 @@ public class CcdClientApiTest {
             .caseData(caseData)
             .caseInfo(caseInfo)
             .build();
-
-        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
-
-
     }
 
     @Test
-    public void shouldCreateCase() {
+    void shouldCreateCase() {
+
+        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
         when(mockCoreCaseDataApi.startForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
             GRANT_OF_REPRESENTATION.getName(), CREATE_DRAFT.getName())).thenReturn(startEventResponse);
 
@@ -182,7 +172,8 @@ public class CcdClientApiTest {
     }
 
     @Test
-    public void shouldUpdateCase() {
+    void shouldUpdateCase() {
+        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
         caseDataContent.getEvent().setId(UPDATE_DRAFT.getName());
 
         when(mockCoreCaseDataApi.startEventForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
@@ -212,7 +203,8 @@ public class CcdClientApiTest {
     }
 
     @Test
-    public void shouldUpdateCaseAsCaseWorker() {
+    void shouldUpdateCaseAsCaseWorker() {
+        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
         caseDataContent.getEvent().setId(UPDATE_DRAFT.getName());
 
         when(mockCoreCaseDataApi.startEventForCaseWorker(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
@@ -242,7 +234,10 @@ public class CcdClientApiTest {
     }
 
     @Test
-    public void shouldFindCase() {
+    void shouldFindCase() {
+        when(searchFieldFactory.getEsSearchFieldName(CaseType.GRANT_OF_REPRESENTATION))
+                .thenReturn("primaryApplicantEmailAddress");
+        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
 
         String queryString = "queryString";
         when(mockInvitationElasticSearchQueryBuilder.buildQuery(APPLICANT_EMAIL, "primaryApplicantEmailAddress"))
@@ -264,7 +259,9 @@ public class CcdClientApiTest {
     }
 
     @Test
-    public void shouldFindCaseByApplicantEmail() {
+    void shouldFindCaseByApplicantEmail() {
+        when(searchFieldFactory.getSearchApplicantEmailFieldName()).thenReturn("primaryApplicantEmailAddress");
+        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
 
         String queryString = "queryString";
         when(mockInvitationElasticSearchQueryBuilder.buildQuery(APPLICANT_EMAIL, "primaryApplicantEmailAddress"))
@@ -287,7 +284,8 @@ public class CcdClientApiTest {
     }
 
     @Test
-    public void shouldFindAllCase() {
+    void shouldFindAllCase() {
+        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
 
         when(mockCoreCaseDataApi.searchForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID),
                 eq(PROBATE.name()), eq(GRANT_OF_REPRESENTATION.getName()), eq(new HashMap<String, String>())))
@@ -304,7 +302,9 @@ public class CcdClientApiTest {
     }
 
     @Test
-    public void shouldFindCaseById() {
+    void shouldFindCaseById() {
+
+        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
         when(mockCoreCaseDataApi.getCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(CASE_ID.toString())))
             .thenReturn(caseDetails);
 
@@ -319,19 +319,21 @@ public class CcdClientApiTest {
     }
 
     @Test
-    public void shouldReturnEmptyOptionalWhenCaseNotFoundById() {
+    void shouldReturnEmptyOptionalWhenCaseNotFoundById() {
         when(mockCoreCaseDataApi.getCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(CASE_ID.toString())))
             .thenReturn(null);
 
         Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCaseById(CASE_ID.toString(), securityDto);
 
-        assertEquals(false, optionalCaseResponse.isPresent());
+        assertFalse(optionalCaseResponse.isPresent());
         verify(mockCoreCaseDataApi, times(1))
             .getCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(CASE_ID.toString()));
     }
 
     @Test
-    public void shouldFindCaseByInvitationId() {
+    void shouldFindCaseByInvitationId() {
+        when(searchFieldFactory.getSearchInviteFieldName()).thenReturn(inviteField);
+        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
 
 
         when(mockInvitationElasticSearchQueryBuilder.buildQuery(INVITATION_ID, inviteField))
@@ -355,7 +357,9 @@ public class CcdClientApiTest {
 
 
     @Test
-    public void shouldReturnEmptyOptionalWhenReturningNullOnSearch() {
+    void shouldReturnEmptyOptionalWhenReturningNullOnSearch() {
+        when(searchFieldFactory.getEsSearchFieldName(CaseType.GRANT_OF_REPRESENTATION))
+                .thenReturn("primaryApplicantEmailAddress");
         String queryString = "queryString";
         when(mockInvitationElasticSearchQueryBuilder.buildQuery(APPLICANT_EMAIL, "primaryApplicantEmailAddress"))
             .thenReturn(queryString);
@@ -369,11 +373,12 @@ public class CcdClientApiTest {
             ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
 
 
-        assertEquals(false, optionalCaseResponse.isPresent());
+        assertFalse(optionalCaseResponse.isPresent());
     }
 
     @Test
-    public void shouldReturnEmptyOptionalWhenReturningNullOnSearchInvitation() {
+    void shouldReturnEmptyOptionalWhenReturningNullOnSearchInvitation() {
+        when(searchFieldFactory.getSearchInviteFieldName()).thenReturn(inviteField);
         String invitationId = INVITATION_ID;
         String invitationQuery =
             INVIATION_QUERY;
@@ -386,11 +391,13 @@ public class CcdClientApiTest {
         Optional<ProbateCaseDetails> optionalCaseResponse =
             ccdClientApi.findCaseByInviteId(invitationId, GRANT_OF_REPRESENTATION, securityDto);
 
-        assertEquals(false, optionalCaseResponse.isPresent());
+        assertFalse(optionalCaseResponse.isPresent());
     }
 
     @Test
-    public void shouldThrowIllegalStateExceptionWhenFindingMoreThanOneCase() {
+    void shouldThrowIllegalStateExceptionWhenFindingMoreThanOneCase() {
+        when(searchFieldFactory.getEsSearchFieldName(CaseType.GRANT_OF_REPRESENTATION))
+                .thenReturn("primaryApplicantEmailAddress");
 
         String queryString = "queryString";
         when(mockInvitationElasticSearchQueryBuilder.buildQuery(APPLICANT_EMAIL, "primaryApplicantEmailAddress"))
@@ -410,8 +417,8 @@ public class CcdClientApiTest {
 
     @Test
     void shouldThrowExceptionWhenFindMoreThanOneCaseByInviteId() {
+        when(searchFieldFactory.getSearchInviteFieldName()).thenReturn(inviteField);
 
-        String queryString = "queryString";
         when(mockInvitationElasticSearchQueryBuilder.buildQuery(INVITATION_ID, inviteField))
                 .thenReturn(INVIATION_QUERY);
 
@@ -429,6 +436,7 @@ public class CcdClientApiTest {
 
     @Test
     void shouldReturnEmptyOptionalWhenReturningNullOnSearchEmail() {
+        when(searchFieldFactory.getSearchApplicantEmailFieldName()).thenReturn("primaryApplicantEmailAddress");
         String queryString = "queryString";
         when(mockInvitationElasticSearchQueryBuilder.buildQuery(APPLICANT_EMAIL, "primaryApplicantEmailAddress"))
                 .thenReturn(queryString);
@@ -442,6 +450,6 @@ public class CcdClientApiTest {
                 ccdClientApi.findCaseByApplicantEmail(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
 
 
-        assertEquals(false, optionalCaseResponse.isPresent());
+        assertFalse(optionalCaseResponse.isPresent());
     }
 }

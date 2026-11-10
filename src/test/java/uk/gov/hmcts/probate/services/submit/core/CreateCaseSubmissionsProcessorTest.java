@@ -4,12 +4,10 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
-import uk.gov.hmcts.probate.services.submit.model.v2.Registry;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
@@ -36,8 +34,8 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_AGAIN;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_TO_SUCCESS;
 
-@ExtendWith(SpringExtension.class)
-public class CreateCaseSubmissionsProcessorTest {
+@ExtendWith(MockitoExtension.class)
+class CreateCaseSubmissionsProcessorTest {
 
     private static final String APPLICANT_EMAIL = "test@test.com";
 
@@ -59,12 +57,8 @@ public class CreateCaseSubmissionsProcessorTest {
     private RegistryService registryService;
 
     @Mock
-    private Registry registry;
-
-    @Mock
     private ValidationService validationService;
 
-    @InjectMocks
     private CreateCaseSubmissionsProcessor createCaseSubmissionsProcessor;
 
     private ProbateCaseDetails caseRequest;
@@ -78,7 +72,13 @@ public class CreateCaseSubmissionsProcessorTest {
     private ProbateCaseDetails caseResponse;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
+        createCaseSubmissionsProcessor = new CreateCaseSubmissionsProcessor(coreCaseDataService,
+                eventFactory,
+                registryService,
+                securityUtils,
+                searchFieldFactory,
+                validationService);
         securityDto = SecurityDto.builder().build();
         caseData = new CaveatData();
         caseData.setCaveatorEmailAddress(APPLICANT_EMAIL);
@@ -87,11 +87,15 @@ public class CreateCaseSubmissionsProcessorTest {
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(CaseState.DRAFT);
         caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+    }
 
-        when(searchFieldFactory.getSearchFieldValuePair(CaseType.CAVEAT, caseData))
+    private void mockSearchField() {
+        when(searchFieldFactory.getSearchFieldValuePair(CAVEAT, caseData))
                 .thenReturn(ImmutablePair.of("caveatorEmailAddress", APPLICANT_EMAIL));
+    }
 
-        when(eventFactory.getCaseEvents(CaseType.CAVEAT)).thenReturn(CaseEvents.builder()
+    private void mockCaseEvents() {
+        when(eventFactory.getCaseEvents(CAVEAT)).thenReturn(CaseEvents.builder()
                 .createCaseApplicationEventId(GOP_CREATE_APPLICATION)
                 .createCaseEventId(GOP_CREATE_CASE)
                 .paymentFailedAgainEventId(GOP_PAYMENT_FAILED_AGAIN)
@@ -101,7 +105,9 @@ public class CreateCaseSubmissionsProcessorTest {
     }
 
     @Test
-    public void shouldProcessCase() {
+    void shouldProcessCase() {
+        mockSearchField();
+        mockCaseEvents();
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, CAVEAT, securityDto))
                 .thenReturn(Optional.empty());
@@ -114,15 +120,7 @@ public class CreateCaseSubmissionsProcessorTest {
     }
 
     @Test
-    public void shouldNotSubmitWhenExistingCase() {
-        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
-        when(coreCaseDataService.findCase(APPLICANT_EMAIL, CAVEAT, securityDto))
-                .thenReturn(Optional.of(caseResponse));
-
-    }
-
-    @Test
-    public void shouldThrowAssertFieldExceptionWhenIdentifierDoesNotMatchBody() {
+    void shouldThrowAssertFieldExceptionWhenIdentifierDoesNotMatchBody() {
         when(searchFieldFactory.getSearchFieldValuePair(CaseType.CAVEAT, caseData))
             .thenReturn(ImmutablePair.of("caveatorEmailAddress", "sdfsdfsd"));
 
@@ -133,6 +131,7 @@ public class CreateCaseSubmissionsProcessorTest {
 
     @Test
     void shouldThrowCaseAlreadyExistsException() {
+        mockSearchField();
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, CAVEAT, securityDto))
                 .thenReturn(Optional.of(caseResponse));

@@ -21,6 +21,10 @@ management:
 spring:
   application:
     name: probate-submit-service
+  http:
+    converters:
+      # Keep Jackson 2 HTTP payloads during the Spring Boot 4 migration.
+      preferred-json-mapper: jackson2
   thymeleaf.check-template-location: true
   thymeleaf.prefix=classpath: /templates/
   thymeleaf.excluded-view-names: # comma-separated list of view names   that should be excluded from resolution
@@ -37,7 +41,7 @@ spring:
     basename: messages
     cache-seconds: -1
     encoding: UTF-8
-  jackson:
+  jackson2:
     deserialization:
       FAIL_ON_UNKNOWN_PROPERTIES: true
   cloud:
