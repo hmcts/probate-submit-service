@@ -348,6 +348,49 @@ public class CasesServiceImplTest {
     }
 
     @Test
+    void shouldUpdateCaseForCitizenHubResponseWithLatestEmailAddress() {
+        List<CollectionMember<UploadDocument>> documents = new ArrayList<>();
+        documents.add(createUploadDocuments("0"));
+
+        GrantOfRepresentationData latestCaseData = new GrantOfRepresentationData();
+        latestCaseData.setPrimaryApplicantEmailAddress("latest@test.com");
+
+        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
+        caseData.setCitizenResponseCheckbox(Boolean.TRUE);
+        caseData.setCitizenResponse("response");
+        caseData.setCitizenDocumentsUploaded(documents);
+        caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
+
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(CaseState.BO_CASE_STOPPED);
+
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+        ProbateCaseDetails latestCaseRequest = ProbateCaseDetails.builder().caseData(latestCaseData).caseInfo(caseInfo).build();
+
+
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
+        Optional<ProbateCaseDetails> latestCaseResponseOptional = Optional.of(latestCaseRequest);
+
+        SecurityDto securityDto = SecurityDto.builder().build();
+
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(coreCaseDataService.findCaseById(CASE_ID, securityDto))
+                .thenReturn(latestCaseResponseOptional);
+        when(coreCaseDataService
+                .updateCase(CASE_ID, caseData, GOP_CITIZEN_HUB_RESPONSE, securityDto, EVENT_DESCRIPTION))
+                .thenReturn(latestCaseRequest);
+
+        ProbateCaseDetails caseResponse = casesService.saveCase(CASE_ID, caseRequest,EVENT_DESCRIPTION);
+
+        assertEquals(((GrantOfRepresentationData)caseResponse.getCaseData()).getPrimaryApplicantEmailAddress(), "latest@test.com");
+        verify(securityUtils, times(1)).getSecurityDto();
+        verify(coreCaseDataService, times(1)).findCaseById(CASE_ID, securityDto);
+        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData,
+                GOP_CITIZEN_HUB_RESPONSE, securityDto, EVENT_DESCRIPTION);
+    }
+
+    @Test
     void shouldUpdateCaseForCitizenHubResponseWithUploadIssue() {
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setDocumentUploadIssue(Boolean.TRUE);
