@@ -366,7 +366,8 @@ public class CasesServiceImplTest {
         caseInfo.setState(CaseState.BO_CASE_STOPPED);
 
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
-        ProbateCaseDetails latestCaseRequest = ProbateCaseDetails.builder().caseData(latestCaseData).caseInfo(caseInfo).build();
+        ProbateCaseDetails latestCaseRequest = ProbateCaseDetails.builder()
+                .caseData(latestCaseData).caseInfo(caseInfo).build();
 
 
         Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
@@ -383,7 +384,8 @@ public class CasesServiceImplTest {
 
         ProbateCaseDetails caseResponse = casesService.saveCase(CASE_ID, caseRequest,EVENT_DESCRIPTION);
 
-        assertEquals(((GrantOfRepresentationData)caseResponse.getCaseData()).getPrimaryApplicantEmailAddress(), "latest@test.com");
+        assertEquals("latest@test.com",
+                ((GrantOfRepresentationData)caseResponse.getCaseData()).getPrimaryApplicantEmailAddress());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCaseById(CASE_ID, securityDto);
         verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData,
