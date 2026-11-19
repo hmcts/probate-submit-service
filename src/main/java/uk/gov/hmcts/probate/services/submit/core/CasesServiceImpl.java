@@ -134,6 +134,10 @@ public class CasesServiceImpl implements CasesService {
             } else if (EventId.GOP_UPDATE_DRAFT.equals(eventId) && isTaskListPage(eventDescription)) {
                 eventId = EventId.KEEP_DRAFT;
             }
+            if (EventId.GOP_CITIZEN_HUB_RESPONSE_DRAFT.equals(eventId)
+                    || EventId.GOP_CITIZEN_HUB_RESPONSE.equals(eventId)) {
+                refreshPrimaryApplicantEmailAddress(caseResponse.getCaseData(), caseData);
+            }
             if (asCaseworker) {
                 return coreCaseDataService
                     .updateCaseAsCaseworker(caseResponse.getCaseInfo().getCaseId(), caseData, eventId, securityDto);
@@ -184,6 +188,13 @@ public class CasesServiceImpl implements CasesService {
         ProbateCaseDetails probateCaseDetails = getCase(searchField, caseType);
         validationService.validate(probateCaseDetails);
         return probateCaseDetails;
+    }
+
+    private void refreshPrimaryApplicantEmailAddress(CaseData sourceCaseData, CaseData targetCaseData) {
+        if (sourceCaseData instanceof GrantOfRepresentationData source
+                && targetCaseData instanceof GrantOfRepresentationData target) {
+            target.setPrimaryApplicantEmailAddress(source.getPrimaryApplicantEmailAddress());
+        }
     }
 
     private boolean isSubmitHubResponse(CaseData caseData) {
