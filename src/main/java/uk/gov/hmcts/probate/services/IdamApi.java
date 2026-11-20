@@ -50,7 +50,7 @@ public interface IdamApi {
     );
 
     @GetMapping(
-            value = "/details",
+            value = "/o/userinfo",
             headers = CONTENT_TYPE + "=" + APPLICATION_FORM_URLENCODED_VALUE,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
     )

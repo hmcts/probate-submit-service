@@ -46,7 +46,7 @@ echo $token
 
 id=$(curl --silent -XGET \
   -H "Authorization: Bearer ${token}" \
-  http://localhost:4501/details)
+  http://localhost:4501/o/userinfo)
 
 echo
 echo 'User Details: '
