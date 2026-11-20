@@ -25,7 +25,7 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VAL
 public interface IdamApi {
     @Deprecated
     @PostMapping(
-            value = "/oauth2/authorize",
+            value = "/o/token?grant_type=password",
             headers = CONTENT_TYPE + "=" + APPLICATION_FORM_URLENCODED_VALUE,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
     )
@@ -50,7 +50,7 @@ public interface IdamApi {
     );
 
     @GetMapping(
-            value = "/details",
+            value = "/o/userinfo",
             headers = CONTENT_TYPE + "=" + APPLICATION_FORM_URLENCODED_VALUE,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
     )
