@@ -116,7 +116,7 @@ public class SaveCaseTests extends IntegrationTestBase {
 
     @Test
     public void saveCaseWithInvalidDataReturns400() {
-        String caseId = RandomStringUtils.randomNumeric(16).toLowerCase();
+        String caseId = RandomStringUtils.secure().nextNumeric(16).toLowerCase();
 
         RestAssured.given()
             .relaxedHTTPSValidation()
