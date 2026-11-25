@@ -5,10 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PaymentsControllerIT {
+class PaymentsControllerIT {
 
     private static final String PAYMENTS_URL = "/payments";
     private static final String UPDATE_CASE_URL = "/ccd-case-update";
@@ -38,7 +38,7 @@ public class PaymentsControllerIT {
     private static final String APPLICATION_CREATED = "PAAppCreated";
     private static final String CREATE_CASES_ENDPOINT = "cases";
 
-    @MockBean
+    @MockitoBean
     private PaymentsService paymentsService;
 
     @Autowired
@@ -51,12 +51,12 @@ public class PaymentsControllerIT {
     private WebApplicationContext webApplicationContext;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
     @Test
-    public void shouldUpdatePaymentByCaseId() throws Exception {
+    void shouldUpdatePaymentByCaseId() throws Exception {
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation_caseDetails.json");
         ProbateCaseDetails caseDetailsRequest = objectMapper.readValue(json, ProbateCaseDetails.class);
 
@@ -68,7 +68,7 @@ public class PaymentsControllerIT {
     }
 
     @Test
-    public void shouldCreateCase() throws Exception {
+    void shouldCreateCase() throws Exception {
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();

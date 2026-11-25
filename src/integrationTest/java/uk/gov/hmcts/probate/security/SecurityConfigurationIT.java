@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
 @SpringBootTest
-public class SecurityConfigurationIT {
+class SecurityConfigurationIT {
 
     private static final String PRINCIPAL = "probate_backend";
 
@@ -46,16 +46,16 @@ public class SecurityConfigurationIT {
 
     private MockMvc mvc;
 
-    @MockBean
+    @MockitoBean
     private SubjectResolver<Service> serviceResolver;
 
-    @MockBean
+    @MockitoBean
     private RequestAuthorizer<User> userRequestAuthorizer;
 
     private Service service;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(context)
             .apply(springSecurity())
             .defaultRequest(get("/").accept(MediaType.TEXT_HTML))
@@ -69,12 +69,12 @@ public class SecurityConfigurationIT {
     }
 
     @Test
-    public void shouldGetSwaggerUiWithStatusCodeOkAndUnAuthenticated() throws Exception {
+    void shouldGetSwaggerUiWithStatusCodeOkAndUnAuthenticated() throws Exception {
         mvc.perform(get("/swagger-ui/index.html")).andExpect(status().isOk()).andExpect(unauthenticated());
     }
 
     @Test
-    public void shouldNotAuthenticateForSubmitEndpoint() throws Exception {
+    void shouldNotAuthenticateForSubmitEndpoint() throws Exception {
         mvc.perform(post("/submit")
             .header("UserId", "123")
             .header(AUTHORIZATION, "RANDOM2XXXXX"))
@@ -82,7 +82,7 @@ public class SecurityConfigurationIT {
     }
 
     @Test
-    public void shouldNotAuthenticateForPaymentStatusEndpoint() throws Exception {
+    void shouldNotAuthenticateForPaymentStatusEndpoint() throws Exception {
         mvc.perform(post("/updatePaymentStatus")
             .header("UserId", "123")
             .header(AUTHORIZATION, "RANDOM2XXXXX"))
@@ -90,7 +90,7 @@ public class SecurityConfigurationIT {
     }
 
     @Test
-    public void shouldAuthenticateForCasesEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
+    void shouldAuthenticateForCasesEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
         mvc.perform(post("/cases/test@test.com")
             .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
             .header(AUTHORIZATION, "Bearer jddslfjsdlfj"))
@@ -98,7 +98,7 @@ public class SecurityConfigurationIT {
     }
 
     @Test
-    public void shouldAuthenticateForSubmissionsEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
+    void shouldAuthenticateForSubmissionsEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
         mvc.perform(post("/submissions/test@test.com")
             .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
             .header(AUTHORIZATION, "Bearer jddslfjsdlfj"))
@@ -106,7 +106,7 @@ public class SecurityConfigurationIT {
     }
 
     @Test
-    public void shouldAuthenticateForPaymentsEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
+    void shouldAuthenticateForPaymentsEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
         mvc.perform(post("/payments/test@test.com")
             .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
             .header(AUTHORIZATION, "Bearer jddslfjsdlfj"))
