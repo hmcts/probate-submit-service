@@ -2,6 +2,8 @@ package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Path;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,8 +29,6 @@ import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
 
 import java.util.HashSet;
 import java.util.Set;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Path;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
