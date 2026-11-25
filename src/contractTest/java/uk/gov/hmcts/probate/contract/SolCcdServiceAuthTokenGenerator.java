@@ -116,7 +116,7 @@ public class SolCcdServiceAuthTokenGenerator {
         String jsonResponse = given()
             .relaxedHTTPSValidation()
             .header("Authorization", "Basic " + encoded)
-            .post(idamUserBaseUrl + "/oauth2/authorize?response_type=code"
+            .post(idamUserBaseUrl + "/o/token?grant_type=password&response_type=code"
                 + "&client_id=" + clientId
                 + "&redirect_uri=" + redirectUri)
             .asString();

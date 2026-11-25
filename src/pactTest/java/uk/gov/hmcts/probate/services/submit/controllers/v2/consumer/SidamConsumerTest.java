@@ -52,7 +52,7 @@ public class SidamConsumerTest {
         return builder
                 .given("a valid user exists")
                 .uponReceiving("A request for a User")
-                .path("/details")
+                .path("/o/userinfo")
                 .method("GET")
                 .matchHeader("Authorization", AUTH_TOKEN)
                 .willRespondWith()
