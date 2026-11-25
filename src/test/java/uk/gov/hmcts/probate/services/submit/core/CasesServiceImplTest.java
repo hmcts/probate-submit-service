@@ -505,6 +505,7 @@ class CasesServiceImplTest {
 
     @Test
     void shouldUpdateCaseForChangeInRelationshipToDeceased() {
+        mockCaseEvents();
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantRelationshipToDeceased(Relationship.CHILD);
         CaseInfo caseInfo = new CaseInfo();
@@ -532,6 +533,7 @@ class CasesServiceImplTest {
 
     @Test
     void shouldUpdateCaseForChangeInSiblingSameParentPage() {
+        mockCaseEvents();
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantRelationshipToDeceased(Relationship.CHILD);
         CaseInfo caseInfo = new CaseInfo();
@@ -559,6 +561,7 @@ class CasesServiceImplTest {
 
     @Test
     void shouldUseIntestacyRelationshipDraftForIndexedCoApplicantRelationshipPage() {
+        mockCaseEvents();
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantRelationshipToDeceased(Relationship.CHILD);
         CaseInfo caseInfo = new CaseInfo();
