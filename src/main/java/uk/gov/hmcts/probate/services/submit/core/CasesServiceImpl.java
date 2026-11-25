@@ -3,6 +3,7 @@ package uk.gov.hmcts.probate.services.submit.core;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -133,6 +134,10 @@ public class CasesServiceImpl implements CasesService {
                 eventId = EventId.GOP_CITIZEN_HUB_RESPONSE;
             } else if (EventId.GOP_UPDATE_DRAFT.equals(eventId) && isTaskListPage(eventDescription)) {
                 eventId = EventId.KEEP_DRAFT;
+            } else if (EventId.GOP_UPDATE_DRAFT.equals(eventId) && isRelationshipToDeceased(eventDescription)) {
+                eventId = EventId.INTESTACY_RELATIONSHIP_DRAFT;
+            } else if (EventId.GOP_UPDATE_DRAFT.equals(eventId) && isSameParentPage(eventDescription)) {
+                eventId = EventId.INTESTACY_SIBLING_SAME_PARENT_DRAFT;
             }
             if (asCaseworker) {
                 return coreCaseDataService
@@ -204,5 +209,14 @@ public class CasesServiceImpl implements CasesService {
 
     private boolean isTaskListPage(String eventDescription) {
         return eventDescription != null && eventDescription.contains("task-list");
+    }
+
+    private boolean isSameParentPage(String eventDescription) {
+        return eventDescription != null && eventDescription.contains("deceased-same-parents");
+    }
+
+    // Intentional contains check: co-applicant routes can include an index segment such as "/0".
+    private boolean isRelationshipToDeceased(String eventDescription) {
+        return StringUtils.containsIgnoreCase(eventDescription, "relationship-to-deceased");
     }
 }
