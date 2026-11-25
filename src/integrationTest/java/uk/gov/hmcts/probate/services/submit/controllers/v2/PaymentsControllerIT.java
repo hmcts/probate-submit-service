@@ -5,10 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,7 +33,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PaymentsControllerIT {
+class PaymentsControllerIT {
 
     private static final String PAYMENTS_URL = "/payments";
     private static final String UPDATE_CASE_URL = "/ccd-case-update";
@@ -62,16 +61,12 @@ public class PaymentsControllerIT {
     private WebApplicationContext webApplicationContext;
 
     @BeforeEach
-    public void setup() {
-
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(webApplicationContext)
-                .apply(springSecurity())
-                .build();
+    void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
     @Test
-    public void shouldUpdatePaymentByCaseId() throws Exception {
+    void shouldUpdatePaymentByCaseId() throws Exception {
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation_caseDetails.json");
         ProbateCaseDetails caseDetailsRequest = objectMapper.readValue(json, ProbateCaseDetails.class);
 
@@ -86,9 +81,7 @@ public class PaymentsControllerIT {
     }
 
     @Test
-    public void shouldCreateCase() throws Exception {
-        when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
-        when(ccdDataStoreService.isCaseOwner(EMAIL_ADDRESS)).thenReturn(true);
+    void shouldCreateCase() throws Exception {
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();

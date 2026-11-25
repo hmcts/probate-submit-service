@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -42,12 +42,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class SubmissionsControllerIT {
+class SubmissionsControllerIT {
 
     private static final String SUBMISSIONS_URL = "/submissions";
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String CASE_ID = "1343242352";
-    private static final String APPLICATION_CREATED = "ApplicationCreated";
 
     @MockitoBean
     private SubmissionsService submissionsService;
@@ -62,15 +61,12 @@ public class SubmissionsControllerIT {
     private WebApplicationContext webApplicationContext;
 
     @BeforeEach
-    public void setup() {
-
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(webApplicationContext)
-                .build();
+    void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
     @Test
-    public void shouldCreateCase() throws Exception {
+    void shouldCreateCase() throws Exception {
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
@@ -91,7 +87,7 @@ public class SubmissionsControllerIT {
     }
 
     @Test
-    public void shouldThrowBadRequestOnCreateCaseWithInvalidPayload() throws Exception {
+    void shouldThrowBadRequestOnCreateCaseWithInvalidPayload() throws Exception {
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();

@@ -8,10 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -56,7 +55,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CasesControllerIT {
+class CasesControllerIT {
 
     private static final String CASES_URL = "/cases";
     private static final String CASES_BY_APPLICANT_EMAIL_URL = "/cases/applicantEmail";
@@ -91,20 +90,12 @@ public class CasesControllerIT {
     private WebApplicationContext webApplicationContext;
 
     @BeforeEach
-    public void setup() {
-
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(webApplicationContext)
-                .apply(springSecurity())
-                .build();
-
-        when(serviceAuthTokenGenerator.generate()).thenReturn("mock-s2s-token");
+    void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
     @Test
-    public void shouldGetCaseForIntestacyGrantOfRepresentation() throws Exception {
-        when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
-        when(ccdDataStoreService.isCaseOwner(EMAIL_ADDRESS)).thenReturn(true);
+    void shouldGetCaseForIntestacyGrantOfRepresentation() throws Exception {
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
@@ -125,9 +116,7 @@ public class CasesControllerIT {
     }
 
     @Test
-    public void shouldGetCaseByApplicantEmailForIntestacyGrantOfRepresentation() throws Exception {
-        when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
-        when(ccdDataStoreService.isCaseOwner(CASE_ID)).thenReturn(true);
+    void shouldGetCaseByApplicantEmailForIntestacyGrantOfRepresentation() throws Exception {
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
@@ -150,9 +139,7 @@ public class CasesControllerIT {
 
 
     @Test
-    public void shouldGetAllCaseForGrantOfRepresentation() throws Exception {
-        when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
-        when(ccdDataStoreService.isCasesOwner(anyList())).thenReturn(true);
+    void shouldGetAllCaseForGrantOfRepresentation() throws Exception {
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
@@ -173,9 +160,7 @@ public class CasesControllerIT {
     }
 
     @Test
-    public void shouldGetCaseByIdForIntestacyGrantOfRepresentation() throws Exception {
-        when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
-        when(ccdDataStoreService.isCaseOwner(CASE_ID)).thenReturn(true);
+    void shouldGetCaseByIdForIntestacyGrantOfRepresentation() throws Exception {
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
@@ -196,7 +181,7 @@ public class CasesControllerIT {
     }
 
     @Test
-    public void shouldGetCaseForIntestacyGrantOfRepresentationByInvitationId() throws Exception {
+    void shouldGetCaseForIntestacyGrantOfRepresentationByInvitationId() throws Exception {
 
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().build();
         when(casesService.getCaseByInvitationId(INVITATION_ID, CaseType.GRANT_OF_REPRESENTATION))
@@ -214,10 +199,7 @@ public class CasesControllerIT {
 
 
     @Test
-    public void shouldValidate() throws Exception {
-        when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
-        when(ccdDataStoreService.isCaseOwner(EMAIL_ADDRESS)).thenReturn(true);
-
+    void shouldValidate() throws Exception {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
 
         mockMvc.perform(put(CASES_URL + "/" + EMAIL_ADDRESS + VALIDATE_ENDPOINT)
@@ -233,7 +215,7 @@ public class CasesControllerIT {
     }
 
     @Test
-    public void shouldReturnStatusOf400WhenCaseValidationException() throws Exception {
+    void shouldReturnStatusOf400WhenCaseValidationException() throws Exception {
         ConstraintViolation<CaseData> constraintViolation = Mockito.mock(ConstraintViolation.class);
         when(constraintViolation.getMessage()).thenReturn("must not be null");
         Path path = Mockito.mock(Path.class);
@@ -265,9 +247,7 @@ public class CasesControllerIT {
     }
 
     @Test
-    public void shouldSaveCase() throws Exception {
-        when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
-        when(ccdDataStoreService.isCaseOwner(EMAIL_ADDRESS)).thenReturn(true);
+    void shouldSaveCase() throws Exception {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
 
@@ -284,7 +264,7 @@ public class CasesControllerIT {
 
 
     @Test
-    public void shouldInitiateCase() throws Exception {
+    void shouldInitiateCase() throws Exception {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
 
@@ -300,7 +280,7 @@ public class CasesControllerIT {
     }
 
     @Test
-    public void shouldSaveCaseAsCaseworker() throws Exception {
+    void shouldSaveCaseAsCaseworker() throws Exception {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
 
@@ -316,9 +296,7 @@ public class CasesControllerIT {
     }
 
     @Test
-    public void shouldGiveStatusOf401WhenAssertFieldExceptionThrown() throws Exception {
-        when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
-        when(ccdDataStoreService.isCaseOwner(EMAIL_ADDRESS)).thenReturn(true);
+    void shouldGiveStatusOf500WhenAssertFieldExceptionThrown() throws Exception {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
         when(casesService.saveCase(anyString(), any(ProbateCaseDetails.class), anyString()))
